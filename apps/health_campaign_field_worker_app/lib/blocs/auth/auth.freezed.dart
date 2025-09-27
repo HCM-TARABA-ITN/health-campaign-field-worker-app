@@ -20,30 +20,33 @@ mixin _$AuthEvent {
   TResult when<TResult extends Object?>({
     required TResult Function(String userId, String password, String tenantId)
         login,
-    required TResult Function(
-            int spaq1Count, int spaq2Count, int blueVasCount, int redVasCount)
-        addSpaqCounts,
+    required TResult Function(int? bednetCount, int? spaq1Count,
+            int? spaq2Count, int? blueVasCount, int? redVasCount)
+        addProductCounts,
     required TResult Function(String tenantId) autoLogin,
+    required TResult Function(String clientReferenceId) deliveryProductCounts,
     required TResult Function() logout,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String userId, String password, String tenantId)? login,
-    TResult? Function(
-            int spaq1Count, int spaq2Count, int blueVasCount, int redVasCount)?
-        addSpaqCounts,
+    TResult? Function(int? bednetCount, int? spaq1Count, int? spaq2Count,
+            int? blueVasCount, int? redVasCount)?
+        addProductCounts,
     TResult? Function(String tenantId)? autoLogin,
+    TResult? Function(String clientReferenceId)? deliveryProductCounts,
     TResult? Function()? logout,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String userId, String password, String tenantId)? login,
-    TResult Function(
-            int spaq1Count, int spaq2Count, int blueVasCount, int redVasCount)?
-        addSpaqCounts,
+    TResult Function(int? bednetCount, int? spaq1Count, int? spaq2Count,
+            int? blueVasCount, int? redVasCount)?
+        addProductCounts,
     TResult Function(String tenantId)? autoLogin,
+    TResult Function(String clientReferenceId)? deliveryProductCounts,
     TResult Function()? logout,
     required TResult orElse(),
   }) =>
@@ -51,24 +54,30 @@ mixin _$AuthEvent {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(AuthLoginEvent value) login,
-    required TResult Function(AuthAddSpaqCountsEvent value) addSpaqCounts,
+    required TResult Function(AuthAddProductCountsEvent value) addProductCounts,
     required TResult Function(AuthAutoLoginEvent value) autoLogin,
+    required TResult Function(AuthDeliveryProductCountsEvent value)
+        deliveryProductCounts,
     required TResult Function(AuthLogoutEvent value) logout,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(AuthLoginEvent value)? login,
-    TResult? Function(AuthAddSpaqCountsEvent value)? addSpaqCounts,
+    TResult? Function(AuthAddProductCountsEvent value)? addProductCounts,
     TResult? Function(AuthAutoLoginEvent value)? autoLogin,
+    TResult? Function(AuthDeliveryProductCountsEvent value)?
+        deliveryProductCounts,
     TResult? Function(AuthLogoutEvent value)? logout,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(AuthLoginEvent value)? login,
-    TResult Function(AuthAddSpaqCountsEvent value)? addSpaqCounts,
+    TResult Function(AuthAddProductCountsEvent value)? addProductCounts,
     TResult Function(AuthAutoLoginEvent value)? autoLogin,
+    TResult Function(AuthDeliveryProductCountsEvent value)?
+        deliveryProductCounts,
     TResult Function(AuthLogoutEvent value)? logout,
     required TResult orElse(),
   }) =>
@@ -178,10 +187,11 @@ class _$AuthLoginEventImpl implements AuthLoginEvent {
   TResult when<TResult extends Object?>({
     required TResult Function(String userId, String password, String tenantId)
         login,
-    required TResult Function(
-            int spaq1Count, int spaq2Count, int blueVasCount, int redVasCount)
-        addSpaqCounts,
+    required TResult Function(int? bednetCount, int? spaq1Count,
+            int? spaq2Count, int? blueVasCount, int? redVasCount)
+        addProductCounts,
     required TResult Function(String tenantId) autoLogin,
+    required TResult Function(String clientReferenceId) deliveryProductCounts,
     required TResult Function() logout,
   }) {
     return login(userId, password, tenantId);
@@ -191,10 +201,11 @@ class _$AuthLoginEventImpl implements AuthLoginEvent {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String userId, String password, String tenantId)? login,
-    TResult? Function(
-            int spaq1Count, int spaq2Count, int blueVasCount, int redVasCount)?
-        addSpaqCounts,
+    TResult? Function(int? bednetCount, int? spaq1Count, int? spaq2Count,
+            int? blueVasCount, int? redVasCount)?
+        addProductCounts,
     TResult? Function(String tenantId)? autoLogin,
+    TResult? Function(String clientReferenceId)? deliveryProductCounts,
     TResult? Function()? logout,
   }) {
     return login?.call(userId, password, tenantId);
@@ -204,10 +215,11 @@ class _$AuthLoginEventImpl implements AuthLoginEvent {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String userId, String password, String tenantId)? login,
-    TResult Function(
-            int spaq1Count, int spaq2Count, int blueVasCount, int redVasCount)?
-        addSpaqCounts,
+    TResult Function(int? bednetCount, int? spaq1Count, int? spaq2Count,
+            int? blueVasCount, int? redVasCount)?
+        addProductCounts,
     TResult Function(String tenantId)? autoLogin,
+    TResult Function(String clientReferenceId)? deliveryProductCounts,
     TResult Function()? logout,
     required TResult orElse(),
   }) {
@@ -221,8 +233,10 @@ class _$AuthLoginEventImpl implements AuthLoginEvent {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(AuthLoginEvent value) login,
-    required TResult Function(AuthAddSpaqCountsEvent value) addSpaqCounts,
+    required TResult Function(AuthAddProductCountsEvent value) addProductCounts,
     required TResult Function(AuthAutoLoginEvent value) autoLogin,
+    required TResult Function(AuthDeliveryProductCountsEvent value)
+        deliveryProductCounts,
     required TResult Function(AuthLogoutEvent value) logout,
   }) {
     return login(this);
@@ -232,8 +246,10 @@ class _$AuthLoginEventImpl implements AuthLoginEvent {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(AuthLoginEvent value)? login,
-    TResult? Function(AuthAddSpaqCountsEvent value)? addSpaqCounts,
+    TResult? Function(AuthAddProductCountsEvent value)? addProductCounts,
     TResult? Function(AuthAutoLoginEvent value)? autoLogin,
+    TResult? Function(AuthDeliveryProductCountsEvent value)?
+        deliveryProductCounts,
     TResult? Function(AuthLogoutEvent value)? logout,
   }) {
     return login?.call(this);
@@ -243,8 +259,10 @@ class _$AuthLoginEventImpl implements AuthLoginEvent {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(AuthLoginEvent value)? login,
-    TResult Function(AuthAddSpaqCountsEvent value)? addSpaqCounts,
+    TResult Function(AuthAddProductCountsEvent value)? addProductCounts,
     TResult Function(AuthAutoLoginEvent value)? autoLogin,
+    TResult Function(AuthDeliveryProductCountsEvent value)?
+        deliveryProductCounts,
     TResult Function(AuthLogoutEvent value)? logout,
     required TResult orElse(),
   }) {
@@ -270,82 +288,96 @@ abstract class AuthLoginEvent implements AuthEvent {
 }
 
 /// @nodoc
-abstract class _$$AuthAddSpaqCountsEventImplCopyWith<$Res> {
-  factory _$$AuthAddSpaqCountsEventImplCopyWith(
-          _$AuthAddSpaqCountsEventImpl value,
-          $Res Function(_$AuthAddSpaqCountsEventImpl) then) =
-      __$$AuthAddSpaqCountsEventImplCopyWithImpl<$Res>;
+abstract class _$$AuthAddProductCountsEventImplCopyWith<$Res> {
+  factory _$$AuthAddProductCountsEventImplCopyWith(
+          _$AuthAddProductCountsEventImpl value,
+          $Res Function(_$AuthAddProductCountsEventImpl) then) =
+      __$$AuthAddProductCountsEventImplCopyWithImpl<$Res>;
   @useResult
   $Res call(
-      {int spaq1Count, int spaq2Count, int blueVasCount, int redVasCount});
+      {int? bednetCount,
+      int? spaq1Count,
+      int? spaq2Count,
+      int? blueVasCount,
+      int? redVasCount});
 }
 
 /// @nodoc
-class __$$AuthAddSpaqCountsEventImplCopyWithImpl<$Res>
-    extends _$AuthEventCopyWithImpl<$Res, _$AuthAddSpaqCountsEventImpl>
-    implements _$$AuthAddSpaqCountsEventImplCopyWith<$Res> {
-  __$$AuthAddSpaqCountsEventImplCopyWithImpl(
-      _$AuthAddSpaqCountsEventImpl _value,
-      $Res Function(_$AuthAddSpaqCountsEventImpl) _then)
+class __$$AuthAddProductCountsEventImplCopyWithImpl<$Res>
+    extends _$AuthEventCopyWithImpl<$Res, _$AuthAddProductCountsEventImpl>
+    implements _$$AuthAddProductCountsEventImplCopyWith<$Res> {
+  __$$AuthAddProductCountsEventImplCopyWithImpl(
+      _$AuthAddProductCountsEventImpl _value,
+      $Res Function(_$AuthAddProductCountsEventImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? spaq1Count = null,
-    Object? spaq2Count = null,
-    Object? blueVasCount = null,
-    Object? redVasCount = null,
+    Object? bednetCount = freezed,
+    Object? spaq1Count = freezed,
+    Object? spaq2Count = freezed,
+    Object? blueVasCount = freezed,
+    Object? redVasCount = freezed,
   }) {
-    return _then(_$AuthAddSpaqCountsEventImpl(
-      spaq1Count: null == spaq1Count
+    return _then(_$AuthAddProductCountsEventImpl(
+      bednetCount: freezed == bednetCount
+          ? _value.bednetCount
+          : bednetCount // ignore: cast_nullable_to_non_nullable
+              as int?,
+      spaq1Count: freezed == spaq1Count
           ? _value.spaq1Count
           : spaq1Count // ignore: cast_nullable_to_non_nullable
-              as int,
-      spaq2Count: null == spaq2Count
+              as int?,
+      spaq2Count: freezed == spaq2Count
           ? _value.spaq2Count
           : spaq2Count // ignore: cast_nullable_to_non_nullable
-              as int,
-      blueVasCount: null == blueVasCount
+              as int?,
+      blueVasCount: freezed == blueVasCount
           ? _value.blueVasCount
           : blueVasCount // ignore: cast_nullable_to_non_nullable
-              as int,
-      redVasCount: null == redVasCount
+              as int?,
+      redVasCount: freezed == redVasCount
           ? _value.redVasCount
           : redVasCount // ignore: cast_nullable_to_non_nullable
-              as int,
+              as int?,
     ));
   }
 }
 
 /// @nodoc
 
-class _$AuthAddSpaqCountsEventImpl implements AuthAddSpaqCountsEvent {
-  const _$AuthAddSpaqCountsEventImpl(
-      {required this.spaq1Count,
-      required this.spaq2Count,
-      required this.blueVasCount,
-      required this.redVasCount});
+class _$AuthAddProductCountsEventImpl implements AuthAddProductCountsEvent {
+  const _$AuthAddProductCountsEventImpl(
+      {this.bednetCount,
+      this.spaq1Count,
+      this.spaq2Count,
+      this.blueVasCount,
+      this.redVasCount});
 
   @override
-  final int spaq1Count;
+  final int? bednetCount;
   @override
-  final int spaq2Count;
+  final int? spaq1Count;
   @override
-  final int blueVasCount;
+  final int? spaq2Count;
   @override
-  final int redVasCount;
+  final int? blueVasCount;
+  @override
+  final int? redVasCount;
 
   @override
   String toString() {
-    return 'AuthEvent.addSpaqCounts(spaq1Count: $spaq1Count, spaq2Count: $spaq2Count, blueVasCount: $blueVasCount, redVasCount: $redVasCount)';
+    return 'AuthEvent.addProductCounts(bednetCount: $bednetCount, spaq1Count: $spaq1Count, spaq2Count: $spaq2Count, blueVasCount: $blueVasCount, redVasCount: $redVasCount)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$AuthAddSpaqCountsEventImpl &&
+            other is _$AuthAddProductCountsEventImpl &&
+            (identical(other.bednetCount, bednetCount) ||
+                other.bednetCount == bednetCount) &&
             (identical(other.spaq1Count, spaq1Count) ||
                 other.spaq1Count == spaq1Count) &&
             (identical(other.spaq2Count, spaq2Count) ||
@@ -357,57 +389,62 @@ class _$AuthAddSpaqCountsEventImpl implements AuthAddSpaqCountsEvent {
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType, spaq1Count, spaq2Count, blueVasCount, redVasCount);
+  int get hashCode => Object.hash(runtimeType, bednetCount, spaq1Count,
+      spaq2Count, blueVasCount, redVasCount);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$AuthAddSpaqCountsEventImplCopyWith<_$AuthAddSpaqCountsEventImpl>
-      get copyWith => __$$AuthAddSpaqCountsEventImplCopyWithImpl<
-          _$AuthAddSpaqCountsEventImpl>(this, _$identity);
+  _$$AuthAddProductCountsEventImplCopyWith<_$AuthAddProductCountsEventImpl>
+      get copyWith => __$$AuthAddProductCountsEventImplCopyWithImpl<
+          _$AuthAddProductCountsEventImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(String userId, String password, String tenantId)
         login,
-    required TResult Function(
-            int spaq1Count, int spaq2Count, int blueVasCount, int redVasCount)
-        addSpaqCounts,
+    required TResult Function(int? bednetCount, int? spaq1Count,
+            int? spaq2Count, int? blueVasCount, int? redVasCount)
+        addProductCounts,
     required TResult Function(String tenantId) autoLogin,
+    required TResult Function(String clientReferenceId) deliveryProductCounts,
     required TResult Function() logout,
   }) {
-    return addSpaqCounts(spaq1Count, spaq2Count, blueVasCount, redVasCount);
+    return addProductCounts(
+        bednetCount, spaq1Count, spaq2Count, blueVasCount, redVasCount);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String userId, String password, String tenantId)? login,
-    TResult? Function(
-            int spaq1Count, int spaq2Count, int blueVasCount, int redVasCount)?
-        addSpaqCounts,
+    TResult? Function(int? bednetCount, int? spaq1Count, int? spaq2Count,
+            int? blueVasCount, int? redVasCount)?
+        addProductCounts,
     TResult? Function(String tenantId)? autoLogin,
+    TResult? Function(String clientReferenceId)? deliveryProductCounts,
     TResult? Function()? logout,
   }) {
-    return addSpaqCounts?.call(
-        spaq1Count, spaq2Count, blueVasCount, redVasCount);
+    return addProductCounts?.call(
+        bednetCount, spaq1Count, spaq2Count, blueVasCount, redVasCount);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String userId, String password, String tenantId)? login,
-    TResult Function(
-            int spaq1Count, int spaq2Count, int blueVasCount, int redVasCount)?
-        addSpaqCounts,
+    TResult Function(int? bednetCount, int? spaq1Count, int? spaq2Count,
+            int? blueVasCount, int? redVasCount)?
+        addProductCounts,
     TResult Function(String tenantId)? autoLogin,
+    TResult Function(String clientReferenceId)? deliveryProductCounts,
     TResult Function()? logout,
     required TResult orElse(),
   }) {
-    if (addSpaqCounts != null) {
-      return addSpaqCounts(spaq1Count, spaq2Count, blueVasCount, redVasCount);
+    if (addProductCounts != null) {
+      return addProductCounts(
+          bednetCount, spaq1Count, spaq2Count, blueVasCount, redVasCount);
     }
     return orElse();
   }
@@ -416,53 +453,61 @@ class _$AuthAddSpaqCountsEventImpl implements AuthAddSpaqCountsEvent {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(AuthLoginEvent value) login,
-    required TResult Function(AuthAddSpaqCountsEvent value) addSpaqCounts,
+    required TResult Function(AuthAddProductCountsEvent value) addProductCounts,
     required TResult Function(AuthAutoLoginEvent value) autoLogin,
+    required TResult Function(AuthDeliveryProductCountsEvent value)
+        deliveryProductCounts,
     required TResult Function(AuthLogoutEvent value) logout,
   }) {
-    return addSpaqCounts(this);
+    return addProductCounts(this);
   }
 
   @override
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(AuthLoginEvent value)? login,
-    TResult? Function(AuthAddSpaqCountsEvent value)? addSpaqCounts,
+    TResult? Function(AuthAddProductCountsEvent value)? addProductCounts,
     TResult? Function(AuthAutoLoginEvent value)? autoLogin,
+    TResult? Function(AuthDeliveryProductCountsEvent value)?
+        deliveryProductCounts,
     TResult? Function(AuthLogoutEvent value)? logout,
   }) {
-    return addSpaqCounts?.call(this);
+    return addProductCounts?.call(this);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(AuthLoginEvent value)? login,
-    TResult Function(AuthAddSpaqCountsEvent value)? addSpaqCounts,
+    TResult Function(AuthAddProductCountsEvent value)? addProductCounts,
     TResult Function(AuthAutoLoginEvent value)? autoLogin,
+    TResult Function(AuthDeliveryProductCountsEvent value)?
+        deliveryProductCounts,
     TResult Function(AuthLogoutEvent value)? logout,
     required TResult orElse(),
   }) {
-    if (addSpaqCounts != null) {
-      return addSpaqCounts(this);
+    if (addProductCounts != null) {
+      return addProductCounts(this);
     }
     return orElse();
   }
 }
 
-abstract class AuthAddSpaqCountsEvent implements AuthEvent {
-  const factory AuthAddSpaqCountsEvent(
-      {required final int spaq1Count,
-      required final int spaq2Count,
-      required final int blueVasCount,
-      required final int redVasCount}) = _$AuthAddSpaqCountsEventImpl;
+abstract class AuthAddProductCountsEvent implements AuthEvent {
+  const factory AuthAddProductCountsEvent(
+      {final int? bednetCount,
+      final int? spaq1Count,
+      final int? spaq2Count,
+      final int? blueVasCount,
+      final int? redVasCount}) = _$AuthAddProductCountsEventImpl;
 
-  int get spaq1Count;
-  int get spaq2Count;
-  int get blueVasCount;
-  int get redVasCount;
+  int? get bednetCount;
+  int? get spaq1Count;
+  int? get spaq2Count;
+  int? get blueVasCount;
+  int? get redVasCount;
   @JsonKey(ignore: true)
-  _$$AuthAddSpaqCountsEventImplCopyWith<_$AuthAddSpaqCountsEventImpl>
+  _$$AuthAddProductCountsEventImplCopyWith<_$AuthAddProductCountsEventImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -534,10 +579,11 @@ class _$AuthAutoLoginEventImpl implements AuthAutoLoginEvent {
   TResult when<TResult extends Object?>({
     required TResult Function(String userId, String password, String tenantId)
         login,
-    required TResult Function(
-            int spaq1Count, int spaq2Count, int blueVasCount, int redVasCount)
-        addSpaqCounts,
+    required TResult Function(int? bednetCount, int? spaq1Count,
+            int? spaq2Count, int? blueVasCount, int? redVasCount)
+        addProductCounts,
     required TResult Function(String tenantId) autoLogin,
+    required TResult Function(String clientReferenceId) deliveryProductCounts,
     required TResult Function() logout,
   }) {
     return autoLogin(tenantId);
@@ -547,10 +593,11 @@ class _$AuthAutoLoginEventImpl implements AuthAutoLoginEvent {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String userId, String password, String tenantId)? login,
-    TResult? Function(
-            int spaq1Count, int spaq2Count, int blueVasCount, int redVasCount)?
-        addSpaqCounts,
+    TResult? Function(int? bednetCount, int? spaq1Count, int? spaq2Count,
+            int? blueVasCount, int? redVasCount)?
+        addProductCounts,
     TResult? Function(String tenantId)? autoLogin,
+    TResult? Function(String clientReferenceId)? deliveryProductCounts,
     TResult? Function()? logout,
   }) {
     return autoLogin?.call(tenantId);
@@ -560,10 +607,11 @@ class _$AuthAutoLoginEventImpl implements AuthAutoLoginEvent {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String userId, String password, String tenantId)? login,
-    TResult Function(
-            int spaq1Count, int spaq2Count, int blueVasCount, int redVasCount)?
-        addSpaqCounts,
+    TResult Function(int? bednetCount, int? spaq1Count, int? spaq2Count,
+            int? blueVasCount, int? redVasCount)?
+        addProductCounts,
     TResult Function(String tenantId)? autoLogin,
+    TResult Function(String clientReferenceId)? deliveryProductCounts,
     TResult Function()? logout,
     required TResult orElse(),
   }) {
@@ -577,8 +625,10 @@ class _$AuthAutoLoginEventImpl implements AuthAutoLoginEvent {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(AuthLoginEvent value) login,
-    required TResult Function(AuthAddSpaqCountsEvent value) addSpaqCounts,
+    required TResult Function(AuthAddProductCountsEvent value) addProductCounts,
     required TResult Function(AuthAutoLoginEvent value) autoLogin,
+    required TResult Function(AuthDeliveryProductCountsEvent value)
+        deliveryProductCounts,
     required TResult Function(AuthLogoutEvent value) logout,
   }) {
     return autoLogin(this);
@@ -588,8 +638,10 @@ class _$AuthAutoLoginEventImpl implements AuthAutoLoginEvent {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(AuthLoginEvent value)? login,
-    TResult? Function(AuthAddSpaqCountsEvent value)? addSpaqCounts,
+    TResult? Function(AuthAddProductCountsEvent value)? addProductCounts,
     TResult? Function(AuthAutoLoginEvent value)? autoLogin,
+    TResult? Function(AuthDeliveryProductCountsEvent value)?
+        deliveryProductCounts,
     TResult? Function(AuthLogoutEvent value)? logout,
   }) {
     return autoLogin?.call(this);
@@ -599,8 +651,10 @@ class _$AuthAutoLoginEventImpl implements AuthAutoLoginEvent {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(AuthLoginEvent value)? login,
-    TResult Function(AuthAddSpaqCountsEvent value)? addSpaqCounts,
+    TResult Function(AuthAddProductCountsEvent value)? addProductCounts,
     TResult Function(AuthAutoLoginEvent value)? autoLogin,
+    TResult Function(AuthDeliveryProductCountsEvent value)?
+        deliveryProductCounts,
     TResult Function(AuthLogoutEvent value)? logout,
     required TResult orElse(),
   }) {
@@ -619,6 +673,176 @@ abstract class AuthAutoLoginEvent implements AuthEvent {
   @JsonKey(ignore: true)
   _$$AuthAutoLoginEventImplCopyWith<_$AuthAutoLoginEventImpl> get copyWith =>
       throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$AuthDeliveryProductCountsEventImplCopyWith<$Res> {
+  factory _$$AuthDeliveryProductCountsEventImplCopyWith(
+          _$AuthDeliveryProductCountsEventImpl value,
+          $Res Function(_$AuthDeliveryProductCountsEventImpl) then) =
+      __$$AuthDeliveryProductCountsEventImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({String clientReferenceId});
+}
+
+/// @nodoc
+class __$$AuthDeliveryProductCountsEventImplCopyWithImpl<$Res>
+    extends _$AuthEventCopyWithImpl<$Res, _$AuthDeliveryProductCountsEventImpl>
+    implements _$$AuthDeliveryProductCountsEventImplCopyWith<$Res> {
+  __$$AuthDeliveryProductCountsEventImplCopyWithImpl(
+      _$AuthDeliveryProductCountsEventImpl _value,
+      $Res Function(_$AuthDeliveryProductCountsEventImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? clientReferenceId = null,
+  }) {
+    return _then(_$AuthDeliveryProductCountsEventImpl(
+      clientReferenceId: null == clientReferenceId
+          ? _value.clientReferenceId
+          : clientReferenceId // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$AuthDeliveryProductCountsEventImpl
+    implements AuthDeliveryProductCountsEvent {
+  const _$AuthDeliveryProductCountsEventImpl({required this.clientReferenceId});
+
+  @override
+  final String clientReferenceId;
+
+  @override
+  String toString() {
+    return 'AuthEvent.deliveryProductCounts(clientReferenceId: $clientReferenceId)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$AuthDeliveryProductCountsEventImpl &&
+            (identical(other.clientReferenceId, clientReferenceId) ||
+                other.clientReferenceId == clientReferenceId));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, clientReferenceId);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$AuthDeliveryProductCountsEventImplCopyWith<
+          _$AuthDeliveryProductCountsEventImpl>
+      get copyWith => __$$AuthDeliveryProductCountsEventImplCopyWithImpl<
+          _$AuthDeliveryProductCountsEventImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(String userId, String password, String tenantId)
+        login,
+    required TResult Function(int? bednetCount, int? spaq1Count,
+            int? spaq2Count, int? blueVasCount, int? redVasCount)
+        addProductCounts,
+    required TResult Function(String tenantId) autoLogin,
+    required TResult Function(String clientReferenceId) deliveryProductCounts,
+    required TResult Function() logout,
+  }) {
+    return deliveryProductCounts(clientReferenceId);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(String userId, String password, String tenantId)? login,
+    TResult? Function(int? bednetCount, int? spaq1Count, int? spaq2Count,
+            int? blueVasCount, int? redVasCount)?
+        addProductCounts,
+    TResult? Function(String tenantId)? autoLogin,
+    TResult? Function(String clientReferenceId)? deliveryProductCounts,
+    TResult? Function()? logout,
+  }) {
+    return deliveryProductCounts?.call(clientReferenceId);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(String userId, String password, String tenantId)? login,
+    TResult Function(int? bednetCount, int? spaq1Count, int? spaq2Count,
+            int? blueVasCount, int? redVasCount)?
+        addProductCounts,
+    TResult Function(String tenantId)? autoLogin,
+    TResult Function(String clientReferenceId)? deliveryProductCounts,
+    TResult Function()? logout,
+    required TResult orElse(),
+  }) {
+    if (deliveryProductCounts != null) {
+      return deliveryProductCounts(clientReferenceId);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(AuthLoginEvent value) login,
+    required TResult Function(AuthAddProductCountsEvent value) addProductCounts,
+    required TResult Function(AuthAutoLoginEvent value) autoLogin,
+    required TResult Function(AuthDeliveryProductCountsEvent value)
+        deliveryProductCounts,
+    required TResult Function(AuthLogoutEvent value) logout,
+  }) {
+    return deliveryProductCounts(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(AuthLoginEvent value)? login,
+    TResult? Function(AuthAddProductCountsEvent value)? addProductCounts,
+    TResult? Function(AuthAutoLoginEvent value)? autoLogin,
+    TResult? Function(AuthDeliveryProductCountsEvent value)?
+        deliveryProductCounts,
+    TResult? Function(AuthLogoutEvent value)? logout,
+  }) {
+    return deliveryProductCounts?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(AuthLoginEvent value)? login,
+    TResult Function(AuthAddProductCountsEvent value)? addProductCounts,
+    TResult Function(AuthAutoLoginEvent value)? autoLogin,
+    TResult Function(AuthDeliveryProductCountsEvent value)?
+        deliveryProductCounts,
+    TResult Function(AuthLogoutEvent value)? logout,
+    required TResult orElse(),
+  }) {
+    if (deliveryProductCounts != null) {
+      return deliveryProductCounts(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class AuthDeliveryProductCountsEvent implements AuthEvent {
+  const factory AuthDeliveryProductCountsEvent(
+          {required final String clientReferenceId}) =
+      _$AuthDeliveryProductCountsEventImpl;
+
+  String get clientReferenceId;
+  @JsonKey(ignore: true)
+  _$$AuthDeliveryProductCountsEventImplCopyWith<
+          _$AuthDeliveryProductCountsEventImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -661,10 +885,11 @@ class _$AuthLogoutEventImpl implements AuthLogoutEvent {
   TResult when<TResult extends Object?>({
     required TResult Function(String userId, String password, String tenantId)
         login,
-    required TResult Function(
-            int spaq1Count, int spaq2Count, int blueVasCount, int redVasCount)
-        addSpaqCounts,
+    required TResult Function(int? bednetCount, int? spaq1Count,
+            int? spaq2Count, int? blueVasCount, int? redVasCount)
+        addProductCounts,
     required TResult Function(String tenantId) autoLogin,
+    required TResult Function(String clientReferenceId) deliveryProductCounts,
     required TResult Function() logout,
   }) {
     return logout();
@@ -674,10 +899,11 @@ class _$AuthLogoutEventImpl implements AuthLogoutEvent {
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function(String userId, String password, String tenantId)? login,
-    TResult? Function(
-            int spaq1Count, int spaq2Count, int blueVasCount, int redVasCount)?
-        addSpaqCounts,
+    TResult? Function(int? bednetCount, int? spaq1Count, int? spaq2Count,
+            int? blueVasCount, int? redVasCount)?
+        addProductCounts,
     TResult? Function(String tenantId)? autoLogin,
+    TResult? Function(String clientReferenceId)? deliveryProductCounts,
     TResult? Function()? logout,
   }) {
     return logout?.call();
@@ -687,10 +913,11 @@ class _$AuthLogoutEventImpl implements AuthLogoutEvent {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(String userId, String password, String tenantId)? login,
-    TResult Function(
-            int spaq1Count, int spaq2Count, int blueVasCount, int redVasCount)?
-        addSpaqCounts,
+    TResult Function(int? bednetCount, int? spaq1Count, int? spaq2Count,
+            int? blueVasCount, int? redVasCount)?
+        addProductCounts,
     TResult Function(String tenantId)? autoLogin,
+    TResult Function(String clientReferenceId)? deliveryProductCounts,
     TResult Function()? logout,
     required TResult orElse(),
   }) {
@@ -704,8 +931,10 @@ class _$AuthLogoutEventImpl implements AuthLogoutEvent {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(AuthLoginEvent value) login,
-    required TResult Function(AuthAddSpaqCountsEvent value) addSpaqCounts,
+    required TResult Function(AuthAddProductCountsEvent value) addProductCounts,
     required TResult Function(AuthAutoLoginEvent value) autoLogin,
+    required TResult Function(AuthDeliveryProductCountsEvent value)
+        deliveryProductCounts,
     required TResult Function(AuthLogoutEvent value) logout,
   }) {
     return logout(this);
@@ -715,8 +944,10 @@ class _$AuthLogoutEventImpl implements AuthLogoutEvent {
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(AuthLoginEvent value)? login,
-    TResult? Function(AuthAddSpaqCountsEvent value)? addSpaqCounts,
+    TResult? Function(AuthAddProductCountsEvent value)? addProductCounts,
     TResult? Function(AuthAutoLoginEvent value)? autoLogin,
+    TResult? Function(AuthDeliveryProductCountsEvent value)?
+        deliveryProductCounts,
     TResult? Function(AuthLogoutEvent value)? logout,
   }) {
     return logout?.call(this);
@@ -726,8 +957,10 @@ class _$AuthLogoutEventImpl implements AuthLogoutEvent {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(AuthLoginEvent value)? login,
-    TResult Function(AuthAddSpaqCountsEvent value)? addSpaqCounts,
+    TResult Function(AuthAddProductCountsEvent value)? addProductCounts,
     TResult Function(AuthAutoLoginEvent value)? autoLogin,
+    TResult Function(AuthDeliveryProductCountsEvent value)?
+        deliveryProductCounts,
     TResult Function(AuthLogoutEvent value)? logout,
     required TResult orElse(),
   }) {
@@ -754,6 +987,7 @@ mixin _$AuthState {
             UserRequestModel userModel,
             RoleActionsWrapperModel actionsWrapper,
             String? individualId,
+            int? bednetCount,
             int? spaq1Count,
             int? spaq2Count,
             int? blueVasCount,
@@ -772,6 +1006,7 @@ mixin _$AuthState {
             UserRequestModel userModel,
             RoleActionsWrapperModel actionsWrapper,
             String? individualId,
+            int? bednetCount,
             int? spaq1Count,
             int? spaq2Count,
             int? blueVasCount,
@@ -790,6 +1025,7 @@ mixin _$AuthState {
             UserRequestModel userModel,
             RoleActionsWrapperModel actionsWrapper,
             String? individualId,
+            int? bednetCount,
             int? spaq1Count,
             int? spaq2Count,
             int? blueVasCount,
@@ -892,6 +1128,7 @@ class _$AuthUnauthenticatedStateImpl implements AuthUnauthenticatedState {
             UserRequestModel userModel,
             RoleActionsWrapperModel actionsWrapper,
             String? individualId,
+            int? bednetCount,
             int? spaq1Count,
             int? spaq2Count,
             int? blueVasCount,
@@ -913,6 +1150,7 @@ class _$AuthUnauthenticatedStateImpl implements AuthUnauthenticatedState {
             UserRequestModel userModel,
             RoleActionsWrapperModel actionsWrapper,
             String? individualId,
+            int? bednetCount,
             int? spaq1Count,
             int? spaq2Count,
             int? blueVasCount,
@@ -934,6 +1172,7 @@ class _$AuthUnauthenticatedStateImpl implements AuthUnauthenticatedState {
             UserRequestModel userModel,
             RoleActionsWrapperModel actionsWrapper,
             String? individualId,
+            int? bednetCount,
             int? spaq1Count,
             int? spaq2Count,
             int? blueVasCount,
@@ -1036,6 +1275,7 @@ class _$AuthLoadingStateImpl implements AuthLoadingState {
             UserRequestModel userModel,
             RoleActionsWrapperModel actionsWrapper,
             String? individualId,
+            int? bednetCount,
             int? spaq1Count,
             int? spaq2Count,
             int? blueVasCount,
@@ -1057,6 +1297,7 @@ class _$AuthLoadingStateImpl implements AuthLoadingState {
             UserRequestModel userModel,
             RoleActionsWrapperModel actionsWrapper,
             String? individualId,
+            int? bednetCount,
             int? spaq1Count,
             int? spaq2Count,
             int? blueVasCount,
@@ -1078,6 +1319,7 @@ class _$AuthLoadingStateImpl implements AuthLoadingState {
             UserRequestModel userModel,
             RoleActionsWrapperModel actionsWrapper,
             String? individualId,
+            int? bednetCount,
             int? spaq1Count,
             int? spaq2Count,
             int? blueVasCount,
@@ -1147,6 +1389,7 @@ abstract class _$$AuthAuthenticatedStateImplCopyWith<$Res> {
       UserRequestModel userModel,
       RoleActionsWrapperModel actionsWrapper,
       String? individualId,
+      int? bednetCount,
       int? spaq1Count,
       int? spaq2Count,
       int? blueVasCount,
@@ -1173,6 +1416,7 @@ class __$$AuthAuthenticatedStateImplCopyWithImpl<$Res>
     Object? userModel = null,
     Object? actionsWrapper = null,
     Object? individualId = freezed,
+    Object? bednetCount = freezed,
     Object? spaq1Count = freezed,
     Object? spaq2Count = freezed,
     Object? blueVasCount = freezed,
@@ -1199,6 +1443,10 @@ class __$$AuthAuthenticatedStateImplCopyWithImpl<$Res>
           ? _value.individualId
           : individualId // ignore: cast_nullable_to_non_nullable
               as String?,
+      bednetCount: freezed == bednetCount
+          ? _value.bednetCount
+          : bednetCount // ignore: cast_nullable_to_non_nullable
+              as int?,
       spaq1Count: freezed == spaq1Count
           ? _value.spaq1Count
           : spaq1Count // ignore: cast_nullable_to_non_nullable
@@ -1245,6 +1493,7 @@ class _$AuthAuthenticatedStateImpl implements AuthAuthenticatedState {
       required this.userModel,
       required this.actionsWrapper,
       this.individualId,
+      this.bednetCount,
       this.spaq1Count,
       this.spaq2Count,
       this.blueVasCount,
@@ -1261,6 +1510,8 @@ class _$AuthAuthenticatedStateImpl implements AuthAuthenticatedState {
   @override
   final String? individualId;
   @override
+  final int? bednetCount;
+  @override
   final int? spaq1Count;
   @override
   final int? spaq2Count;
@@ -1271,7 +1522,7 @@ class _$AuthAuthenticatedStateImpl implements AuthAuthenticatedState {
 
   @override
   String toString() {
-    return 'AuthState.authenticated(accessToken: $accessToken, refreshToken: $refreshToken, userModel: $userModel, actionsWrapper: $actionsWrapper, individualId: $individualId, spaq1Count: $spaq1Count, spaq2Count: $spaq2Count, blueVasCount: $blueVasCount, redVasCount: $redVasCount)';
+    return 'AuthState.authenticated(accessToken: $accessToken, refreshToken: $refreshToken, userModel: $userModel, actionsWrapper: $actionsWrapper, individualId: $individualId, bednetCount: $bednetCount, spaq1Count: $spaq1Count, spaq2Count: $spaq2Count, blueVasCount: $blueVasCount, redVasCount: $redVasCount)';
   }
 
   @override
@@ -1289,6 +1540,8 @@ class _$AuthAuthenticatedStateImpl implements AuthAuthenticatedState {
                 other.actionsWrapper == actionsWrapper) &&
             (identical(other.individualId, individualId) ||
                 other.individualId == individualId) &&
+            (identical(other.bednetCount, bednetCount) ||
+                other.bednetCount == bednetCount) &&
             (identical(other.spaq1Count, spaq1Count) ||
                 other.spaq1Count == spaq1Count) &&
             (identical(other.spaq2Count, spaq2Count) ||
@@ -1307,6 +1560,7 @@ class _$AuthAuthenticatedStateImpl implements AuthAuthenticatedState {
       userModel,
       actionsWrapper,
       individualId,
+      bednetCount,
       spaq1Count,
       spaq2Count,
       blueVasCount,
@@ -1330,6 +1584,7 @@ class _$AuthAuthenticatedStateImpl implements AuthAuthenticatedState {
             UserRequestModel userModel,
             RoleActionsWrapperModel actionsWrapper,
             String? individualId,
+            int? bednetCount,
             int? spaq1Count,
             int? spaq2Count,
             int? blueVasCount,
@@ -1337,8 +1592,17 @@ class _$AuthAuthenticatedStateImpl implements AuthAuthenticatedState {
         authenticated,
     required TResult Function(String? error) error,
   }) {
-    return authenticated(accessToken, refreshToken, userModel, actionsWrapper,
-        individualId, spaq1Count, spaq2Count, blueVasCount, redVasCount);
+    return authenticated(
+        accessToken,
+        refreshToken,
+        userModel,
+        actionsWrapper,
+        individualId,
+        bednetCount,
+        spaq1Count,
+        spaq2Count,
+        blueVasCount,
+        redVasCount);
   }
 
   @override
@@ -1352,6 +1616,7 @@ class _$AuthAuthenticatedStateImpl implements AuthAuthenticatedState {
             UserRequestModel userModel,
             RoleActionsWrapperModel actionsWrapper,
             String? individualId,
+            int? bednetCount,
             int? spaq1Count,
             int? spaq2Count,
             int? blueVasCount,
@@ -1365,6 +1630,7 @@ class _$AuthAuthenticatedStateImpl implements AuthAuthenticatedState {
         userModel,
         actionsWrapper,
         individualId,
+        bednetCount,
         spaq1Count,
         spaq2Count,
         blueVasCount,
@@ -1382,6 +1648,7 @@ class _$AuthAuthenticatedStateImpl implements AuthAuthenticatedState {
             UserRequestModel userModel,
             RoleActionsWrapperModel actionsWrapper,
             String? individualId,
+            int? bednetCount,
             int? spaq1Count,
             int? spaq2Count,
             int? blueVasCount,
@@ -1391,8 +1658,17 @@ class _$AuthAuthenticatedStateImpl implements AuthAuthenticatedState {
     required TResult orElse(),
   }) {
     if (authenticated != null) {
-      return authenticated(accessToken, refreshToken, userModel, actionsWrapper,
-          individualId, spaq1Count, spaq2Count, blueVasCount, redVasCount);
+      return authenticated(
+          accessToken,
+          refreshToken,
+          userModel,
+          actionsWrapper,
+          individualId,
+          bednetCount,
+          spaq1Count,
+          spaq2Count,
+          blueVasCount,
+          redVasCount);
     }
     return orElse();
   }
@@ -1442,6 +1718,7 @@ abstract class AuthAuthenticatedState implements AuthState {
       required final UserRequestModel userModel,
       required final RoleActionsWrapperModel actionsWrapper,
       final String? individualId,
+      final int? bednetCount,
       final int? spaq1Count,
       final int? spaq2Count,
       final int? blueVasCount,
@@ -1452,6 +1729,7 @@ abstract class AuthAuthenticatedState implements AuthState {
   UserRequestModel get userModel;
   RoleActionsWrapperModel get actionsWrapper;
   String? get individualId;
+  int? get bednetCount;
   int? get spaq1Count;
   int? get spaq2Count;
   int? get blueVasCount;
@@ -1534,6 +1812,7 @@ class _$AuthErrorStateImpl implements AuthErrorState {
             UserRequestModel userModel,
             RoleActionsWrapperModel actionsWrapper,
             String? individualId,
+            int? bednetCount,
             int? spaq1Count,
             int? spaq2Count,
             int? blueVasCount,
@@ -1555,6 +1834,7 @@ class _$AuthErrorStateImpl implements AuthErrorState {
             UserRequestModel userModel,
             RoleActionsWrapperModel actionsWrapper,
             String? individualId,
+            int? bednetCount,
             int? spaq1Count,
             int? spaq2Count,
             int? blueVasCount,
@@ -1576,6 +1856,7 @@ class _$AuthErrorStateImpl implements AuthErrorState {
             UserRequestModel userModel,
             RoleActionsWrapperModel actionsWrapper,
             String? individualId,
+            int? bednetCount,
             int? spaq1Count,
             int? spaq2Count,
             int? blueVasCount,

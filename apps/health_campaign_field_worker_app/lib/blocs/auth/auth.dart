@@ -5,6 +5,10 @@ import 'package:digit_ui_components/utils/app_logger.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:registration_delivery/models/entities/task.dart';
+import 'package:registration_delivery/models/entities/task_resource.dart';
+import 'package:registration_delivery/utils/typedefs.dart';
+import 'package:registration_delivery/utils/utils.dart';
 
 import '../../data/local_store/secure_store/secure_store.dart';
 import '../../data/repositories/remote/auth.dart';
@@ -26,18 +30,21 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final MdmsRepository mdmsRepository;
   final RemoteRepository<IndividualModel, IndividualSearchModel>
       individualRemoteRepository;
+  final TaskDataRepository taskRepository;
 
   AuthBloc({
     required this.authRepository,
     required this.mdmsRepository,
     required this.individualRemoteRepository,
+    required this.taskRepository,
     LocalSecureStore? localSecureStore,
   })  : localSecureStore = LocalSecureStore.instance,
         super(const AuthUnauthenticatedState()) {
     on(_onLogin);
     on(_onLogout);
     on(_onAutoLogin);
-    on(_onAddSpaqCounts);
+    on(_onAddProductCounts);
+    on(_onDeliveryProductCounts);
   }
 
   //_onAutoLogin event handles auto-login of the user when the user is already logged in and token is not expired, AuthenticatedWrapper is returned in UI
@@ -53,6 +60,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final userObject = await localSecureStore.userRequestModel;
       final actionsList = await localSecureStore.savedActions;
       final userIndividualId = await localSecureStore.userIndividualId;
+      final bednet = await localSecureStore.bednet;
       final spaq1 = await localSecureStore.spaq1;
       final spaq2 = await localSecureStore.spaq2;
 
@@ -71,6 +79,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           userModel: userObject,
           individualId: userIndividualId,
           actionsWrapper: actionsList,
+          bednetCount: bednet,
           spaq1Count: spaq1,
           spaq2Count: spaq2,
           blueVasCount: blueVas,
@@ -107,6 +116,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         "enabled": true,
       });
       await localSecureStore.setBoundaryRefetch(true);
+      final bednet = await localSecureStore.bednet;
       final spaq1 = await localSecureStore.spaq1;
       final spaq2 = await localSecureStore.spaq2;
       final blueVas = await localSecureStore.blueVas;
@@ -133,6 +143,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             userModel: result.userRequestModel,
             actionsWrapper: actionsWrapper,
             individualId: await localSecureStore.userIndividualId,
+            bednetCount: bednet,
             spaq1Count: spaq1,
             spaq2Count: spaq2,
             blueVasCount: blueVas,
@@ -165,29 +176,33 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(const AuthUnauthenticatedState());
   }
 
-  FutureOr<void> _onAddSpaqCounts(
-    AuthAddSpaqCountsEvent event,
+  FutureOr<void> _onAddProductCounts(
+    AuthAddProductCountsEvent event,
     AuthEmitter emit,
   ) async {
     // emit(const AuthLoadingState());
 
     try {
+      int bednet = await localSecureStore.bednet;
       int spaq1 = await localSecureStore.spaq1;
       int spaq2 = await localSecureStore.spaq2;
       int blueVas = await localSecureStore.blueVas;
       int redVas = await localSecureStore.redVas;
 
-      int additionSpaq1Count = event.spaq1Count;
-      int additionSpaq2Count = event.spaq2Count;
-      int additionBlueVasCount = event.blueVasCount;
-      int additionRedVasCount = event.redVasCount;
+      int additionBednetCount = event.bednetCount ?? 0;
+      int additionSpaq1Count = event.spaq1Count ?? 0;
+      int additionSpaq2Count = event.spaq2Count ?? 0;
+      int additionBlueVasCount = event.blueVasCount ?? 0;
+      int additionRedVasCount = event.redVasCount ?? 0;
 
+      bednet = bednet + additionBednetCount;
       spaq1 = spaq1 + additionSpaq1Count;
       spaq2 = spaq2 + additionSpaq2Count;
       blueVas = blueVas + additionBlueVasCount;
       redVas = redVas + additionRedVasCount;
 
-      localSecureStore.setSpaqCounts(spaq1, spaq2, blueVas, redVas);
+      RegistrationDeliverySingleton().setStockCount(bednet);
+      localSecureStore.setSpaqCounts(bednet, spaq1, spaq2, blueVas, redVas);
 
       final accessToken = await localSecureStore.accessToken;
       final refreshToken = await localSecureStore.refreshToken;
@@ -207,6 +222,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           userModel: userObject,
           individualId: userIndividualId,
           actionsWrapper: actionsList,
+          bednetCount: bednet,
           spaq1Count: spaq1,
           spaq2Count: spaq2,
           blueVasCount: blueVas,
@@ -219,6 +235,157 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       rethrow;
     }
   }
+
+  // FutureOr<void> _onAddSpaqCounts(
+  //   AuthAddProductCountsEvent event,
+  //   AuthEmitter emit,
+  // ) async {
+  //   // emit(const AuthLoadingState());
+
+  //   try {
+  //     int bednet = await localSecureStore.bednet;
+  //     int spaq1 = await localSecureStore.spaq1;
+  //     int spaq2 = await localSecureStore.spaq2;
+  //     int blueVas = await localSecureStore.blueVas;
+  //     int redVas = await localSecureStore.redVas;
+
+  //     int additionBednetCount = event.bednetCount ?? 0;
+  //     int additionSpaq1Count = event.spaq1Count;
+  //     int additionSpaq2Count = event.spaq2Count;
+  //     int additionBlueVasCount = event.blueVasCount;
+  //     int additionRedVasCount = event.redVasCount;
+
+  //     bednet = bednet + additionBednetCount;
+  //     spaq1 = spaq1 + additionSpaq1Count;
+  //     spaq2 = spaq2 + additionSpaq2Count;
+  //     blueVas = blueVas + additionBlueVasCount;
+  //     redVas = redVas + additionRedVasCount;
+
+  //     RegistrationDeliverySingleton().setStockCount(bednet);
+  //     localSecureStore.setSpaqCounts(spaq1, spaq2, blueVas, redVas);
+
+  //     final accessToken = await localSecureStore.accessToken;
+  //     final refreshToken = await localSecureStore.refreshToken;
+  //     final userObject = await localSecureStore.userRequestModel;
+  //     final actionsList = await localSecureStore.savedActions;
+  //     final userIndividualId = await localSecureStore.userIndividualId;
+
+  //     if (accessToken == null ||
+  //         refreshToken == null ||
+  //         userObject == null ||
+  //         actionsList == null) {
+  //       emit(const AuthUnauthenticatedState());
+  //     } else {
+  //       emit(AuthAuthenticatedState(
+  //         accessToken: accessToken,
+  //         refreshToken: refreshToken,
+  //         userModel: userObject,
+  //         individualId: userIndividualId,
+  //         actionsWrapper: actionsList,
+  //         bednetCount: bednet,
+  //         spaq1Count: spaq1,
+  //         spaq2Count: spaq2,
+  //         blueVasCount: blueVas,
+  //         redVasCount: redVas,
+  //       ));
+  //     }
+  //   } catch (_) {
+  //     await localSecureStore.deleteAll();
+  //     emit(const AuthUnauthenticatedState());
+  //     rethrow;
+  //   }
+  // }
+
+  FutureOr<void> _onDeliveryProductCounts(
+    AuthDeliveryProductCountsEvent event,
+    AuthEmitter emit,
+  ) async {
+    // emit(const AuthLoadingState());
+
+    List<TaskModel> taskList = await taskRepository
+        .search(TaskSearchModel(clientReferenceId: [event.clientReferenceId]));
+    int bednetCount = _resourceDistributed(taskList.first.resources);
+
+    try {
+      int bednet = await localSecureStore.bednet;
+      int spaq1 = await localSecureStore.spaq1;
+      int spaq2 = await localSecureStore.spaq2;
+      int blueVas = await localSecureStore.blueVas;
+      int redVas = await localSecureStore.redVas;
+
+      bednet = bednet - bednetCount;
+      spaq1 = spaq1 - 0;
+      spaq2 = spaq2 - 0;
+      blueVas = blueVas - 0;
+      redVas = redVas - 0;
+
+      localSecureStore.setSpaqCounts(bednet, spaq1, spaq2, blueVas, redVas);
+      RegistrationDeliverySingleton().setStockCount(bednet);
+
+      final accessToken = await localSecureStore.accessToken;
+      final refreshToken = await localSecureStore.refreshToken;
+      final userObject = await localSecureStore.userRequestModel;
+      final actionsList = await localSecureStore.savedActions;
+      final userIndividualId = await localSecureStore.userIndividualId;
+
+      if (accessToken == null ||
+          refreshToken == null ||
+          userObject == null ||
+          actionsList == null) {
+        emit(const AuthUnauthenticatedState());
+      } else {
+        emit(AuthAuthenticatedState(
+          accessToken: accessToken,
+          refreshToken: refreshToken,
+          userModel: userObject,
+          individualId: userIndividualId,
+          actionsWrapper: actionsList,
+          bednetCount: bednet,
+          spaq1Count: spaq1,
+          spaq2Count: spaq2,
+          blueVasCount: blueVas,
+          redVasCount: redVas,
+        ));
+      }
+    } catch (_) {
+      await localSecureStore.deleteAll();
+      emit(const AuthUnauthenticatedState());
+      rethrow;
+    }
+  }
+
+  int _resourceDistributed(List<TaskResourceModel>? taskResources) {
+    int resourceDistributed = 0;
+    RegExp intPattern = RegExp(r'^\d+$');
+    RegExp doublePattern = RegExp(r'^\d+\.\d+$');
+    if (taskResources != null) {
+      for (var resource in taskResources) {
+        // Info quantity is string type as per model
+        String quantity = resource.quantity ?? "0";
+        try {
+          if (intPattern.hasMatch(quantity)) {
+            resourceDistributed = resourceDistributed + int.parse(quantity);
+          } else if (doublePattern.hasMatch(quantity)) {
+            //info will round the decimal and convert to int
+            double parsedQuantity = double.parse(quantity);
+            if (parsedQuantity.isNaN ||
+                parsedQuantity.isInfinite ||
+                parsedQuantity.isNegative) {
+              continue;
+            } else {
+              int correctedQuantity = parsedQuantity.ceil();
+              resourceDistributed = resourceDistributed + correctedQuantity;
+            }
+          } else {
+            continue;
+          }
+        } catch (e) {
+          continue;
+        }
+      }
+    }
+    return resourceDistributed;
+  }
 }
 
 @freezed
@@ -229,16 +396,21 @@ class AuthEvent with _$AuthEvent {
     required String tenantId,
   }) = AuthLoginEvent;
 
-  const factory AuthEvent.addSpaqCounts({
-    required int spaq1Count,
-    required int spaq2Count,
-    required int blueVasCount,
-    required int redVasCount,
-  }) = AuthAddSpaqCountsEvent;
+  const factory AuthEvent.addProductCounts({
+    int? bednetCount,
+    int? spaq1Count,
+    int? spaq2Count,
+    int? blueVasCount,
+    int? redVasCount,
+  }) = AuthAddProductCountsEvent;
 
   const factory AuthEvent.autoLogin({
     required String tenantId,
   }) = AuthAutoLoginEvent;
+
+  const factory AuthEvent.deliveryProductCounts({
+    required String clientReferenceId,
+  }) = AuthDeliveryProductCountsEvent;
 
   const factory AuthEvent.logout() = AuthLogoutEvent;
 }
@@ -255,6 +427,7 @@ class AuthState with _$AuthState {
     required UserRequestModel userModel,
     required RoleActionsWrapperModel actionsWrapper,
     String? individualId,
+    final int? bednetCount,
     final int? spaq1Count,
     final int? spaq2Count,
     final int? blueVasCount,

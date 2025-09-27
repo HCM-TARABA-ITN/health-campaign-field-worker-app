@@ -176,6 +176,7 @@ extension ContextUtilityExtensions on BuildContext {
         userModel,
         actionsWrapper,
         individualId,
+        bednet,
         spaq1,
         spaq2,
         blueVas,
@@ -201,6 +202,7 @@ extension ContextUtilityExtensions on BuildContext {
         userModel,
         actionsWrapper,
         individualId,
+        bednet,
         spaq1,
         spaq2,
         blueVas,
@@ -243,6 +245,7 @@ extension ContextUtilityExtensions on BuildContext {
         userModel,
         actions,
         individualId,
+        bednet,
         spaq1,
         spaq2,
         blueVas,
@@ -281,6 +284,32 @@ extension ContextUtilityExtensions on BuildContext {
     return false;
   }
 
+  int get bednet {
+    final authBloc = _get<AuthBloc>();
+    final bednet = authBloc.state.whenOrNull(
+      authenticated: (
+        accessToken,
+        refreshToken,
+        userModel,
+        actionsWrapper,
+        individualId,
+        bednet,
+        spaq1,
+        spaq2,
+        blueVas,
+        redVas,
+      ) {
+        return bednet;
+      },
+    );
+
+    if (bednet == null) {
+      return 0;
+    }
+
+    return bednet;
+  }
+
   int get spaq1 {
     final authBloc = _get<AuthBloc>();
     final spaq1 = authBloc.state.whenOrNull(
@@ -290,6 +319,7 @@ extension ContextUtilityExtensions on BuildContext {
         userModel,
         actionsWrapper,
         individualId,
+        bednet,
         spaq1,
         spaq2,
         blueVas,
@@ -315,6 +345,7 @@ extension ContextUtilityExtensions on BuildContext {
         userModel,
         actionsWrapper,
         individualId,
+        bednet,
         spaq1,
         spaq2,
         blueVas,
@@ -342,6 +373,7 @@ extension ContextUtilityExtensions on BuildContext {
         userModel,
         actionsWrapper,
         individualId,
+        bednet,
         spaq1,
         spaq2,
         blueVas,
@@ -367,6 +399,7 @@ extension ContextUtilityExtensions on BuildContext {
         userModel,
         actionsWrapper,
         individualId,
+        bednet,
         spaq1,
         spaq2,
         blueVas,

@@ -7,6 +7,8 @@ import 'package:digit_dss/digit_dss.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_ui_components/services/location_bloc.dart';
 import 'package:dio/dio.dart';
+
+import 'package:digit_crud_bloc/repositories/local/search_entity_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:inventory_management/blocs/record_stock.dart';
@@ -81,6 +83,14 @@ class MainApplicationState extends State<MainApplication>
           create: (context) => IndividualGlobalSearchRepository(
             widget.sql,
             IndividualOpLogManager(widget.isar),
+          ),
+        ),
+        RepositoryProvider<SearchEntityRepository>(
+          create: (context) => SearchEntityRepository(
+            widget.sql,
+            IndividualOpLogManager(widget.isar),
+
+            /// todo: need to be changed to make is generic as this won't affect anything right now
           ),
         ),
         RepositoryProvider<HouseHoldGlobalSearchRepository>(
@@ -218,6 +228,7 @@ class MainApplicationState extends State<MainApplication>
                   individualRemoteRepository: ctx.read<
                       RemoteRepository<IndividualModel,
                           IndividualSearchModel>>(),
+                  taskRepository: ctx.repository<TaskModel, TaskSearchModel>(),
                 )..add(
                     AuthAutoLoginEvent(
                       tenantId: envConfig.variables.tenantId,
@@ -251,7 +262,7 @@ class MainApplicationState extends State<MainApplication>
 
                     final localizationModulesList = appConfig.backendInterface;
                     var firstLanguage;
-                    firstLanguage = appConfig.languages?.lastOrNull?.value;
+                    firstLanguage = appConfig.languages?.firstOrNull?.value;
 
                     final selectedLocale =
                         AppSharedPreferences().getSelectedLocale ??
@@ -516,8 +527,16 @@ class MainApplicationState extends State<MainApplication>
                                 orElse: () => [
                                   const UnauthenticatedRouteWrapper(),
                                 ],
-                                authenticated: (_, __, ___, ____, _____, ______,
-                                        _______, ________, _________) =>
+                                authenticated: (_,
+                                        __,
+                                        ___,
+                                        ____,
+                                        _____,
+                                        ______,
+                                        _______,
+                                        ________,
+                                        _________,
+                                        __________) =>
                                     [
                                   AuthenticatedRouteWrapper(),
                                 ],
