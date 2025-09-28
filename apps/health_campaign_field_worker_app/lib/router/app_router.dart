@@ -315,14 +315,14 @@ class AppRouter extends _$AppRouter {
                 page: HouseholdOverviewRoute.page,
                 path: 'household-overview',
               ),
-              AutoRoute(
-                page: CustomHouseholdOverviewRoute.page,
-                path: 'custom-household-overview',
-              ),
-              RedirectRoute(
-                path: 'household-overview',
-                redirectTo: 'custom-household-overview',
-              ),
+              // AutoRoute(
+              //   page: CustomHouseholdOverviewRoute.page,
+              //   path: 'custom-household-overview',
+              // ),
+              // RedirectRoute(
+              //   path: 'household-overview',
+              //   redirectTo: 'custom-household-overview',
+              // ),
               AutoRoute(
                 page: BeneficiaryDetailsRoute.page,
                 path: 'beneficiary-details',
@@ -331,13 +331,13 @@ class AppRouter extends _$AppRouter {
                 page: HouseholdAcknowledgementRoute.page,
                 path: 'household-acknowledgement',
               ),
-              AutoRoute(
-                page: CustomHouseholdAcknowledgementRoute.page,
-                path: 'custom-household-acknowledgement',
-              ),
-              RedirectRoute(
-                  path: 'household-acknowledgement',
-                  redirectTo: 'custom-household-acknowledgement'),
+              // AutoRoute(
+              //   page: CustomHouseholdAcknowledgementRoute.page,
+              //   path: 'custom-household-acknowledgement',
+              // ),
+              // RedirectRoute(
+              //     path: 'household-acknowledgement',
+              //     redirectTo: 'custom-household-acknowledgement'),
               ...FormsRoute().routes,
             ]),
         AutoRoute(page: BeneficiaryIdDownSyncRoute.page),
