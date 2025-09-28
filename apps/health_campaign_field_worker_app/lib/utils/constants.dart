@@ -120,6 +120,7 @@ class Constants {
   static const String spaq2 = "SPAQ 2";
   static const String blueVAS = "Blue VAS";
   static const String redVAS = "Red VAS";
+  static const String bednet = "BEDNET - BEDNET";
 
   static const String productVariantId1 = 'PVAR-2025-05-08-000001';
   static const String productVariantId2 = 'PVAR-2025-05-08-000002';

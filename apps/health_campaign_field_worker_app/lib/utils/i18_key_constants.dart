@@ -476,6 +476,14 @@ class StockDetails {
 
   String get recordStockReturnedDescription =>
       'STOCK_DETAILS_RECORD_STOCK_RETURNED_DESCRIPTION';
+  // String get balesReceivedRequired => 'BALES_RECEIVED_IS_REQUIRED';
+  // String get netsReceivedRequired => 'NETS_RECEIVED_IS_REQUIRED';
+
+  // String get balesNumberLabel => 'BALES_NUMBER_LABEL';
+  // String get netsReceivedLabel => 'NETS_RECEIVED_LABEL';
+  // String get numberOfNetsInWaybillLabel => 'NUMBER_OF_NETS_IN_WAYBILL_LABEL';
+  // String get commentsLabel => 'COMMENTS_LABEL';
+  String get driverIdLabel => 'DRIVER_ID_LABEL';
 }
 
 class StockReconciliationDetails {
