@@ -291,7 +291,8 @@ class AuthenticatedPageWrapper extends StatelessWidget {
             .where(
               (role) =>
                   role.code == RolesType.distributor.toValue() ||
-                  role.code == RolesType.communityDistributor.toValue(),
+                  role.code == RolesType.communityDistributor.toValue() ||
+                  role.code == RolesType.registrar.toValue(),
             )
             .toList()
             .isNotEmpty
