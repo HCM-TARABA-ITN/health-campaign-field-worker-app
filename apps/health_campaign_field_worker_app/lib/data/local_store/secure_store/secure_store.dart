@@ -24,7 +24,7 @@ class LocalSecureStore {
   static const spaq2Key = 'spaq2';
   static const blueVasKey = 'blueVas';
   static const redVasKey = 'redVas';
-
+  
   List<String> keysToKeep = [
     bednetKey,
     spaq1Key,
@@ -251,12 +251,13 @@ class LocalSecureStore {
   }
 
   Future<void> setSpaqCounts(
-      int spaq1, int spaq2, int blueVas, int redVas) async {
+      int bednet, int spaq1, int spaq2, int blueVas, int redVas) async {
     final userBody = await storage.read(key: userObjectKey);
     if (userBody == null) return;
 
     try {
       final user = UserRequestModel.fromJson(json.decode(userBody));
+      final bednetMapString = await storage.read(key: bednetKey);
       final spaq1MapString = await storage.read(key: spaq1Key);
       final spaq2MapString = await storage.read(key: spaq2Key);
       final blueVasMapString = await storage.read(key: blueVasKey);
@@ -267,6 +268,12 @@ class LocalSecureStore {
 
       Map<String, dynamic> blueVasMap = {};
       Map<String, dynamic> redVasMap = {};
+
+      if (bednetMapString != null) {
+        try {
+          bednetMap = json.decode(bednetMapString);
+        } catch (_) {}
+      }
 
       if (spaq1MapString != null) {
         try {
@@ -292,12 +299,18 @@ class LocalSecureStore {
         } catch (_) {}
       }
 
+      bednetMap[user.uuid] = bednet;
+
       spaq1Map[user.uuid] = spaq1;
       spaq2Map[user.uuid] = spaq2;
 
       blueVasMap[user.uuid] = blueVas;
       redVasMap[user.uuid] = redVas;
 
+      await storage.write(
+        key: bednetKey,
+        value: json.encode(bednetMap),
+      );
       await storage.write(
         key: spaq1Key,
         value: json.encode(spaq1Map),

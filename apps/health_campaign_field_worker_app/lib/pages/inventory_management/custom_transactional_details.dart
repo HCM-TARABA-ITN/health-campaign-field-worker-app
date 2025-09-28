@@ -749,7 +749,8 @@ class CustomTransactionalDetailsPageState
                                                 spaq1 = totalQuantity;
 
                                                 context.read<AuthBloc>().add(
-                                                      AuthAddSpaqCountsEvent(
+                                                      AuthAddProductCountsEvent(
+                                                          bednetCount: 0,
                                                           spaq1Count: spaq1,
                                                           spaq2Count: spaq2,
                                                           blueVasCount: 0,

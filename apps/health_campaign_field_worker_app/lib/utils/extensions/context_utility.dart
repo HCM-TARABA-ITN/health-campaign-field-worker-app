@@ -284,6 +284,32 @@ extension ContextUtilityExtensions on BuildContext {
     return false;
   }
 
+  int get bednet {
+    final authBloc = _get<AuthBloc>();
+    final bednet = authBloc.state.whenOrNull(
+      authenticated: (
+        accessToken,
+        refreshToken,
+        userModel,
+        actionsWrapper,
+        individualId,
+        bednet,
+        spaq1,
+        spaq2,
+        blueVas,
+        redVas,
+      ) {
+        return bednet;
+      },
+    );
+
+    if (bednet == null) {
+      return 0;
+    }
+
+    return bednet;
+  }
+
   int get spaq1 {
     final authBloc = _get<AuthBloc>();
     final spaq1 = authBloc.state.whenOrNull(
@@ -311,32 +337,6 @@ extension ContextUtilityExtensions on BuildContext {
   }
 
   int get spaq2 {
-    final authBloc = _get<AuthBloc>();
-    final spaq2 = authBloc.state.whenOrNull(
-      authenticated: (
-        accessToken,
-        refreshToken,
-        userModel,
-        actionsWrapper,
-        individualId,
-        bednet,
-        spaq1,
-        spaq2,
-        blueVas,
-        redVas,
-      ) {
-        return spaq2;
-      },
-    );
-
-    if (spaq2 == null) {
-      return 0;
-    }
-
-    return spaq2;
-  }
-
-  int get bednet {
     final authBloc = _get<AuthBloc>();
     final spaq2 = authBloc.state.whenOrNull(
       authenticated: (

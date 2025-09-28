@@ -1,4 +1,9 @@
+import 'dart:convert';
+
+import 'package:collection/collection.dart';
+import 'package:digit_data_model/models/templates/template_config.dart';
 import 'package:recase/recase.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:survey_form/router/survey_form_router.gm.dart';
 import 'package:survey_form/survey_form.dart';
 
@@ -357,10 +362,258 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.family_restroom_rounded,
           label: i18.home.beneficiaryLabel,
           onPressed: () async {
+            if (isTriggerLocalisation) {
+              final moduleName =
+                  'hcm-registrationflow-${context.selectedProject.referenceID},hcm-deliveryflow-${context.selectedProject.referenceID}';
+              triggerLocalization(module: moduleName);
+              isTriggerLocalisation = false;
+            }
+
+            final prefs = await SharedPreferences.getInstance();
+            final schemaJsonRaw = prefs.getString('app_config_schemas');
+
+            if (schemaJsonRaw != null) {
+              final allSchemas =
+                  json.decode(schemaJsonRaw) as Map<String, dynamic>;
+
+              final registrationSchemaEntry =
+                  allSchemas['REGISTRATIONFLOW'] as Map<String, dynamic>?;
+
+              final registrationSchemaData = registrationSchemaEntry?['data'];
+
+              if (registrationSchemaData != null) {
+                // Extract templates from both schemas
+                final regTemplatesRaw = registrationSchemaData?['templates'];
+
+                final Map<String, dynamic> regTemplateMap =
+                    regTemplatesRaw is Map<String, dynamic>
+                        ? regTemplatesRaw
+                        : {};
+
+                final templates = {
+                  for (final entry in {...regTemplateMap}.entries)
+                    entry.key: TemplateConfig.fromJson(
+                        entry.value as Map<String, dynamic>)
+                };
+
+                final registrationConfig = json.encode(registrationSchemaData);
+
+                RegistrationDeliverySingleton().setTemplateConfigs(templates);
+                RegistrationDeliverySingleton()
+                    .setRegistrationConfig(registrationConfig);
+              }
+            }
             RegistrationDeliverySingleton()
                 .setHouseholdType(HouseholdType.family);
-            context.router.push(const CustomRegistrationDeliveryWrapperRoute());
+
+            await context.router.push(const RegistrationDeliveryWrapperRoute());
           },
+          // onPressed: () async {
+          //   RegistrationDeliverySingleton()
+          //       .setHouseholdType(HouseholdType.family);
+          //   final prefs = await SharedPreferences.getInstance();
+          //   final schemaJsonRaw = prefs.getString('app_config_schemas');
+          //   if (schemaJsonRaw != null) {
+          //     final allSchemas =
+          //         json.decode(schemaJsonRaw) as Map<String, dynamic>;
+          //     final registrationSchemaEntry =
+          //         allSchemas['REGISTRATIONFLOW'] as Map<String, dynamic>?;
+          //     final deliverySchemaEntry =
+          //         allSchemas['DELIVERYFLOW'] as Map<String, dynamic>?;
+          //     final registrationSchemaData = registrationSchemaEntry?['data'];
+          //     final deliverySchemaData = deliverySchemaEntry?['data'];
+          //     if (registrationSchemaData != null ||
+          //         deliverySchemaData != null) {
+          //       // Extract templates from both schemas
+          //       Map<String, dynamic> regTemplatesRaw =
+          //           registrationSchemaData?['templates'];
+          //       Map<String, dynamic> delTemplatesRaw =
+          //           deliverySchemaData?['templates'];
+
+          //       // // Make the head of household field true
+          //       // registrationSchemaData['pages']["beneficiaryDetails"]
+          //       //     ["properties"]['isHeadOfFamily'] = {
+          //       //   "type": "boolean",
+          //       //   "label":
+          //       //       "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_isHeadOfFamily",
+          //       //   "order": 2,
+          //       //   "value": true,
+          //       //   "format": "checkbox",
+          //       //   "hidden": false,
+          //       //   "tooltip": "",
+          //       //   "helpText": "",
+          //       //   "infoText": "",
+          //       //   "readOnly": false,
+          //       //   "fieldName": "isHeadOfFamily",
+          //       //   "deleteFlag": false,
+          //       //   "innerLabel": "",
+          //       //   "systemDate": false,
+          //       //   "validations": [
+          //       //     {
+          //       //       "type": "required",
+          //       //       "value": true,
+          //       //       "message":
+          //       //           "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_isHeadOfFamily_mandatory_message"
+          //       //     }
+          //       //   ],
+          //       //   "errorMessage": "",
+          //       //   "includeInForm": true,
+          //       //   "isMultiSelect": false,
+          //       //   "includeInSummary": true
+          //       // };
+
+          //       // Added phone number validation
+          //       List<dynamic> phoneValidation = registrationSchemaData['pages']
+          //                   ["beneficiaryDetails"]["properties"]["phone"]
+          //               ["validations"] ??
+          //           [];
+          //       String maxLength = phoneValidation.firstWhereOrNull(
+          //             (element) => element["type"] == "maxLength",
+          //           )?["value"] ??
+          //           "11";
+          //       // registrationSchemaData['pages']["beneficiaryDetails"]
+          //       //     ["properties"]["phone"] = {
+          //       //   "type": "string",
+          //       //   "label": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_phone",
+          //       //   "order": 6,
+          //       //   "value": "",
+          //       //   "format": "text",
+          //       //   "hidden": false,
+          //       //   "tooltip":
+          //       //       "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_phone_tooltip",
+          //       //   "helpText":
+          //       //       "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_phone_helpText",
+          //       //   "infoText": "",
+          //       //   "readOnly": false,
+          //       //   "fieldName": "phone",
+          //       //   "deleteFlag": false,
+          //       //   "innerLabel": "",
+          //       //   "systemDate": false,
+          //       //   "validations": [
+          //       //     {
+          //       //       "type": "maxLength",
+          //       //       "value": int.parse(maxLength),
+          //       //       "message": "Should have 11 digits"
+          //       //     },
+          //       //     {
+          //       //       "type": "minLength",
+          //       //       "value": int.parse(maxLength),
+          //       //       "message": "Should have 11 digits"
+          //       //     },
+          //       //     {
+          //       //       "type": "pattern",
+          //       //       "value": r"^[0-9]*$",
+          //       //       "message":
+          //       //           "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_phone_regex"
+          //       //     }
+          //       //   ],
+          //       //   "errorMessage":
+          //       //       "CMP-2025-08-18-000034_REGISTRATIONFLOW_beneficiaryDetails_errorMessage_phone",
+          //       //   "includeInForm": true,
+          //       //   "isMultiSelect": false,
+          //       //   "includeInSummary": true
+          //       // };
+
+          //       // Navigate into the DeliveryDetails page properties map
+          //       final deliveryDetails = (deliverySchemaData['pages']
+          //           as Map)['DeliveryDetails'] as Map<String, dynamic>;
+          //       final properties =
+          //           deliveryDetails['properties'] as Map<String, dynamic>;
+
+          //       // 1. Ensure resourceCard exists and set readOnly = true (preserving other fields)
+          //       properties['resourceCard'] = {
+          //         ...?properties['resourceCard'] as Map<String, dynamic>?,
+          //         'readOnly': true,
+          //       };
+          //       // final Map<String, dynamic> regTemplateMap =
+          //       //     regTemplatesRaw is Map<String, dynamic>
+          //       //         ? regTemplatesRaw
+          //       //         : {};
+          //       // final Map<String, dynamic> delTemplateMap =
+          //       //     delTemplatesRaw is Map<String, dynamic>
+          //       //         ? delTemplatesRaw
+          //       //         : {};
+          //       // regTemplateMap["SearchBeneficiary"]["properties"]
+          //       //     ["searchByID"] = regTemplateMap["SearchBeneficiary"]
+          //       //         ["properties"]["searchByID"] ??
+          //       //     {
+          //       //       "type": "template",
+          //       //       "label": "APPONE_REGISTRATION_SEARCHBENEFICIARY_BY_ID",
+          //       //       "order": 1,
+          //       //       "value": true,
+          //       //       "format": "searchByID",
+          //       //       "hidden": true,
+          //       //       "tooltip": "",
+          //       //       "helpText": "",
+          //       //       "infoText": "",
+          //       //       "readOnly": false,
+          //       //       "fieldName": "searchByID",
+          //       //       "deleteFlag": false,
+          //       //       "innerLabel": "",
+          //       //       "systemDate": false,
+          //       //       "validations": [],
+          //       //       "errorMessage": "",
+          //       //       "includeInForm": true,
+          //       //       "isMultiSelect": false,
+          //       //       "includeInSummary": true
+          //       //     };
+          //       // final beneficiaryTemplate = delTemplateMap['BeneficiaryDetails']
+          //       //     as Map<String, dynamic>;
+          //       // final templateProperty =
+          //       //     beneficiaryTemplate['properties'] as Map<String, dynamic>;
+
+          //       // 2. Add deliveryConditionDialog if not present (or merge if present)
+          //       // templateProperty['deliveryConditionDialog'] = {
+          //       //   ...?properties['deliveryConditionDialog']
+          //       //       as Map<String, dynamic>?,
+          //       //   'type': 'dynamic',
+          //       //   'enums': [],
+          //       //   'label':
+          //       //       'APPONE_REGISTRATION_BENEFICIARY_DETAILS_deliveryConditiondialog_label',
+          //       //   'order': 3,
+          //       //   'value': '',
+          //       //   'format': 'custom',
+          //       //   'hidden': true,
+          //       //   'tooltip': '',
+          //       //   'helpText': '',
+          //       //   'infoText': '',
+          //       //   'readOnly': false,
+          //       //   'fieldName': 'deliveryConditionDialog',
+          //       //   'deleteFlag': false,
+          //       //   'innerLabel': '',
+          //       //   'systemDate': false,
+          //       //   'validations': [],
+          //       //   'errorMessage': '',
+          //       //   'includeInForm': true,
+          //       //   'isMultiSelect': false,
+          //       //   'includeInSummary': true,
+          //       // };
+          //       final templates = {
+          //         for (final entry
+          //             in {...regTemplatesRaw, ...delTemplatesRaw}.entries)
+          //           entry.key: TemplateConfig.fromJson(
+          //               entry.value as Map<String, dynamic>)
+          //       };
+          //       final registrationConfig = json.encode(registrationSchemaData);
+          //       final deliveryConfig = json.encode(deliverySchemaData);
+          //       RegistrationDeliverySingleton().setTemplateConfigs(templates);
+          //       RegistrationDeliverySingleton()
+          //           .setRegistrationConfig(registrationConfig);
+          //       RegistrationDeliverySingleton()
+          //           .setDeliveryConfig(deliveryConfig);
+          //     }
+          //     if (isTriggerLocalisation) {
+          //       final moduleName =
+          //           'hcm-registrationflow-${context.selectedProject.referenceID},hcm-deliveryflow-${context.selectedProject.referenceID}';
+          //       triggerLocalization(module: moduleName, loadOnline: true);
+          //       isTriggerLocalisation = false;
+          //     }
+          //   }
+
+          //   RegistrationDeliverySingleton()
+          //       .setHouseholdType(HouseholdType.family);
+          //   context.router.push(const RegistrationDeliveryWrapperRoute());
+          // },
         ),
       ),
       i18.home.beneficiaryReferralLabel:
@@ -373,7 +626,7 @@ class _HomePageState extends LocalizedState<HomePage> {
               triggerLocalization();
               isTriggerLocalisation = false;
             }
-            context.router.push(CustomSearchReferralReconciliationsRoute());
+            context.router.push(SearchReferralReconciliationsRoute());
           },
         ),
       ),
@@ -431,7 +684,7 @@ class _HomePageState extends LocalizedState<HomePage> {
         icon: Icons.supervised_user_circle_rounded,
         label: i18.home.beneficiaryReferralLabel,
         onPressed: () async {
-          await context.router.push(CustomSearchReferralReconciliationsRoute());
+          await context.router.push(SearchReferralReconciliationsRoute());
         },
       ),
       i18.home.syncDataLabel: homeShowcaseData.distributorSyncData.buildWith(
@@ -719,7 +972,7 @@ class _HomePageState extends LocalizedState<HomePage> {
     }
   }
 
-  void triggerLocalization() {
+  void triggerLocalization({String? module, bool? loadOnline}) {
     context.read<AppInitializationBloc>().state.maybeWhen(
           orElse: () {},
           initialized: (
@@ -729,23 +982,62 @@ class _HomePageState extends LocalizedState<HomePage> {
           ) {
             final appConfig = appConfiguration;
             final localizationModulesList = appConfiguration.backendInterface;
-            final selectedLocale =
-                "en_NG"; //AppSharedPreferences().getSelectedLocale;
+            final selectedLocale = AppSharedPreferences().getSelectedLocale;
             LocalizationParams()
                 .setCode(LeastLevelBoundarySingleton().boundary);
-            context
-                .read<LocalizationBloc>()
-                .add(LocalizationEvent.onLoadLocalization(
-                  module:
-                      "${localizationModulesList?.interfaces.where((element) => element.type == Modules.localizationModule).map((e) => e.name.toString()).join(',')}",
-                  tenantId: appConfig.tenantId ?? "default",
-                  locale: selectedLocale!,
-                  path: Constants.localizationApiPath,
-                ));
+            if (loadOnline == true) {
+              context
+                  .read<LocalizationBloc>()
+                  .add(LocalizationEvent.onRemoteLoadLocalization(
+                    module: module ??
+                        "${localizationModulesList?.interfaces.where((element) => element.type == Modules.localizationModule).map((e) => e.name.toString()).join(',')}",
+                    tenantId: envConfig.variables.tenantId,
+                    locale: selectedLocale!,
+                    path: Constants.localizationApiPath,
+                  ));
+            } else {
+              context
+                  .read<LocalizationBloc>()
+                  .add(LocalizationEvent.onLoadLocalization(
+                    module: module ??
+                        "${localizationModulesList?.interfaces.where((element) => element.type == Modules.localizationModule).map((e) => e.name.toString()).join(',')}",
+                    tenantId: envConfig.variables.tenantId,
+                    locale: selectedLocale!,
+                    path: Constants.localizationApiPath,
+                  ));
+            }
           },
         );
   }
 }
+
+//   void triggerLocalization() {
+//     context.read<AppInitializationBloc>().state.maybeWhen(
+//           orElse: () {},
+//           initialized: (
+//             AppConfiguration appConfiguration,
+//             _,
+//             __,
+//           ) {
+//             final appConfig = appConfiguration;
+//             final localizationModulesList = appConfiguration.backendInterface;
+//             final selectedLocale =
+//                 "en_NG"; //AppSharedPreferences().getSelectedLocale;
+//             LocalizationParams()
+//                 .setCode(LeastLevelBoundarySingleton().boundary);
+//             context
+//                 .read<LocalizationBloc>()
+//                 .add(LocalizationEvent.onLoadLocalization(
+//                   module:
+//                       "${localizationModulesList?.interfaces.where((element) => element.type == Modules.localizationModule).map((e) => e.name.toString()).join(',')}",
+//                   tenantId: appConfig.tenantId ?? "default",
+//                   locale: selectedLocale!,
+//                   path: Constants.localizationApiPath,
+//                 ));
+//           },
+//         );
+//   }
+// }
 
 // Function to set initial Data required for the packages to run
 void setPackagesSingleton(BuildContext context) {
