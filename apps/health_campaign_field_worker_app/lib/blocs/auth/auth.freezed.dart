@@ -772,6 +772,7 @@ mixin _$AuthState {
             UserRequestModel userModel,
             RoleActionsWrapperModel actionsWrapper,
             String? individualId,
+            int? bednetCount,
             int? spaq1Count,
             int? spaq2Count,
             int? blueVasCount,

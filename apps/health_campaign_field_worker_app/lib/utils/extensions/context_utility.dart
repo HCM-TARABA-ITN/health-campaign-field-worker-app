@@ -176,6 +176,7 @@ extension ContextUtilityExtensions on BuildContext {
         userModel,
         actionsWrapper,
         individualId,
+        bednet,
         spaq1,
         spaq2,
         blueVas,
@@ -201,6 +202,7 @@ extension ContextUtilityExtensions on BuildContext {
         userModel,
         actionsWrapper,
         individualId,
+        bednet,
         spaq1,
         spaq2,
         blueVas,
@@ -243,6 +245,7 @@ extension ContextUtilityExtensions on BuildContext {
         userModel,
         actions,
         individualId,
+        bednet,
         spaq1,
         spaq2,
         blueVas,
@@ -290,6 +293,7 @@ extension ContextUtilityExtensions on BuildContext {
         userModel,
         actionsWrapper,
         individualId,
+        bednet,
         spaq1,
         spaq2,
         blueVas,
@@ -315,6 +319,33 @@ extension ContextUtilityExtensions on BuildContext {
         userModel,
         actionsWrapper,
         individualId,
+        bednet,
+        spaq1,
+        spaq2,
+        blueVas,
+        redVas,
+      ) {
+        return spaq2;
+      },
+    );
+
+    if (spaq2 == null) {
+      return 0;
+    }
+
+    return spaq2;
+  }
+
+  int get bednet {
+    final authBloc = _get<AuthBloc>();
+    final spaq2 = authBloc.state.whenOrNull(
+      authenticated: (
+        accessToken,
+        refreshToken,
+        userModel,
+        actionsWrapper,
+        individualId,
+        bednet,
         spaq1,
         spaq2,
         blueVas,
@@ -342,6 +373,7 @@ extension ContextUtilityExtensions on BuildContext {
         userModel,
         actionsWrapper,
         individualId,
+        bednet,
         spaq1,
         spaq2,
         blueVas,
@@ -367,6 +399,7 @@ extension ContextUtilityExtensions on BuildContext {
         userModel,
         actionsWrapper,
         individualId,
+        bednet,
         spaq1,
         spaq2,
         blueVas,

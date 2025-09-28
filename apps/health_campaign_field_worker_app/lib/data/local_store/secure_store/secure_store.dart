@@ -19,12 +19,19 @@ class LocalSecureStore {
   static const isAppInActiveKey = 'isAppInActiveKey';
   static const manualSyncKey = 'manualSyncKey';
   static const selectedProjectTypeKey = 'selectedProjectType';
+  static const bednetKey = 'bednet';
   static const spaq1Key = 'spaq1';
   static const spaq2Key = 'spaq2';
   static const blueVasKey = 'blueVas';
   static const redVasKey = 'redVas';
 
-  List<String> keysToKeep = [spaq1Key, spaq2Key,blueVasKey,redVasKey];
+  List<String> keysToKeep = [
+    bednetKey,
+    spaq1Key,
+    spaq2Key,
+    blueVasKey,
+    redVasKey
+  ];
 
   final storage = const FlutterSecureStorage();
 
@@ -152,6 +159,24 @@ class LocalSecureStore {
     }
   }
 
+  Future<int> get bednet async {
+    final userBody = await storage.read(key: userObjectKey);
+    if (userBody == null) return 0;
+    final bednetMapString = await storage.read(key: bednetKey);
+
+    if (bednetMapString == null) return 0;
+
+    try {
+      final user = UserRequestModel.fromJson(json.decode(userBody));
+
+      Map<String, dynamic> bednetMap = json.decode(bednetMapString);
+
+      return bednetMap[user.uuid] != null ? bednetMap[user.uuid] as int : 0;
+    } catch (_) {
+      return 0;
+    }
+  }
+
   Future<int> get spaq1 async {
     final userBody = await storage.read(key: userObjectKey);
     if (userBody == null) return 0;
@@ -206,6 +231,7 @@ class LocalSecureStore {
       return 0;
     }
   }
+
   Future<int> get redVas async {
     final userBody = await storage.read(key: userObjectKey);
     if (userBody == null) return 0;
@@ -224,17 +250,18 @@ class LocalSecureStore {
     }
   }
 
-  Future<void> setSpaqCounts(int spaq1, int spaq2, int blueVas,int redVas) async {
+  Future<void> setSpaqCounts(
+      int spaq1, int spaq2, int blueVas, int redVas) async {
     final userBody = await storage.read(key: userObjectKey);
     if (userBody == null) return;
 
     try {
       final user = UserRequestModel.fromJson(json.decode(userBody));
-
       final spaq1MapString = await storage.read(key: spaq1Key);
       final spaq2MapString = await storage.read(key: spaq2Key);
       final blueVasMapString = await storage.read(key: blueVasKey);
       final redVasMapString = await storage.read(key: redVasKey);
+      Map<String, dynamic> bednetMap = {};
       Map<String, dynamic> spaq1Map = {};
       Map<String, dynamic> spaq2Map = {};
 
@@ -371,8 +398,7 @@ class LocalSecureStore {
   }
 
   Future<void> deleteAll() async {
-
-   // await storage.deleteAll();
+    // await storage.deleteAll();
 
     Map<String, String> allValues = await storage.readAll();
     List<String> allKeys = allValues.keys.toList();

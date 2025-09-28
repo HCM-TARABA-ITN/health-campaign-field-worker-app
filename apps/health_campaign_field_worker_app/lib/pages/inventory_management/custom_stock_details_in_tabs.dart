@@ -378,7 +378,9 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
     switch (entryType) {
       case StockRecordEntryType.receipt:
         pageTitle = i18.stockDetails.receivedPageTitle;
-        if (productName == Constants.spaq1 || productName == Constants.spaq2) {
+        if (productName == Constants.spaq1 ||
+            productName == Constants.spaq2 ||
+            productName == Constants.bednet) {
           quantityCountLabel = i18.stockDetails.quantityReceivedLabel;
         } else {
           quantityCountLabel = i18.stockDetails.quantityReceivedLabel;
@@ -388,7 +390,9 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
         pageTitle = (isWareHouseMgr || isHealthFacilitySupervisor)
             ? i18.stockDetails.issuedPageTitle
             : i18.stockDetails.returnedPageTitle;
-        if (productName == Constants.spaq1 || productName == Constants.spaq2) {
+        if (productName == Constants.spaq1 ||
+            productName == Constants.spaq2 ||
+            productName == Constants.bednet) {
           quantityCountLabel = (isWareHouseMgr || isHealthFacilitySupervisor)
               ? i18.stockDetails.quantitySentLabel
               : i18.stockDetails.quantityReturnedLabel;
@@ -404,7 +408,9 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
         break;
       case StockRecordEntryType.returned:
         pageTitle = i18.stockDetails.returnedPageTitle;
-        if (productName == Constants.spaq1 || productName == Constants.spaq2) {
+        if (productName == Constants.spaq1 ||
+            productName == Constants.spaq2 ||
+            productName == Constants.bednet) {
           quantityCountLabel =
               i18_local.stockDetails.quantityUnusedReturnedLabel;
           quantityPartialCountLabel =
@@ -879,8 +885,10 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
       // Loop through all stocks and dispatch individual events
       int currentSpaq1Count = context.spaq1;
       int currentSpaq2Count = context.spaq2;
+      int currentBednetCount = context.bednet;
       int spaq1Count = 0;
       int spaq2Count = 0;
+      int bednetCount = 0;
       for (var productName in selectedProducts) {
         await _saveCurrentTabData(productName, entryType);
       }
@@ -907,6 +915,8 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
           spaq1Count += totalQty;
         } else if (productName == Constants.spaq2) {
           spaq2Count += totalQty;
+        } else if (productName == Constants.bednet) {
+          bednetCount += totalQty;
         }
 
         // Custom logic based on productName
@@ -927,6 +937,20 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
             return;
           } else if (productName == Constants.spaq2 &&
               (currentSpaq2Count + totalQty < 0)) {
+            await DigitToast.show(
+              context,
+              options: DigitToastOptions(
+                  localizations.translate(context.isCommunityDistributor
+                      ? i18_local
+                          .beneficiaryDetails.validationForExcessStockReturn
+                      : i18_local
+                          .beneficiaryDetails.validationForExcessStockDispatch),
+                  true,
+                  theme),
+            );
+            return;
+          } else if (productName == Constants.bednet &&
+              (currentBednetCount + totalQty < 0)) {
             await DigitToast.show(
               context,
               options: DigitToastOptions(
