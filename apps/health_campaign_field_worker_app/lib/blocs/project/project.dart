@@ -775,10 +775,11 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     var offset = 0;
     var initialLimit = Constants.apiCallLimit;
 
-    final stockEntries = await stockRemoteRepository.search(stockSearchModel,
-        limit: initialLimit,
-        offSet: offset,
-        lastChangedSince: lastChangedSince);
+    final stockEntries = await stockRemoteRepository.search(
+      stockSearchModel,
+      limit: initialLimit,
+      offSet: offset,
+    );
 
     return stockEntries;
   }
