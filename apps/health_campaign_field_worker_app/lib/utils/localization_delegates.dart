@@ -21,6 +21,8 @@ import 'package:inventory_management/blocs/app_localization.dart'
     as inventory_localization;
 import 'package:survey_form/blocs/app_localization.dart'
     as survey_form_localization;
+import 'package:digit_forms_engine/blocs/app_localization.dart'
+    as forms_engine_localization;
 
 import 'package:flutter_localizations/flutter_localizations.dart';
 
@@ -81,6 +83,10 @@ getAppLocalizationDelegates({
       appConfig.languages!,
     ),
     surveyForm_localization.SurveyFormLocalization.getDelegate(
+      LocalizationLocalRepository().returnLocalizationFromSQL(sql) as Future,
+      appConfig.languages!,
+    ),
+    forms_engine_localization.FormLocalization.getDelegate(
       LocalizationLocalRepository().returnLocalizationFromSQL(sql) as Future,
       appConfig.languages!,
     ),

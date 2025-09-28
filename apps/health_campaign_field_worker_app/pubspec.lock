@@ -530,7 +530,7 @@ packages:
     source: hosted
     version: "1.0.3"
   digit_crud_bloc:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: digit_crud_bloc
       sha256: "194a3f455aa1e6448b52ef66352a83b086a0bb444d374501b1290e6bab2bab62"
@@ -570,7 +570,7 @@ packages:
     source: hosted
     version: "0.0.1"
   digit_forms_engine:
-    dependency: "direct overridden"
+    dependency: "direct main"
     description:
       name: digit_forms_engine
       sha256: c36ed2752ee83436702a388e9ee23110d07bae57991a9edd0b4be36b3cde89eb
