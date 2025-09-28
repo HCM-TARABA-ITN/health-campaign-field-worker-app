@@ -126,6 +126,9 @@ class CustomWarehouseDetailsPageState
                   ) ??
                   [];
               final stockState = recordStockBloc.state;
+              if (facilities.isNotEmpty && !context.isCommunityDistributor) {
+                selectedFacilityId ??= facilities.first.id;
+              }
 
               return Scaffold(
                 body: GestureDetector(
@@ -416,6 +419,11 @@ class CustomWarehouseDetailsPageState
                                                   control.invalid &&
                                                   control.touched,
                                               builder: (field) {
+                                                field.control.value =
+                                                    facilities.first.id;
+                                                controller1.text =
+                                                    localizations.translate(
+                                                        'FAC_${facilities.first.id}');
                                                 return InputField(
                                                   type: InputType.search,
                                                   label:

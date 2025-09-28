@@ -51,6 +51,13 @@ class CustomStockDetailsPageState
   static const _vehicleNumberKey = 'vehicleNumber';
   static const _typeOfTransportKey = 'typeOfTransport';
   static const _deliveryTeamKey = 'deliveryTeam';
+  // static const _balesReceivedKey = 'balesReceived';
+  // static const _netsReceivedKey = 'netsReceived';
+  // static const _waybillNumberKey = 'waybillNumber';
+  // static const _commentsKey = 'comments';
+  static const _driverIdKey = 'driverId';
+  // static const _numberOfNetsInWaybillKey = 'numberOfNetsInWaybill';
+
   bool deliveryTeamSelected = false;
   String? selectedFacilityId;
   List<InventoryTransportTypes> transportTypes = [];
@@ -74,6 +81,18 @@ class CustomStockDetailsPageState
       _deliveryTeamKey: FormControl<String>(
         validators: deliveryTeamSelected ? [Validators.required] : [],
       ),
+      // _balesReceivedKey: FormControl<int>(
+      //   validators: [Validators.min(0), Validators.required],
+      // ),
+      // _netsReceivedKey: FormControl<int>(
+      //   validators: [Validators.min(0), Validators.required],
+      // ),
+      // _numberOfNetsInWaybillKey: FormControl<int>(
+      //   validators: [Validators.min(0)],
+      // ),
+      // _waybillNumberKey: FormControl<String>(),
+      // _commentsKey: FormControl<String>(),
+      _driverIdKey: FormControl<String>(),
     });
   }
 
@@ -289,6 +308,7 @@ class CustomStockDetailsPageState
                                     );
                                     return;
                                   }
+
                                   final primaryId =
                                       BlocProvider.of<RecordStockBloc>(
                                     context,
@@ -397,30 +417,27 @@ class CustomStockDetailsPageState
                                           .control(_deliveryTeamKey)
                                           .value as String?;
 
-                                      int spaq1 = 0;
-                                      int spaq2 = 0;
+                                      // int totalQuantity = 0;
+                                      // int totalRemainingQuantityInMl =
+                                      //     context.spaq1;
 
-                                      int totalQuantity = 0;
-                                      int totalRemainingQuantityInMl =
-                                          context.spaq1;
+                                      // int totalExpectedUnusedBottles =
+                                      //     totalRemainingQuantityInMl ~/
+                                      //         Constants.mlPerBottle;
 
-                                      int totalExpectedUnusedBottles =
-                                          totalRemainingQuantityInMl ~/
-                                              Constants.mlPerBottle;
+                                      // int totalExpectedPartialQuantityInMl =
+                                      //     totalRemainingQuantityInMl %
+                                      //         Constants.mlPerBottle;
 
-                                      int totalExpectedPartialQuantityInMl =
-                                          totalRemainingQuantityInMl %
-                                              Constants.mlPerBottle;
+                                      // int totalExpectedPartialBottles =
+                                      //     totalRemainingQuantityInMl %
+                                      //                 Constants.mlPerBottle !=
+                                      //             0
+                                      //         ? 1
+                                      //         : 0;
 
-                                      int totalExpectedPartialBottles =
-                                          totalRemainingQuantityInMl %
-                                                      Constants.mlPerBottle !=
-                                                  0
-                                              ? 1
-                                              : 0;
-
-                                      spaq1 =
-                                          totalQuantity * Constants.mlPerBottle;
+                                      // spaq1 =
+                                      //     totalQuantity * Constants.mlPerBottle;
 
                                       String? senderId;
                                       String? senderType;
@@ -471,6 +488,12 @@ class CustomStockDetailsPageState
                                             .control(_productVariantKey)
                                             .value as List<ProductVariantModel>;
 
+                                        ProductVariantModel? bednetProduct =
+                                            selectedProducts.firstWhereOrNull(
+                                                (element) =>
+                                                    element.sku ==
+                                                    Constants.bednet);
+
                                         ProductVariantModel? spaq1Product =
                                             selectedProducts.firstWhereOrNull(
                                                 (element) =>
@@ -487,6 +510,8 @@ class CustomStockDetailsPageState
                                         context.read<StockBloc>().add(
                                               StockSelectedEvent(
                                                 selectedProducts: [
+                                                  if (bednetProduct != null)
+                                                    bednetProduct,
                                                   if (spaq1Product != null)
                                                     spaq1Product,
                                                   if (spaq2Product != null)
@@ -544,16 +569,21 @@ class CustomStockDetailsPageState
                                       )),
                                     ),
                                     fetched: (productVariants) {
-                                      ProductVariantModel? spaq1 =
+                                      ProductVariantModel? bednet =
                                           productVariants
                                               .firstWhereOrNull((element) =>
                                                   element.sku ==
-                                                  Constants.spaq1);
-                                      ProductVariantModel? spaq2 =
-                                          productVariants
-                                              .firstWhereOrNull((element) =>
-                                                  element.sku ==
-                                                  Constants.spaq2);
+                                                  Constants.bednet);
+                                      // ProductVariantModel? spaq1 =
+                                      //     productVariants
+                                      //         .firstWhereOrNull((element) =>
+                                      //             element.sku ==
+                                      //             Constants.spaq1);
+                                      // ProductVariantModel? spaq2 =
+                                      //     productVariants
+                                      //         .firstWhereOrNull((element) =>
+                                      //             element.sku ==
+                                      //             Constants.spaq2);
                                       return ReactiveWrapperField(
                                         formControlName: _productVariantKey,
                                         validationMessages: {
@@ -563,42 +593,54 @@ class CustomStockDetailsPageState
                                         showErrors: (control) =>
                                             control.invalid && control.touched,
                                         builder: (field) {
+                                          field.control.value = [bednet!];
+
                                           return LabeledField(
                                             label: localizations.translate(
                                               module.selectProductLabel,
                                             ),
                                             isRequired: true,
-                                            child: MultiSelectDropDown(
-                                              // errorText: field.errorText,
-                                              selectionType:
-                                                  SelectionType.defaultSelect,
-                                              options: [
-                                                if (spaq1 != null) spaq1,
-                                                if (spaq2 != null) spaq2
-                                              ].map((variant) {
-                                                return DropdownItem(
-                                                  name: localizations.translate(
-                                                      variant.sku ??
-                                                          variant.id),
-                                                  code: variant.id,
-                                                );
-                                              }).toList(),
-
-                                              onOptionSelected:
-                                                  (List<DropdownItem>
-                                                      selectedOptionsList) {
-                                                final selectedVariants =
-                                                    selectedOptionsList
-                                                        .map((item) {
-                                                  return productVariants
-                                                      .firstWhere((variant) =>
-                                                          variant.id ==
-                                                          item.code);
-                                                }).toList();
-                                                field.control.value =
-                                                    selectedVariants;
-                                              },
+                                            child: InputField(
+                                              type: InputType.text,
+                                              readOnly: true,
+                                              initialValue: bednet != null
+                                                  ? localizations.translate(
+                                                      bednet.variation ??
+                                                          bednet.id)
+                                                  : '',
+                                              suffixIcon: Icons.arrow_drop_down,
                                             ),
+                                            // child: MultiSelectDropDown(
+                                            //   // errorText: field.errorText,
+                                            //   selectionType:
+                                            //       SelectionType.defaultSelect,
+                                            //   options: [
+                                            //     if (spaq1 != null) spaq1,
+                                            //     if (spaq2 != null) spaq2
+                                            //   ].map((variant) {
+                                            //     return DropdownItem(
+                                            //       name: localizations.translate(
+                                            //           variant.sku ??
+                                            //               variant.id),
+                                            //       code: variant.id,
+                                            //     );
+                                            //   }).toList(),
+
+                                            //   onOptionSelected:
+                                            //       (List<DropdownItem>
+                                            //           selectedOptionsList) {
+                                            //     final selectedVariants =
+                                            //         selectedOptionsList
+                                            //             .map((item) {
+                                            //       return productVariants
+                                            //           .firstWhere((variant) =>
+                                            //               variant.id ==
+                                            //               item.code);
+                                            //     }).toList();
+                                            //     field.control.value =
+                                            //         selectedVariants;
+                                            //   },
+                                            // ),
                                           );
                                         },
                                       );
@@ -786,6 +828,63 @@ class CustomStockDetailsPageState
                                       });
                                 },
                               ),
+                              // ReactiveWrapperField(
+                              //     formControlName: _balesReceivedKey,
+                              //     builder: (field) {
+                              //       return InputField(
+                              //         isRequired: true,
+                              //         type: InputType.text,
+                              //         label: localizations.translate(
+                              //           i18_local.stockDetails.balesNumberLabel,
+                              //         ),
+                              //         onChange: (val) {
+                              //           field.control.value = val;
+                              //         },
+                              //       );
+                              //     }),
+                              // ReactiveWrapperField(
+                              //     formControlName: _netsReceivedKey,
+                              //     builder: (field) {
+                              //       return InputField(
+                              //         isRequired: true,
+                              //         type: InputType.text,
+                              //         label: localizations.translate(
+                              //           i18_local
+                              //               .stockDetails.netsReceivedLabel,
+                              //         ),
+                              //         onChange: (val) {
+                              //           field.control.value = val;
+                              //         },
+                              //       );
+                              //     }),
+                              // ReactiveWrapperField(
+                              //     formControlName: _waybillNumberKey,
+                              //     builder: (field) {
+                              //       return InputField(
+                              //         type: InputType.text,
+                              //         label: localizations.translate(
+                              //           i18_local
+                              //               .stockDetails.waybillNumberLabel,
+                              //         ),
+                              //         onChange: (val) {
+                              //           field.control.value = val;
+                              //         },
+                              //       );
+                              //     }),
+                              // ReactiveWrapperField(
+                              //     formControlName: _numberOfNetsInWaybillKey,
+                              //     builder: (field) {
+                              //       return InputField(
+                              //         type: InputType.text,
+                              //         label: localizations.translate(
+                              //           i18_local.stockDetails
+                              //               .numberOfNetsInWaybillLabel,
+                              //         ),
+                              //         onChange: (val) {
+                              //           field.control.value = val;
+                              //         },
+                              //       );
+                              //     }),
                               // TODO: as this case i need to set when occurring
                               Visibility(
                                 visible: deliveryTeamSelected,
@@ -942,6 +1041,32 @@ class CustomStockDetailsPageState
                                         },
                                       );
                                     }),
+                              ReactiveWrapperField(
+                                  formControlName: _driverIdKey,
+                                  builder: (field) {
+                                    return InputField(
+                                      type: InputType.text,
+                                      label: localizations.translate(
+                                        i18_local.stockDetails.driverIdLabel,
+                                      ),
+                                      onChange: (val) {
+                                        field.control.value = val;
+                                      },
+                                    );
+                                  }),
+                              // ReactiveWrapperField(
+                              //     formControlName: _commentsKey,
+                              //     builder: (field) {
+                              //       return InputField(
+                              //         type: InputType.textArea,
+                              //         label: localizations.translate(
+                              //           i18_local.stockDetails.commentsLabel,
+                              //         ),
+                              //         onChange: (val) {
+                              //           field.control.value = val;
+                              //         },
+                              //       );
+                              //     }),
                             ],
                           ),
                         ],

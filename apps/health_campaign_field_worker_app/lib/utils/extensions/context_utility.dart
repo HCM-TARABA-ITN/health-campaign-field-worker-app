@@ -420,7 +420,10 @@ extension ContextUtilityExtensions on BuildContext {
     try {
       bool communityDistributor = loggedInUserRoles
           .where(
-            (role) => role.code == RolesType.communityDistributor.toValue(),
+            (role) =>
+                role.code == RolesType.distributor.toValue() ||
+                role.code == RolesType.communityDistributor.toValue() ||
+                role.code == RolesType.registrar.toValue(),
           )
           .toList()
           .isNotEmpty;

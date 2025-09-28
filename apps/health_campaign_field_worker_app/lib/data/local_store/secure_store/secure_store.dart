@@ -24,8 +24,14 @@ class LocalSecureStore {
   static const spaq2Key = 'spaq2';
   static const blueVasKey = 'blueVas';
   static const redVasKey = 'redVas';
-
-  List<String> keysToKeep = [spaq1Key, spaq2Key, blueVasKey, redVasKey];
+  
+  List<String> keysToKeep = [
+    bednetKey,
+    spaq1Key,
+    spaq2Key,
+    blueVasKey,
+    redVasKey
+  ];
 
   final storage = const FlutterSecureStorage();
 
@@ -251,13 +257,11 @@ class LocalSecureStore {
 
     try {
       final user = UserRequestModel.fromJson(json.decode(userBody));
-
       final bednetMapString = await storage.read(key: bednetKey);
       final spaq1MapString = await storage.read(key: spaq1Key);
       final spaq2MapString = await storage.read(key: spaq2Key);
       final blueVasMapString = await storage.read(key: blueVasKey);
       final redVasMapString = await storage.read(key: redVasKey);
-
       Map<String, dynamic> bednetMap = {};
       Map<String, dynamic> spaq1Map = {};
       Map<String, dynamic> spaq2Map = {};

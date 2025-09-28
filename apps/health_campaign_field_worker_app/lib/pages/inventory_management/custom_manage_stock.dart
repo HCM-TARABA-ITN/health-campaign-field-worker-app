@@ -1,5 +1,3 @@
-import 'package:auto_route/auto_route.dart';
-import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/menu_card.dart';
@@ -205,6 +203,82 @@ class CustomManageStocksPageState
                       ],
                     ),
                   ),
+                const SizedBox(height: spacer4),
+                Padding(
+                  padding: const EdgeInsets.only(left: spacer2, right: spacer2),
+                  child: Stack(children: [
+                    Align(
+                      alignment: Alignment.center,
+                      child: SizedBox(
+                        width: 0.94 * MediaQuery.of(context).size.width,
+                        child: MenuCard(
+                          heading: localizations.translate(
+                              i18.manageStock.recordStockDamagedLabel),
+                          description: insertNewlines(localizations.translate(
+                              i18.manageStock.recordStockDamagedDescription)),
+                          icon: Icons.file_download_outlined,
+                          onTap: () {
+                            showStockDamageDialog(context);
+                          },
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      top: 0,
+                      bottom: 0,
+                      right: 16,
+                      child: Center(
+                          child: GestureDetector(
+                        onTap: () {
+                          showStockReceiptDialog(context);
+                        },
+                        child: Icon(
+                          Icons.arrow_circle_right,
+                          color: Colors.orange[800],
+                          size: Base.height,
+                        ),
+                      )),
+                    ),
+                  ]),
+                ),
+                const SizedBox(height: spacer4),
+                Padding(
+                  padding: const EdgeInsets.only(left: spacer2, right: spacer2),
+                  child: Stack(children: [
+                    Align(
+                      alignment: Alignment.center,
+                      child: SizedBox(
+                        width: 0.94 * MediaQuery.of(context).size.width,
+                        child: MenuCard(
+                          heading: localizations
+                              .translate(i18.manageStock.recordStockLossLabel),
+                          description: insertNewlines(localizations.translate(
+                              i18.manageStock.recordStockLossDescription)),
+                          icon: Icons.file_download_outlined,
+                          onTap: () {
+                            showStockLossDialog(context);
+                          },
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      top: 0,
+                      bottom: 0,
+                      right: 16,
+                      child: Center(
+                          child: GestureDetector(
+                        onTap: () {
+                          showStockReceiptDialog(context);
+                        },
+                        child: Icon(
+                          Icons.arrow_circle_right,
+                          color: Colors.orange[800],
+                          size: Base.height,
+                        ),
+                      )),
+                    ),
+                  ]),
+                ),
               ]),
               const SizedBox(height: spacer4),
             ],
@@ -470,6 +544,206 @@ class CustomManageStocksPageState
                     context.router.push(
                       CustomMinNumberRoute(
                         type: StockRecordEntryType.returned,
+                      ),
+                    );
+                    Navigator.of(context).pop();
+                  },
+                  child: Container(
+                    width: 400,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.orange[800]!,
+                        width: 1,
+                      ),
+                      borderRadius: BorderRadius.circular(8),
+                      color: Colors.white,
+                    ),
+                    padding: const EdgeInsets.all(16),
+                    child: Center(
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.remove_red_eye,
+                            size: 24,
+                            color: Colors.orange[800],
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            "View Created Transaction",
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.orange[800],
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        });
+  }
+
+  void showStockDamageDialog(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    context.router.push(
+                      RecordStockWrapperRoute(
+                        type: StockRecordEntryType.damaged,
+                      ),
+                    );
+
+                    Navigator.of(context).pop();
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.orange[800]!,
+                        width: 1,
+                      ),
+                      borderRadius: BorderRadius.circular(8),
+                      color: Colors.white,
+                    ),
+                    padding: const EdgeInsets.all(16),
+                    child: Center(
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.edit_note_outlined,
+                            size: 24,
+                            color: Colors.orange[800],
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            "Create New Transaction",
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.orange[800],
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16), // Add spacing between buttons
+                GestureDetector(
+                  onTap: () {
+                    context.router.push(
+                      CustomMinNumberRoute(
+                        type: StockRecordEntryType.damaged,
+                      ),
+                    );
+                    Navigator.of(context).pop();
+                  },
+                  child: Container(
+                    width: 400,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.orange[800]!,
+                        width: 1,
+                      ),
+                      borderRadius: BorderRadius.circular(8),
+                      color: Colors.white,
+                    ),
+                    padding: const EdgeInsets.all(16),
+                    child: Center(
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.remove_red_eye,
+                            size: 24,
+                            color: Colors.orange[800],
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            "View Created Transaction",
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.orange[800],
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        });
+  }
+
+  void showStockLossDialog(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    context.router.push(
+                      RecordStockWrapperRoute(
+                        type: StockRecordEntryType.loss,
+                      ),
+                    );
+
+                    Navigator.of(context).pop();
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.orange[800]!,
+                        width: 1,
+                      ),
+                      borderRadius: BorderRadius.circular(8),
+                      color: Colors.white,
+                    ),
+                    padding: const EdgeInsets.all(16),
+                    child: Center(
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.edit_note_outlined,
+                            size: 24,
+                            color: Colors.orange[800],
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            "Create New Transaction",
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.orange[800],
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16), // Add spacing between buttons
+                GestureDetector(
+                  onTap: () {
+                    context.router.push(
+                      CustomMinNumberRoute(
+                        type: StockRecordEntryType.loss,
                       ),
                     );
                     Navigator.of(context).pop();
