@@ -222,6 +222,7 @@ class _ViewStockRecordsLGAPageState
 
         int spaq1Count = 0;
         int spaq2Count = 0;
+        int bednetCount = 0;
 
         String productName = stock.additionalFields?.fields
             .firstWhereOrNull((element) => element.key == "productName")
@@ -231,10 +232,12 @@ class _ViewStockRecordsLGAPageState
           spaq1Count = totalQty;
         } else if (productName == Constants.spaq2) {
           spaq2Count = totalQty;
+        } else if (productName == Constants.bednet) {
+          bednetCount = totalQty;
         }
         context.read<AuthBloc>().add(
               AuthAddProductCountsEvent(
-                bednetCount: 0,
+                bednetCount: bednetCount,
                 spaq1Count: spaq1Count,
                 spaq2Count: spaq2Count,
                 blueVasCount: 0,
