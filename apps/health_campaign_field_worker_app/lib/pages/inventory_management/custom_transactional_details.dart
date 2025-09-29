@@ -433,6 +433,7 @@ class CustomTransactionalDetailsPageState
 
                                             int spaq1 = 0;
                                             int spaq2 = 0;
+                                            int bednet = 0;
 
                                             int totalQuantity = 0;
                                             int totalRemainingQuantityInMl =
@@ -462,6 +463,7 @@ class CustomTransactionalDetailsPageState
 
                                             spaq1 = totalQuantity *
                                                 Constants.mlPerBottle;
+                                            bednet = totalQuantity;
 
                                             if (spaq1 >
                                                     totalRemainingQuantityInMl &&
@@ -750,7 +752,7 @@ class CustomTransactionalDetailsPageState
 
                                                 context.read<AuthBloc>().add(
                                                       AuthAddProductCountsEvent(
-                                                          bednetCount: 0,
+                                                          bednetCount: bednet,
                                                           spaq1Count: spaq1,
                                                           spaq2Count: spaq2,
                                                           blueVasCount: 0,
