@@ -345,7 +345,8 @@ class CustomStockDetailsPageState
                                     );
                                   } else if ((primaryId ==
                                           secondaryParty?.id) ||
-                                      (primaryId == deliveryTeamName)) {
+                                      ((primaryId == deliveryTeamName) &&
+                                          deliveryTeamSelected)) {
                                     Toast.showToast(
                                       context,
                                       type: ToastType.error,
@@ -605,8 +606,8 @@ class CustomStockDetailsPageState
                                               readOnly: true,
                                               initialValue: bednet != null
                                                   ? localizations.translate(
-                                                      bednet.variation ??
-                                                          bednet.id)
+                                                      i18_local.stockDetails
+                                                          .itnsLabel)
                                                   : '',
                                               suffixIcon: Icons.arrow_drop_down,
                                             ),
