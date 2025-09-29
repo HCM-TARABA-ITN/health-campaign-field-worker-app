@@ -108,6 +108,8 @@ import '../pages/checklist/custom_survey_form_boundary_view.dart';
 import '../pages/checklist/custom_survey_form_acknowledgement.dart';
 import '../pages/checklist/custom_survey_form_wrapper.dart';
 import '../pages/summary_report/custom_distribution_summary_report.dart';
+import '../pages/summary_report/custom_summary_report.dart';
+import '../pages/complaints/custom_complaints_details.dart';
 
 part 'app_router.gr.dart';
 
@@ -288,21 +290,16 @@ class AppRouter extends _$AppRouter {
           path: 'search-referrals',
         ),
 
+        // ...RegistrationDeliveryRoute().routes,
         // from registration delivery
         AutoRoute(
             page: RegistrationDeliveryWrapperRoute.page,
-            path: 'custom-registration-delivery-wrapper',
+            path: 'registration-delivery-wrapper',
             children: [
               AutoRoute(
+                  initial: true,
                   page: SearchBeneficiaryRoute.page,
                   path: 'search-beneficiary'),
-              AutoRoute(
-                  initial: true,
-                  page: CustomSearchBeneficiaryRoute.page,
-                  path: 'custom-search-beneficiary'),
-              RedirectRoute(
-                  path: 'search-beneficiary',
-                  redirectTo: 'custom-search-beneficiary'),
               AutoRoute(
                 page: BeneficiaryErrorRoute.page,
                 path: 'beneficiary-error',
@@ -313,16 +310,8 @@ class AppRouter extends _$AppRouter {
               ),
               AutoRoute(
                 page: HouseholdOverviewRoute.page,
-                path: 'household-overview',
+                path: 'overview',
               ),
-              // AutoRoute(
-              //   page: CustomHouseholdOverviewRoute.page,
-              //   path: 'custom-household-overview',
-              // ),
-              // RedirectRoute(
-              //   path: 'household-overview',
-              //   redirectTo: 'custom-household-overview',
-              // ),
               AutoRoute(
                 page: BeneficiaryDetailsRoute.page,
                 path: 'beneficiary-details',
@@ -331,13 +320,13 @@ class AppRouter extends _$AppRouter {
                 page: HouseholdAcknowledgementRoute.page,
                 path: 'household-acknowledgement',
               ),
-              // AutoRoute(
-              //   page: CustomHouseholdAcknowledgementRoute.page,
-              //   path: 'custom-household-acknowledgement',
-              // ),
-              // RedirectRoute(
-              //     path: 'household-acknowledgement',
-              //     redirectTo: 'custom-household-acknowledgement'),
+              AutoRoute(
+                page: CustomHouseholdAcknowledgementRoute.page,
+                path: 'custom-household-acknowledgement',
+              ),
+              RedirectRoute(
+                  path: 'household-acknowledgement',
+                  redirectTo: 'custom-household-acknowledgement'),
               ...FormsRoute().routes,
             ]),
         AutoRoute(page: BeneficiaryIdDownSyncRoute.page),
@@ -544,6 +533,12 @@ class AppRouter extends _$AppRouter {
         //       // ),
         //     ]),
 
+        // Custom Summary Report Route
+        AutoRoute(
+          page: CustomSummaryReportRoute.page,
+          path: 'custom-report-summary',
+        ),
+
         // Inventory Route
         // AutoRoute(
         //   page: StockReconciliationRoute.page,
@@ -712,11 +707,11 @@ class AppRouter extends _$AppRouter {
           page: ComplaintsRegistrationWrapperRoute.page,
           path: 'complaints-registration',
           children: [
-            // AutoRoute(
-            //   page: ComplaintTypeRoute.page,
-            //   path: 'complaints-type',
-            //   initial: true,
-            // ),
+            AutoRoute(
+              page: ComplaintTypeRoute.page,
+              path: 'complaints-type',
+              initial: true,
+            ),
             // Admin Console
             // AutoRoute(
             //   page: CustomComplaintTypeRoute.page,
@@ -737,10 +732,10 @@ class AppRouter extends _$AppRouter {
               path: 'complaints-details',
             ),
             // Admin Console
-            // AutoRoute(
-            //   page: CustomComplaintsDetailsRoute.page,
-            //   path: 'custom-complaints-details',
-            // ),
+            AutoRoute(
+              page: CustomComplaintsDetailsRoute.page,
+              path: 'custom-complaints-details',
+            ),
             RedirectRoute(
               path: 'complaints-details',
               redirectTo: 'custom-complaints-details',

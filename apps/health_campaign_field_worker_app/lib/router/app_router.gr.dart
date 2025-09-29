@@ -68,6 +68,17 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CustomComplaintsDetailsRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomComplaintsDetailsRouteArgs>(
+          orElse: () => const CustomComplaintsDetailsRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomComplaintsDetailsPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     CustomComplaintsInboxRoute.name: (routeData) {
       final args = routeData.argsAs<CustomComplaintsInboxRouteArgs>(
           orElse: () => const CustomComplaintsInboxRouteArgs());
@@ -200,6 +211,17 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: CustomStockReconciliationPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
+    CustomSummaryReportRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomSummaryReportRouteArgs>(
+          orElse: () => const CustomSummaryReportRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomSummaryReportPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
@@ -657,6 +679,45 @@ class CustomAcknowledgementRouteArgs {
 }
 
 /// generated route for
+/// [CustomComplaintsDetailsPage]
+class CustomComplaintsDetailsRoute
+    extends PageRouteInfo<CustomComplaintsDetailsRouteArgs> {
+  CustomComplaintsDetailsRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomComplaintsDetailsRoute.name,
+          args: CustomComplaintsDetailsRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomComplaintsDetailsRoute';
+
+  static const PageInfo<CustomComplaintsDetailsRouteArgs> page =
+      PageInfo<CustomComplaintsDetailsRouteArgs>(name);
+}
+
+class CustomComplaintsDetailsRouteArgs {
+  const CustomComplaintsDetailsRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomComplaintsDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
 /// [CustomComplaintsInboxPage]
 class CustomComplaintsInboxRoute
     extends PageRouteInfo<CustomComplaintsInboxRouteArgs> {
@@ -740,7 +801,7 @@ class CustomHouseholdAcknowledgementRoute
     extends PageRouteInfo<CustomHouseholdAcknowledgementRouteArgs> {
   CustomHouseholdAcknowledgementRoute({
     Key? key,
-    RegistrationDeliveryLocalization? appLocalizations,
+    AppLocalizations? appLocalizations,
     bool? enableViewHousehold,
     List<PageRouteInfo>? children,
   }) : super(
@@ -768,7 +829,7 @@ class CustomHouseholdAcknowledgementRouteArgs {
 
   final Key? key;
 
-  final RegistrationDeliveryLocalization? appLocalizations;
+  final AppLocalizations? appLocalizations;
 
   final bool? enableViewHousehold;
 
@@ -1145,6 +1206,45 @@ class CustomStockReconciliationRouteArgs {
   @override
   String toString() {
     return 'CustomStockReconciliationRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [CustomSummaryReportPage]
+class CustomSummaryReportRoute
+    extends PageRouteInfo<CustomSummaryReportRouteArgs> {
+  CustomSummaryReportRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomSummaryReportRoute.name,
+          args: CustomSummaryReportRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomSummaryReportRoute';
+
+  static const PageInfo<CustomSummaryReportRouteArgs> page =
+      PageInfo<CustomSummaryReportRouteArgs>(name);
+}
+
+class CustomSummaryReportRouteArgs {
+  const CustomSummaryReportRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomSummaryReportRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 

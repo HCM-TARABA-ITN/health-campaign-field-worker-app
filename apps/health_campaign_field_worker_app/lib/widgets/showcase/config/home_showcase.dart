@@ -35,6 +35,10 @@ class _HomePageShowcaseData {
     messageLocalizationKey: i18.homeShowcase.distributorBeneficiaries,
   );
 
+  final distributionPoint = ShowcaseItemBuilder(
+    messageLocalizationKey: i18.homeShowcase.distributionPoint,
+  );
+
   final distributorFileComplaint = ShowcaseItemBuilder(
     messageLocalizationKey: i18.homeShowcase.distributorFileComplaint,
   );
@@ -50,6 +54,10 @@ class _HomePageShowcaseData {
   final wareHouseManagerStockReconciliation = ShowcaseItemBuilder(
     messageLocalizationKey:
         i18.homeShowcase.wareHouseManagerStockReconciliation,
+  );
+
+  final summaryReport = ShowcaseItemBuilder(
+    messageLocalizationKey: i18.homeShowcase.summaryReport,
   );
 
   final wareHouseManagerChecklist = ShowcaseItemBuilder(
@@ -108,9 +116,9 @@ class _HomePageShowcaseData {
 
   final clf = ShowcaseItemBuilder(messageLocalizationKey: i18.homeShowcase.clf);
 
-  final summaryReport = ShowcaseItemBuilder(
-    messageLocalizationKey: i18.home.viewSummaryReportsLabel,
-  );
+  // final summaryReportOld = ShowcaseItemBuilder(
+  //   messageLocalizationKey: i18.home.viewSummaryReportsLabel,
+  // );
 
   final beneficiaryId = ShowcaseItemBuilder(
     messageLocalizationKey: i18.home.beneficiaryIdLabel,

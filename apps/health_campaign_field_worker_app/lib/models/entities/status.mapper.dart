@@ -25,6 +25,8 @@ class StatusMapper extends EnumMapper<Status> {
   @override
   Status decode(dynamic value) {
     switch (value) {
+      case "ADMINISTRATION_SUCCESS":
+        return Status.administrationSuccess;
       case "DELIVERED":
         return Status.delivered;
       case "NOT_DELIVERED":
@@ -53,6 +55,8 @@ class StatusMapper extends EnumMapper<Status> {
   @override
   dynamic encode(Status self) {
     switch (self) {
+      case Status.administrationSuccess:
+        return "ADMINISTRATION_SUCCESS";
       case Status.delivered:
         return "DELIVERED";
       case Status.notDelivered:

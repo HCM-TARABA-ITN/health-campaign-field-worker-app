@@ -30,6 +30,7 @@ import 'blocs/project/project.dart';
 import 'blocs/search/individual_global_search_smc.dart';
 import 'blocs/search/search_households_smc.dart';
 import 'blocs/summary_report/custom_distribution_summary_report.dart';
+import 'blocs/summary_report/custom_summary_report_bloc.dart';
 import 'data/local_store/app_shared_preferences.dart';
 import 'data/network_manager.dart';
 import 'data/remote_client.dart';
@@ -336,6 +337,14 @@ class MainApplicationState extends State<MainApplication>
                                   LocalizationRepository(
                                       widget.client, widget.sql),
                                   widget.sql),
+                        ),
+                        BlocProvider(
+                          create: (context) => SummaryReportBloc(
+                            householdRepository: context.repository<
+                                HouseholdModel, HouseholdSearchModel>(),
+                            taskDataRepository: context
+                                .repository<TaskModel, TaskSearchModel>(),
+                          ),
                         ),
                         BlocProvider(
                           create: (ctx) => ProjectBloc(
