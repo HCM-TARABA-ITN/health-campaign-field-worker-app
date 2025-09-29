@@ -484,6 +484,7 @@ class StockDetails {
   // String get numberOfNetsInWaybillLabel => 'NUMBER_OF_NETS_IN_WAYBILL_LABEL';
   // String get commentsLabel => 'COMMENTS_LABEL';
   String get driverIdLabel => 'DRIVER_ID_LABEL';
+  String get itnsLabel => 'ITNS_LABEL';
 }
 
 class StockReconciliationDetails {

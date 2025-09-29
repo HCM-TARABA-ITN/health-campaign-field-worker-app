@@ -471,7 +471,7 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
                     Row(
                       children: [
                         const Expanded(child: Text('Resource')),
-                        Expanded(child: Text(productName)),
+                        Expanded(child: Text(products.first.variation ?? '')),
                       ],
                     ),
                     const SizedBox(height: 8),
@@ -1004,6 +1004,10 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
 
     final selectedProducts =
         products.map((variant) => variant.sku).whereType<String>().toList();
+    final selectedProductsToShow = products
+        .map((variant) => variant.variation)
+        .whereType<String>()
+        .toList();
 
     return Scaffold(
       appBar: AppBar(
@@ -1011,7 +1015,7 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
         bottom: TabBar(
           controller: _tabController,
           isScrollable: true,
-          tabs: selectedProducts
+          tabs: selectedProductsToShow
               .map((product) => Tab(text: product.toUpperCase()))
               .toList(),
         ),
