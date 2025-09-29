@@ -290,46 +290,46 @@ class AppRouter extends _$AppRouter {
           path: 'search-referrals',
         ),
 
-        // ...RegistrationDeliveryRoute().routes,
+        ...RegistrationDeliveryRoute().routes,
         // from registration delivery
-        AutoRoute(
-            page: RegistrationDeliveryWrapperRoute.page,
-            path: 'registration-delivery-wrapper',
-            children: [
-              AutoRoute(
-                  initial: true,
-                  page: SearchBeneficiaryRoute.page,
-                  path: 'search-beneficiary'),
-              AutoRoute(
-                page: BeneficiaryErrorRoute.page,
-                path: 'beneficiary-error',
-              ),
-              AutoRoute(
-                page: BeneficiaryAcknowledgementRoute.page,
-                path: 'beneficiary-acknowledgement',
-              ),
-              AutoRoute(
-                page: HouseholdOverviewRoute.page,
-                path: 'overview',
-              ),
-              AutoRoute(
-                page: BeneficiaryDetailsRoute.page,
-                path: 'beneficiary-details',
-              ),
-              AutoRoute(
-                page: HouseholdAcknowledgementRoute.page,
-                path: 'household-acknowledgement',
-              ),
-              AutoRoute(
-                page: CustomHouseholdAcknowledgementRoute.page,
-                path: 'custom-household-acknowledgement',
-              ),
-              RedirectRoute(
-                  path: 'household-acknowledgement',
-                  redirectTo: 'custom-household-acknowledgement'),
-              ...FormsRoute().routes,
-            ]),
-        AutoRoute(page: BeneficiaryIdDownSyncRoute.page),
+        // AutoRoute(
+        //     page: RegistrationDeliveryWrapperRoute.page,
+        //     path: 'registration-delivery-wrapper',
+        //     children: [
+        //       AutoRoute(
+        //           initial: true,
+        //           page: SearchBeneficiaryRoute.page,
+        //           path: 'search-beneficiary'),
+        //       AutoRoute(
+        //         page: BeneficiaryErrorRoute.page,
+        //         path: 'beneficiary-error',
+        //       ),
+        //       AutoRoute(
+        //         page: BeneficiaryAcknowledgementRoute.page,
+        //         path: 'beneficiary-acknowledgement',
+        //       ),
+        //       AutoRoute(
+        //         page: HouseholdOverviewRoute.page,
+        //         path: 'overview',
+        //       ),
+        //       AutoRoute(
+        //         page: BeneficiaryDetailsRoute.page,
+        //         path: 'beneficiary-details',
+        //       ),
+        //       AutoRoute(
+        //         page: HouseholdAcknowledgementRoute.page,
+        //         path: 'household-acknowledgement',
+        //       ),
+        //       // AutoRoute(
+        //       //   page: CustomHouseholdAcknowledgementRoute.page,
+        //       //   path: 'custom-household-acknowledgement',
+        //       // ),
+        //       // RedirectRoute(
+        //       //     path: 'household-acknowledgement',
+        //       //     redirectTo: 'custom-household-acknowledgement'),
+        //       ...FormsRoute().routes,
+        //     ]),
+        // AutoRoute(page: BeneficiaryIdDownSyncRoute.page),
 
 // Admin Console
         // AutoRoute(

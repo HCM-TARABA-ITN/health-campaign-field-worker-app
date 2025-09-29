@@ -892,6 +892,7 @@ Map<String, dynamic> transformJson(Map<String, dynamic> inputJson) {
       'version': inputJson['version'],
       'pages': <String, dynamic>{},
       'summary': inputJson['summary'],
+      'summaryDetails': inputJson['summaryDetails'],
       'templates': <String, dynamic>{},
     };
 
