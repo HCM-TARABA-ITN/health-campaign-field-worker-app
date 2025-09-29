@@ -980,7 +980,7 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
 
       context.read<AuthBloc>().add(
             AuthAddProductCountsEvent(
-              bednetCount: 0,
+              bednetCount: bednetCount,
               spaq1Count: spaq1Count,
               spaq2Count: spaq2Count,
               blueVasCount: 0,
