@@ -5,6 +5,8 @@ part 'status.mapper.dart';
 
 @MappableEnum(caseStyle: CaseStyle.upperCase)
 enum Status {
+  @MappableValue("ADMINISTRATION_SUCCESS")
+  administrationSuccess,
   @MappableValue("DELIVERED")
   delivered,
   @MappableValue("NOT_DELIVERED")

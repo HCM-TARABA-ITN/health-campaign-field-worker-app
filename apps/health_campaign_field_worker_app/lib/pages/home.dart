@@ -90,6 +90,13 @@ class _HomePageState extends LocalizedState<HomePage> {
   late StreamSubscription<List<ConnectivityResult>> subscription;
   bool isTriggerLocalisation = true;
 
+  bool get isDistributor => context.loggedInUserRoles
+      .where(
+        (role) => role.code == RolesType.distributor.toValue(),
+      )
+      .toList()
+      .isNotEmpty;
+
   @override
   initState() {
     super.initState();
@@ -173,7 +180,10 @@ class _HomePageState extends LocalizedState<HomePage> {
                           i18.home.progressIndicatorTitle,
                         ),
                         prefixLabel: localizations.translate(
-                          i18.home.progressIndicatorPrefixLabel,
+                          isDistributor
+                              ? i18.home
+                                  .progressIndicatorPrefixLabelForDistributor
+                              : i18.home.progressIndicatorPrefixLabel,
                         ),
                       ),
                     ),
@@ -365,7 +375,7 @@ class _HomePageState extends LocalizedState<HomePage> {
             if (isTriggerLocalisation) {
               final moduleName =
                   'hcm-registrationflow-${context.selectedProject.referenceID},hcm-deliveryflow-${context.selectedProject.referenceID}';
-              triggerLocalization(module: moduleName);
+              triggerLocalization(module: moduleName, loadOnline: true);
               isTriggerLocalisation = false;
             }
 
@@ -616,6 +626,59 @@ class _HomePageState extends LocalizedState<HomePage> {
           // },
         ),
       ),
+      i18.home.distributionLabel: homeShowcaseData.distributionPoint.buildWith(
+        child: HomeItemCard(
+          icon: Icons.person,
+          label: i18.home.distributionLabel,
+          onPressed: () async {
+            if (isTriggerLocalisation) {
+              final moduleName =
+                  'hcm-deliveryflow-${context.selectedProject.referenceID}';
+              triggerLocalization(module: moduleName, loadOnline: true);
+              isTriggerLocalisation = false;
+            }
+
+            final prefs = await SharedPreferences.getInstance();
+            final schemaJsonRaw = prefs.getString('app_config_schemas');
+
+            if (schemaJsonRaw != null) {
+              final allSchemas =
+                  json.decode(schemaJsonRaw) as Map<String, dynamic>;
+
+              final deliverySchemaEntry =
+                  allSchemas['DELIVERYFLOW'] as Map<String, dynamic>?;
+
+              final deliverySchemaData = deliverySchemaEntry?['data'];
+
+              if (deliverySchemaData != null) {
+                // Extract templates from both schemas
+                final delTemplatesRaw = deliverySchemaData?['templates'];
+
+                final Map<String, dynamic> delTemplateMap =
+                    delTemplatesRaw is Map<String, dynamic>
+                        ? delTemplatesRaw
+                        : {};
+
+                final templates = {
+                  for (final entry in {...delTemplateMap}.entries)
+                    entry.key: TemplateConfig.fromJson(
+                        entry.value as Map<String, dynamic>)
+                };
+
+                final deliveryConfig = json.encode(deliverySchemaData);
+
+                RegistrationDeliverySingleton().setTemplateConfigs(templates);
+                RegistrationDeliverySingleton()
+                    .setDeliveryConfig(deliveryConfig);
+              }
+            }
+            RegistrationDeliverySingleton()
+                .setHouseholdType(HouseholdType.family);
+
+            await context.router.push(const RegistrationDeliveryWrapperRoute());
+          },
+        ),
+      ),
       i18.home.beneficiaryReferralLabel:
           homeShowcaseData.hfBeneficiaryReferral.buildWith(
         child: HomeItemCard(
@@ -649,6 +712,15 @@ class _HomePageState extends LocalizedState<HomePage> {
           },
         ),
       ),
+      i18.home.summaryLabel: homeShowcaseData.summaryReport.buildWith(
+        child: HomeItemCard(
+          icon: Icons.summarize,
+          label: i18.home.summaryLabel,
+          onPressed: () {
+            context.router.push(CustomSummaryReportRoute());
+          },
+        ),
+      ),
       i18.home.stockReconciliationLabel:
           homeShowcaseData.wareHouseManagerStockReconciliation.buildWith(
         child: HomeItemCard(
@@ -668,18 +740,18 @@ class _HomePageState extends LocalizedState<HomePage> {
           },
         ),
       ),
-      i18.home.viewSummaryReportsLabel:
-          homeShowcaseData.summaryReport.buildWith(
-        child: HomeItemCard(
-          icon: Icons.book,
-          label: i18.home.viewSummaryReportsLabel,
-          onPressed: () {
-            context.router.push(
-              CustomDistributionSummaryReportDetailsRoute(),
-            );
-          },
-        ),
-      ),
+      // i18.home.viewSummaryReportsLabel:
+      //     homeShowcaseData.summaryReportOld.buildWith(
+      //   child: HomeItemCard(
+      //     icon: Icons.book,
+      //     label: i18.home.viewSummaryReportsLabel,
+      //     onPressed: () {
+      //       context.router.push(
+      //         CustomDistributionSummaryReportDetailsRoute(),
+      //       );
+      //     },
+      //   ),
+      // ),
       i18.home.beneficiaryReferralLabel: HomeItemCard(
         icon: Icons.supervised_user_circle_rounded,
         label: i18.home.beneficiaryReferralLabel,
@@ -833,9 +905,12 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.clfLabel: homeShowcaseData.clf.showcaseKey,
       i18.home.mySurveyForm:
           homeShowcaseData.supervisorMySurveyForm.showcaseKey,
-      i18.home.viewSummaryReportsLabel:
-          homeShowcaseData.summaryReport.showcaseKey,
+      // i18.home.viewSummaryReportsLabel:
+      //     homeShowcaseData.summaryReport.showcaseKey,
       i18.home.beneficiaryIdLabel: homeShowcaseData.beneficiaryId.showcaseKey,
+      i18.home.distributionLabel:
+          homeShowcaseData.distributionPoint.showcaseKey,
+      i18.home.summaryLabel: homeShowcaseData.summaryReport.showcaseKey,
     };
 
     final homeItemsLabel = <String>[
@@ -846,15 +921,17 @@ class _HomePageState extends LocalizedState<HomePage> {
 
       i18.home.beneficiaryReferralLabel,
       i18.home.beneficiaryLabel,
+      i18.home.distributionLabel,
       i18.home.manageStockLabel,
       i18.home.stockReconciliationLabel,
       i18.home.viewReportsLabel,
-      i18.home.viewSummaryReportsLabel,
+      // i18.home.viewSummaryReportsLabel,
       i18.home.syncDataLabel,
       i18.home.fileComplaint,
       i18.home.db,
       i18.home.dashboard,
       i18.home.beneficiaryIdLabel,
+      i18.home.summaryLabel,
     ];
 
     final List<String> filteredLabels = homeItemsLabel
@@ -872,6 +949,15 @@ class _HomePageState extends LocalizedState<HomePage> {
         .where((f) => f != i18.home.db)
         .map((label) => homeItemsShowcaseMap[label]!)
         .toList();
+
+    if (context.loggedInUserRoles
+        .where(
+          (role) =>
+              role.code == RolesType.distributor.toValue() ||
+              role.code == RolesType.registrar.toValue(),
+        )
+        .toList()
+        .isNotEmpty) filteredLabels.add(i18.home.summaryLabel);
 
     final List<Widget> widgetList =
         filteredLabels.map((label) => homeItemsMap[label]!).toList();

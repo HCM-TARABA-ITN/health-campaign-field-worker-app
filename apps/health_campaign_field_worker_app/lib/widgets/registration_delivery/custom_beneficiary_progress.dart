@@ -18,7 +18,9 @@ import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:flutter/material.dart';
 
 import '../../data/repositories/custom_task.dart';
+import '../../models/entities/roles_type.dart';
 import '../../utils/constants.dart';
+import '../../utils/extensions/extensions.dart';
 
 class CustomBeneficiaryProgressBar extends StatefulWidget {
   final String label;
@@ -38,6 +40,20 @@ class CustomBeneficiaryProgressBar extends StatefulWidget {
 class _CustomBeneficiaryProgressBarState
     extends State<CustomBeneficiaryProgressBar> {
   int current = 0;
+
+  bool get isRegistrar => context.loggedInUserRoles
+      .where(
+        (role) => role.code == RolesType.registrar.toValue(),
+      )
+      .toList()
+      .isNotEmpty;
+  bool get isDistributor => context.loggedInUserRoles
+      .where(
+        (role) => role.code == RolesType.distributor.toValue(),
+      )
+      .toList()
+      .isNotEmpty;
+
   @override
   void didChangeDependencies() {
     final taskRepository =
@@ -115,7 +131,11 @@ class _CustomBeneficiaryProgressBarState
 
   @override
   Widget build(BuildContext context) {
-    const target = Constants.dailyTarget;
+    final target = isRegistrar
+        ? Constants.registrarDailyTarget
+        : (isDistributor
+            ? Constants.distributorDailyTarget
+            : Constants.dailyTarget);
 
     return DigitCard(
       child: CustomProgressIndicatorContainer(

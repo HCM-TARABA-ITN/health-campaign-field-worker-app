@@ -367,6 +367,10 @@ class HomeShowcase {
     return 'DISTRIBUTOR_HOME_SHOWCASE_BENEFICIARIES';
   }
 
+  String get distributionPoint {
+    return 'DISTRIBUTOR_HOME_SHOWCASE_DISTRIBUTION';
+  }
+
   String get distributorFileComplaint {
     return 'DISTRIBUTOR_HOME_SHOWCASE_FILE_COMPLAINT';
   }
@@ -429,6 +433,30 @@ class HomeShowcase {
 
   String get clf {
     return "COMMUNAL_LIVING_FACILITY_SHOWCASE";
+  }
+
+  String get summaryReport {
+    return "SUMMARY_REPORT_LABEL";
+  }
+
+  String get summaryReportDate {
+    return "SUMMARY_REPORT_DATE";
+  }
+
+  String get summaryReportRegistredHouseholds {
+    return "SUMMARY_REPORT_REGISTERED_HOUSEHOLDS";
+  }
+
+  String get summaryReportHouseholdMembers {
+    return "SUMMARY_REPORT_HOUSEHOLD_MEMBERS";
+  }
+
+  String get summaryReportTokensRedeemed {
+    return "SUMMARY_REPORT_TOKENS_REDEEMED";
+  }
+
+  String get summaryReportBednetsDistributed {
+    return "SUMMARY_REPORT_BEDNETS_DISTRIBUTED";
   }
 }
 
@@ -882,6 +910,8 @@ class Home {
 
   String get beneficiaryLabel => 'HOME_BENEFICIARY_LABEL';
 
+  String get distributionLabel => 'HOME_DISTRIBUTION_LABEL';
+
   String get beneficiaryDistributionLabel =>
       'HOME_BENEFICIARY_DISTRIBUTION_LABEL';
 
@@ -897,11 +927,16 @@ class Home {
 
   String get fileComplaint => 'HOME_FILE_COMPLAINT';
 
+  String get summaryLabel => 'HOME_SUMMARY_LABEL';
+
   String get progressIndicatorTitle => 'PROGRESS_INDICATOR_TITLE';
 
   String get progressIndicatorHelp => 'PROGRESS_INDICATOR_HELP';
 
   String get progressIndicatorPrefixLabel => 'PROGRESS_INDICATOR_PREFIX_LABEL';
+
+  String get progressIndicatorPrefixLabelForDistributor =>
+      'PROGRESS_INDICATOR_PREFIX_LABEL_FOR_DISTRIBUTOR';
 
   String get dataSyncInfoLabel => 'DATA_SYNC_INFO_LABEL';
 
@@ -1370,6 +1405,7 @@ class BeneficiaryDetails {
 
   String get householdId => 'HOUSEHOLD_ID_TEXT';
   String get beneficiaryId => 'BENEFICIARY_ID_TEXT';
+  String get eToken => 'E_TOKEN_TEXT';
   String get backToHouseholdDetails => 'BACK_TO_HOUSEHOLD_DETAILS';
   String get backToSearchHousehold => 'BACK_TO_SEARCH_HOUSEHOLD';
   String get beneficiaryDoseUnit => 'BENEFICIARY_DETAILS_DOSE_UNIT';
