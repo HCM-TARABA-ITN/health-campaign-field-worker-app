@@ -607,25 +607,25 @@ class CustomStockReconciliationPageState
                                         .toStringAsFixed(0),
                                     labelFlex: 5,
                                   ),
-                                  // const DigitDivider(),
-                                  // LabelValueItem(
-                                  //   label: localizations.translate(
-                                  //     i18.stockReconciliationDetails.stockLost,
-                                  //   ),
-                                  //   value:
-                                  //       stockState.stockLost.toStringAsFixed(0),
-                                  //   labelFlex: 5,
-                                  // ),
-                                  // const DigitDivider(),
-                                  // LabelValueItem(
-                                  //   label: localizations.translate(
-                                  //     i18.stockReconciliationDetails
-                                  //         .stockDamaged,
-                                  //   ),
-                                  //   value: stockState.stockDamaged
-                                  //       .toStringAsFixed(0),
-                                  //   labelFlex: 5,
-                                  // ),
+                                  const DigitDivider(),
+                                  LabelValueItem(
+                                    label: localizations.translate(
+                                      i18.stockReconciliationDetails.stockLost,
+                                    ),
+                                    value:
+                                        stockState.stockLost.toStringAsFixed(0),
+                                    labelFlex: 5,
+                                  ),
+                                  const DigitDivider(),
+                                  LabelValueItem(
+                                    label: localizations.translate(
+                                      i18.stockReconciliationDetails
+                                          .stockDamaged,
+                                    ),
+                                    value: stockState.stockDamaged
+                                        .toStringAsFixed(0),
+                                    labelFlex: 5,
+                                  ),
                                   const DigitDivider(),
                                   LabelValueItem(
                                     label: localizations.translate(i18
