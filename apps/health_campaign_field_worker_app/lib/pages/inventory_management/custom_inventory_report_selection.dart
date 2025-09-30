@@ -80,6 +80,7 @@ class CustomInventoryReportSelectionPageState
                     ),
                   ),
                 ),
+                const SizedBox(height: spacer4),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: spacer2),
                   child: MenuCard(
@@ -125,6 +126,42 @@ class CustomInventoryReportSelectionPageState
                       ),
                     ),
                   ),
+                const SizedBox(height: spacer4),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: spacer2),
+                  child: MenuCard(
+                    heading: localizations.translate(
+                      i18.inventoryReportSelection.inventoryReportDamagedLabel,
+                    ),
+                    description: localizations.translate(i18
+                        .inventoryReportSelection
+                        .inventoryReportDamagedDescription),
+                    icon: Icons.login,
+                    onTap: () => context.router.push(
+                      CustomInventoryReportDetailsRoute(
+                        reportType: InventoryReportType.damage,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: spacer4),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: spacer2),
+                  child: MenuCard(
+                    heading: localizations.translate(
+                      i18.inventoryReportSelection.inventoryReportLossLabel,
+                    ),
+                    description: localizations.translate(i18
+                        .inventoryReportSelection
+                        .inventoryReportLossDescription),
+                    icon: Icons.login,
+                    onTap: () => context.router.push(
+                      CustomInventoryReportDetailsRoute(
+                        reportType: InventoryReportType.loss,
+                      ),
+                    ),
+                  ),
+                ),
                 if (!context.isCommunityDistributor)
                   const SizedBox(height: spacer4),
                 if (!context.isCommunityDistributor)
