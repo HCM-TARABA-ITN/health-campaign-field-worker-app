@@ -354,7 +354,7 @@ class CustomStockReconciliationPageState
                                                     CircularProgressIndicator(),
                                               ),
                                           fetched: (facilities, allFacilities) {
-                                            if (context.selectedProject.address
+                                            if (ctx.selectedProject.address
                                                     ?.boundaryType ==
                                                 Constants.stateBoundaryLevel) {
                                               List<FacilityModel>
@@ -365,6 +365,40 @@ class CustomStockReconciliationPageState
                                                             element.usage ==
                                                             Constants
                                                                 .stateFacility,
+                                                      )
+                                                      .toList();
+                                              facilities =
+                                                  filteredFacilities.isEmpty
+                                                      ? facilities
+                                                      : filteredFacilities;
+                                            } else if (ctx.selectedProject
+                                                    .address?.boundaryType ==
+                                                Constants.lgaBoundaryLevel) {
+                                              List<FacilityModel>
+                                                  filteredFacilities =
+                                                  facilities
+                                                      .where(
+                                                        (element) =>
+                                                            element.usage ==
+                                                            Constants
+                                                                .lgaFacility,
+                                                      )
+                                                      .toList();
+                                              facilities =
+                                                  filteredFacilities.isEmpty
+                                                      ? facilities
+                                                      : filteredFacilities;
+                                            } else if (ctx.selectedProject
+                                                    .address?.boundaryType ==
+                                                Constants.healthFacility) {
+                                              List<FacilityModel>
+                                                  filteredFacilities =
+                                                  facilities
+                                                      .where(
+                                                        (element) =>
+                                                            element.usage ==
+                                                            Constants
+                                                                .healthFacility,
                                                       )
                                                       .toList();
                                               facilities =
@@ -393,9 +427,11 @@ class CustomStockReconciliationPageState
                                                 name: 'Delivery Team',
                                               ),
                                             ];
+
                                             teamFacilities.addAll(
                                               facilities,
                                             );
+
                                             return Column(
                                               children: [
                                                 InkWell(

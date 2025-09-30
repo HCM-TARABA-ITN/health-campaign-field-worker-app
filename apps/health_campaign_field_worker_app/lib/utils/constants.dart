@@ -96,6 +96,7 @@ class Constants {
   static const String reAdministeredKey = "reAdministered";
   static const String reDoseQuantityKey = 'reDoseQuantity';
   static const String healthFacility = 'Health Facility';
+  static const String deliveryTeam = 'Delivery Team';
   static const String lgaBoundaryLevel = 'LGA';
   static const String districtBoundaryLevel = 'DISTRICT';
   static const String provincialBoundaryLevel = 'Provincia';

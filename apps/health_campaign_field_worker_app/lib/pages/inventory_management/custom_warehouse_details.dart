@@ -97,6 +97,28 @@ class CustomWarehouseDetailsPageState
                         facilities = filteredFacilities.isEmpty
                             ? facilities
                             : filteredFacilities;
+                      } else if (ctx.selectedProject.address?.boundaryType ==
+                          Constants.lgaBoundaryLevel) {
+                        List<FacilityModel> filteredFacilities = facilities
+                            .where(
+                              (element) =>
+                                  element.usage == Constants.lgaFacility,
+                            )
+                            .toList();
+                        facilities = filteredFacilities.isEmpty
+                            ? facilities
+                            : filteredFacilities;
+                      } else if (ctx.selectedProject.address?.boundaryType ==
+                          Constants.healthFacility) {
+                        List<FacilityModel> filteredFacilities = facilities
+                            .where(
+                              (element) =>
+                                  element.usage == Constants.healthFacility,
+                            )
+                            .toList();
+                        facilities = filteredFacilities.isEmpty
+                            ? facilities
+                            : filteredFacilities;
                       } else {
                         List<FacilityModel> filteredFacilities = facilities
                             .where(
@@ -114,9 +136,9 @@ class CustomWarehouseDetailsPageState
                           name: 'Delivery Team',
                         ),
                       ];
-                      teamFacilities.addAll(
-                        facilities,
-                      );
+                      // teamFacilities.addAll(
+                      //   facilities,
+                      // );
 
                       return context.isDistributor &&
                               !InventorySingleton().isWareHouseMgr

@@ -662,11 +662,8 @@ class CustomStockDetailsPageState
                                             [];
 
                                         if (context.selectedProject.address
-                                                    ?.boundaryType ==
-                                                Constants.stateBoundaryLevel ||
-                                            context.selectedProject.address
-                                                    ?.boundaryType ==
-                                                Constants.stateBoundaryLevel) {
+                                                ?.boundaryType ==
+                                            Constants.stateBoundaryLevel) {
                                           filteredFacilities = entryType ==
                                                   StockRecordEntryType.receipt
                                               ? allFacilities //TODO: changed from facilities
@@ -677,7 +674,37 @@ class CustomStockDetailsPageState
                                               : allFacilities //TODO: changed from facilities
                                                   .where((element) =>
                                                       element.usage ==
+                                                      Constants.lgaFacility)
+                                                  .toList();
+                                        } else if (context.selectedProject
+                                                .address?.boundaryType ==
+                                            Constants.lgaBoundaryLevel) {
+                                          filteredFacilities = entryType ==
+                                                  StockRecordEntryType.receipt
+                                              ? allFacilities
+                                                  .where((element) =>
+                                                      element.usage ==
+                                                      Constants.stateFacility)
+                                                  .toList()
+                                              : allFacilities
+                                                  .where((element) =>
+                                                      element.usage ==
                                                       Constants.healthFacility)
+                                                  .toList();
+                                        } else if (context.selectedProject
+                                                .address?.boundaryType ==
+                                            Constants.healthFacility) {
+                                          filteredFacilities = entryType ==
+                                                  StockRecordEntryType.receipt
+                                              ? allFacilities
+                                                  .where((element) =>
+                                                      element.usage ==
+                                                      Constants.lgaFacility)
+                                                  .toList()
+                                              : allFacilities
+                                                  .where((element) =>
+                                                      element.usage ==
+                                                      Constants.deliveryTeam)
                                                   .toList();
                                         } else {
                                           filteredFacilities = context
@@ -687,15 +714,7 @@ class CustomStockDetailsPageState
                                                       element.usage ==
                                                       Constants.healthFacility)
                                                   .toList()
-                                              : entryType ==
-                                                      StockRecordEntryType
-                                                          .receipt
-                                                  ? allFacilities //TODO: changed from facilities
-                                                      .where((element) =>
-                                                          element.usage ==
-                                                          Constants.lgaFacility)
-                                                      .toList()
-                                                  : [];
+                                              : [];
                                         }
 
                                         facilities =
