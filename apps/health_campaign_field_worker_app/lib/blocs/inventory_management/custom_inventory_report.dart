@@ -75,16 +75,16 @@ class CustomInventoryReportBloc
           TransactionReason.damagedInStorage.toValue(),
           TransactionReason.damagedInTransit.toValue(),
         ];
-        receiverId = facilityId;
-        senderId = null;
+        receiverId = null;
+        senderId = facilityId;
       } else if (reportType == InventoryReportType.loss) {
         transactionType = [TransactionType.dispatched.toValue()];
         transactionReason = [
           TransactionReason.lostInStorage.toValue(),
           TransactionReason.lostInTransit.toValue(),
         ];
-        receiverId = facilityId;
-        senderId = null;
+        receiverId = null;
+        senderId = facilityId;
       }
       final data = (receiverId != null
               ? await stockRepository.search(
@@ -109,8 +109,20 @@ class CustomInventoryReportBloc
               element.auditDetails != null &&
               element.auditDetails?.createdBy ==
                   InventorySingleton().loggedInUserUuid);
+      Iterable<StockModel> filteredData = data;
+      if (reportType == InventoryReportType.dispatch) {
+        filteredData = filteredData.where((element) =>
+            element.transactionReason !=
+                TransactionReason.damagedInStorage.toValue() &&
+            element.transactionReason !=
+                TransactionReason.damagedInTransit.toValue() &&
+            element.transactionReason !=
+                TransactionReason.lostInStorage.toValue() &&
+            element.transactionReason !=
+                TransactionReason.lostInTransit.toValue());
+      }
 
-      final groupedData = data.groupListsBy(
+      final groupedData = filteredData.groupListsBy(
         (element) => DateFormat('dd MMM yyyy').format(
           DateTime.fromMillisecondsSinceEpoch(
             element.auditDetails!.createdTime,
