@@ -74,7 +74,8 @@ class SummaryReportBloc extends Bloc<SummaryReportEvent, SummaryReportState> {
       if (element.status == null) continue;
       final status = StatusMapper.fromValue(element.status);
 
-      if (status == Status.administrationSuccess) {
+      if (status == Status.administrationSuccess ||
+          status == Status.administeredSuccess) {
         administeredSuccessTaskList.add(element);
       }
     }

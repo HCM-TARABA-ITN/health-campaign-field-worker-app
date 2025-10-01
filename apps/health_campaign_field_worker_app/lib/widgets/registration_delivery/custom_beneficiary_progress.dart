@@ -5,17 +5,17 @@ import 'package:digit_components/widgets/digit_card.dart';
 import 'package:digit_data_model/data/data_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:health_campaign_field_worker_app/models/entities/assessment_checklist/status.dart';
+import '../../models/entities/assessment_checklist/status.dart';
 
-import 'package:registration_delivery/data/repositories/local/project_beneficiary.dart';
-import 'package:registration_delivery/models/entities/project_beneficiary.dart';
+import 'package:registration_delivery/models/entities/household.dart';
 import 'package:registration_delivery/models/entities/task.dart';
 import 'package:registration_delivery/utils/utils.dart';
-import 'package:registration_delivery/widgets/progress_indicator/progress_indicator.dart';
 
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
-import 'package:flutter/material.dart';
+import '../../data/repositories/custom_household.dart';
+import '../../utils/environment_config.dart';
+import '../../models/entities/household.dart' as local;
 
 import '../../data/repositories/custom_task.dart';
 import '../../models/entities/roles_type.dart';
@@ -27,10 +27,10 @@ class CustomBeneficiaryProgressBar extends StatefulWidget {
   final String prefixLabel;
 
   const CustomBeneficiaryProgressBar({
-    Key? key,
+    super.key,
     required this.label,
     required this.prefixLabel,
-  }) : super(key: key);
+  });
 
   @override
   State<CustomBeneficiaryProgressBar> createState() =>
@@ -40,6 +40,7 @@ class CustomBeneficiaryProgressBar extends StatefulWidget {
 class _CustomBeneficiaryProgressBarState
     extends State<CustomBeneficiaryProgressBar> {
   int current = 0;
+  int registrationCount = 0;
 
   bool get isRegistrar => context.loggedInUserRoles
       .where(
@@ -59,6 +60,9 @@ class _CustomBeneficiaryProgressBarState
     final taskRepository =
         context.read<LocalRepository<TaskModel, TaskSearchModel>>()
             as CustomTaskLocalRepository;
+    final householdRepository =
+        context.read<LocalRepository<HouseholdModel, HouseholdSearchModel>>()
+            as CustomHouseholdLocalRepository;
 
     final projectId = RegistrationDeliverySingleton().projectId;
     final loggedInUserUuid = RegistrationDeliverySingleton().loggedInUserUuid;
@@ -126,6 +130,54 @@ class _CustomBeneficiaryProgressBarState
         }
       },
     );
+
+    householdRepository.listenToChanges(
+      query: local.HouseholdSearchModel(
+        tenantId: envConfig.variables.tenantId,
+        clientCreatedBy: loggedInUserUuid,
+        plannedEndDate: lte.millisecondsSinceEpoch,
+        plannedStartDate: gte.millisecondsSinceEpoch,
+      ),
+      listener: (householdData) async {
+        if (mounted) {
+          final now = DateTime.now();
+          final gte = DateTime(
+            now.year,
+            now.month,
+            now.day,
+          );
+          final lte = DateTime(
+            now.year,
+            now.month,
+            now.day,
+            23,
+            59,
+            59,
+            999,
+          );
+          local.HouseholdSearchModel householdSearchQuery =
+              local.HouseholdSearchModel(
+            tenantId: envConfig.variables.tenantId,
+            clientCreatedBy: loggedInUserUuid,
+            plannedEndDate: lte.millisecondsSinceEpoch,
+            plannedStartDate: gte.millisecondsSinceEpoch,
+          );
+          List<HouseholdModel> results =
+              await householdRepository.progressBarSearch(householdSearchQuery);
+          // final groupedEntries = results.groupListsBy(
+          //   (element) => element.projectBeneficiaryClientReferenceId,
+          // );
+          if (mounted) {
+            setState(() {
+              if (mounted) {
+                registrationCount = results.length;
+                // current = groupedEntries.entries.length;
+              }
+            });
+          }
+        }
+      },
+    );
     super.didChangeDependencies();
   }
 
@@ -137,12 +189,14 @@ class _CustomBeneficiaryProgressBarState
             ? Constants.distributorDailyTarget
             : Constants.dailyTarget);
 
+    int count = isRegistrar ? registrationCount : current;
+
     return DigitCard(
       child: CustomProgressIndicatorContainer(
-        label: '${max(target - current, 0).round()} ${widget.label}',
-        prefixLabel: '$current ${widget.prefixLabel}',
+        label: '${max(target - count, 0).round()} ${widget.label}',
+        prefixLabel: '$count ${widget.prefixLabel}',
         suffixLabel: target.toStringAsFixed(0),
-        value: target == 0 ? 0 : min(current / target, 1),
+        value: target == 0 ? 0 : min(count / target, 1),
       ),
     );
   }
