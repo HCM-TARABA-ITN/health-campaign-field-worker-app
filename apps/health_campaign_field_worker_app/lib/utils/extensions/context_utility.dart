@@ -156,7 +156,9 @@ extension ContextUtilityExtensions on BuildContext {
     try {
       bool isDistributorUser = loggedInUserRoles
           .where(
-            (role) => role.code == RolesType.communityDistributor.toValue(),
+            (role) =>
+                role.code == RolesType.communityDistributor.toValue() ||
+                role.code == RolesType.distributor.toValue(),
           )
           .toList()
           .isNotEmpty;
