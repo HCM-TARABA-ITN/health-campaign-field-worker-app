@@ -29,6 +29,7 @@ import 'package:survey_form/models/entities/service_definition.dart';
 import '../blocs/app_initialization/app_initialization.dart';
 import '../data/local_store/downsync/downsync.dart';
 import '../data/network_manager.dart';
+import '../data/repositories/custom_household.dart';
 import '../data/repositories/custom_task.dart';
 import '../data/repositories/local/inventory_management/custom_stock.dart';
 import '../data/repositories/local/registration_delivery/custom_registration_delivery.dart';
@@ -215,6 +216,12 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
       ),
       RepositoryProvider<LocalRepository<HouseholdModel, HouseholdSearchModel>>(
         create: (_) => HouseholdLocalRepository(
+          sql,
+          HouseholdOpLogManager(isar),
+        ),
+      ),
+      RepositoryProvider<LocalRepository<HouseholdModel, HouseholdSearchModel>>(
+        create: (_) => CustomHouseholdLocalRepository(
           sql,
           HouseholdOpLogManager(isar),
         ),
