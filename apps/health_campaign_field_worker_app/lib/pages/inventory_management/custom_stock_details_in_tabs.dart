@@ -195,10 +195,12 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
         break;
       case StockRecordEntryType.loss:
         transactionType = TransactionType.dispatched.toValue();
+        transactionReason = TransactionReason.lostInTransit.toValue();
 
         break;
       case StockRecordEntryType.damaged:
         transactionType = TransactionType.dispatched.toValue();
+        transactionReason = TransactionReason.damagedInTransit.toValue();
         break;
     }
 
@@ -218,8 +220,33 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
 
     switch (entryType) {
       case StockRecordEntryType.receipt:
+        senderId = secondaryPartyType == 'STAFF'
+            ? secondartParty.split(Constants.pipeSeparator).last
+            : secondartParty;
+        senderType = secondaryPartyType;
+        receiverId = primaryId;
+        receiverType = primaryType;
+        senderIdToShowOnTab = senderId;
+
+        break;
       case StockRecordEntryType.loss:
+        receiverId = secondaryPartyType == 'STAFF'
+            ? secondartParty.split(Constants.pipeSeparator).last
+            : secondartParty;
+        receiverType = secondaryPartyType;
+        senderId = primaryId;
+        senderType = primaryType;
+        senderIdToShowOnTab = senderId;
+        break;
       case StockRecordEntryType.damaged:
+        receiverId = secondaryPartyType == 'STAFF'
+            ? secondartParty.split(Constants.pipeSeparator).last
+            : secondartParty;
+        receiverType = secondaryPartyType;
+        senderId = primaryId;
+        senderType = primaryType;
+        senderIdToShowOnTab = senderId;
+        break;
       case StockRecordEntryType.returned:
         senderId = secondaryPartyType == 'STAFF'
             ? secondartParty.split(Constants.pipeSeparator).last
@@ -345,7 +372,17 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
     switch (entryType) {
       case StockRecordEntryType.receipt:
       case StockRecordEntryType.loss:
+        receiverId = secondartParty;
+        receiverType = "WAREHOUSE";
+        senderId = primaryId;
+        senderType = primaryType;
+        break;
       case StockRecordEntryType.damaged:
+        receiverId = secondartParty;
+        receiverType = "WAREHOUSE";
+        senderId = primaryId;
+        senderType = primaryType;
+        break;
       case StockRecordEntryType.returned:
         senderId = secondartParty;
         senderType = "WAREHOUSE";

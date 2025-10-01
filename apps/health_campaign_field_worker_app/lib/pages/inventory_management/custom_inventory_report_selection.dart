@@ -162,28 +162,6 @@ class CustomInventoryReportSelectionPageState
                     ),
                   ),
                 ),
-                if (!context.isCommunityDistributor)
-                  const SizedBox(height: spacer4),
-                if (!context.isCommunityDistributor)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: spacer2),
-                    child: MenuCard(
-                      heading: localizations.translate(
-                        i18.inventoryReportSelection
-                            .inventoryReportReconciliationLabel,
-                      ),
-                      description: localizations.translate(
-                        i18.inventoryReportSelection
-                            .inventoryReportReconciliationDescription,
-                      ),
-                      icon: Icons.store,
-                      onTap: () => context.router.push(
-                        CustomInventoryReportDetailsRoute(
-                          reportType: InventoryReportType.reconciliation,
-                        ),
-                      ),
-                    ),
-                  ),
               ]),
               const SizedBox(height: spacer4),
             ],

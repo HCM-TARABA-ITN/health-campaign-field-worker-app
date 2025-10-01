@@ -294,6 +294,14 @@ class CustomWarehouseDetailsPageState
                                                         (recordStockBloc.state
                                                                 .entryType ==
                                                             StockRecordEntryType
+                                                                .loss) ||
+                                                        (recordStockBloc.state
+                                                                .entryType ==
+                                                            StockRecordEntryType
+                                                                .damaged) ||
+                                                        (recordStockBloc.state
+                                                                .entryType ==
+                                                            StockRecordEntryType
                                                                 .returned)) {
                                                       context.router.push(
                                                         CustomStockDetailsRoute(
