@@ -60,11 +60,43 @@ class CustomHouseholdAcknowledgementPageState
                           )
                           ?.identifierId !=
                       null)
-                    Text(
-                      getSubText(wrapper.householdMembers.first),
+                    // Text(
+                    //   getSubText(wrapper.householdMembers.first),
+                    //   textAlign: TextAlign.center,
+                    //   style: textTheme.headingM.copyWith(
+                    //       color: const DigitColors().light.paperPrimary),
+                    // ),
+                    Text.rich(
+                      TextSpan(
+                        children: [
+                          TextSpan(
+                            text:
+                                '${localizations.translate(i18.beneficiaryDetails.eToken)}\n',
+                            style: textTheme.headingM.copyWith(
+                              color: const DigitColors().light.paperPrimary,
+                            ),
+                          ),
+                          TextSpan(
+                            text:
+                                '${getSubTextId(wrapper.householdMembers.first)}\n',
+                            style: textTheme.headingM.copyWith(
+                              fontSize:
+                                  textTheme.headingM.fontSize! + 4, // bigger
+                              fontWeight: FontWeight.bold, // bold
+                              color: const DigitColors().light.paperPrimary,
+                            ),
+                          ),
+                          TextSpan(
+                            text:
+                                '\n${localizations.translate(i18.beneficiaryDetails.shortGuidingMessage)}',
+                            style: textTheme.headingM.copyWith(
+                              fontWeight: FontWeight.normal,
+                              color: const DigitColors().light.paperPrimary,
+                            ),
+                          ),
+                        ],
+                      ),
                       textAlign: TextAlign.center,
-                      style: textTheme.headingM.copyWith(
-                          color: const DigitColors().light.paperPrimary),
                     )
                 ],
                 description: householdAcknowledgementTemplate
@@ -167,5 +199,27 @@ class CustomHouseholdAcknowledgementPageState
                       IdentifierTypes.uniqueBeneficiaryID.toValue(),
                 )?.identifierId ?? localizations.translate(i18.common.noResultsFound)}'
         : '';
+  }
+
+  getSubTextId(HouseholdWrapper? wrapper) {
+    String? rawId = wrapper?.individuals?.lastOrNull?.identifiers
+        ?.lastWhereOrNull((e) =>
+            e.identifierType == IdentifierTypes.uniqueBeneficiaryID.toValue())
+        ?.identifierId;
+
+    // Format ID as xxx-xxx-xxx
+    String formattedId = '';
+    if (rawId != null && rawId.isNotEmpty) {
+      formattedId = rawId.replaceAllMapped(
+        RegExp(r".{1,3}"), // groups of 3 chars
+        (match) => "${match.group(0)} - ",
+      );
+      if (formattedId.endsWith('- ')) {
+        formattedId = formattedId.substring(0, formattedId.length - 2);
+      }
+    } else {
+      formattedId = localizations.translate(i18.common.noResultsFound);
+    }
+    return formattedId.isNotEmpty ? formattedId : '';
   }
 }
