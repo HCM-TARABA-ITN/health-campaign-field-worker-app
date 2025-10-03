@@ -69,10 +69,10 @@ class CustomMinNumberPageState extends LocalizedState<CustomMinNumberPage> {
       transactionType = 'DISPATCHED';
     } else if (widget.type == StockRecordEntryType.loss) {
       transactionType = 'DISPATCHED';
-      transactionReason = 'LOST_IN_STORAGE';
+      transactionReason = 'LOST_IN_TRANSIT';
     } else if (widget.type == StockRecordEntryType.damaged) {
       transactionType = 'DISPATCHED';
-      transactionReason = 'DAMAGED_IN_STORAGE';
+      transactionReason = 'DAMAGED_IN_TRANSIT';
     }
 
     final filteredResult = result.where((stock) {

@@ -139,7 +139,8 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
                 ? [
                     Validators.minLength(2),
                     Validators.maxLength(200),
-                    Validators.required
+                    Validators.required,
+                    Validators.pattern(r'^[a-zA-Z0-9\-\/]*$'),
                   ]
                 : [],
           ),

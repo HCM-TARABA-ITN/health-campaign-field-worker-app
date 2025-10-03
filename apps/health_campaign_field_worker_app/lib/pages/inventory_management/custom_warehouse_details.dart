@@ -81,6 +81,15 @@ class CustomWarehouseDetailsPageState
               state.whenOrNull(
                 empty: () =>
                     NoFacilitiesAssignedDialog.show(context, localizations),
+                fetched: (facilities, allfacilities) {
+                  if (facilities.isNotEmpty &&
+                      !context.isCommunityDistributor &&
+                      selectedFacilityId == null) {
+                    setState(() {
+                      selectedFacilityId = facilities.first.id;
+                    });
+                  }
+                },
               );
             },
             builder: (ctx, facilityState) {
@@ -136,6 +145,7 @@ class CustomWarehouseDetailsPageState
                           name: 'Delivery Team',
                         ),
                       ];
+
                       // teamFacilities.addAll(
                       //   facilities,
                       // );
@@ -148,9 +158,6 @@ class CustomWarehouseDetailsPageState
                   ) ??
                   [];
               final stockState = recordStockBloc.state;
-              if (facilities.isNotEmpty && !context.isCommunityDistributor) {
-                selectedFacilityId ??= facilities.first.id;
-              }
 
               return Scaffold(
                 body: GestureDetector(
