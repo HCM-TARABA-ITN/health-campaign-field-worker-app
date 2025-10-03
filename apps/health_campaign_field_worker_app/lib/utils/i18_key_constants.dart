@@ -1406,6 +1406,7 @@ class BeneficiaryDetails {
   String get householdId => 'HOUSEHOLD_ID_TEXT';
   String get beneficiaryId => 'BENEFICIARY_ID_TEXT';
   String get eToken => 'E_TOKEN_TEXT';
+  String get shortGuidingMessage => 'SHORT_GUIDING_MESSAGE';
   String get backToHouseholdDetails => 'BACK_TO_HOUSEHOLD_DETAILS';
   String get backToSearchHousehold => 'BACK_TO_SEARCH_HOUSEHOLD';
   String get beneficiaryDoseUnit => 'BENEFICIARY_DETAILS_DOSE_UNIT';
