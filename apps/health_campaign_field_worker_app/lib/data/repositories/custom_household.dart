@@ -222,8 +222,7 @@ class CustomHouseholdLocalRepository extends HouseholdLocalRepository {
     });
   }
 
-  @override
-  FutureOr<List<HouseholdModel>> search(
+  FutureOr<List<HouseholdModel>> searchUpdated(
     HouseholdSearchModel query, [
     String? userId,
   ]) async {
