@@ -69,13 +69,17 @@ class _ViewStockRecordsPageState extends LocalizedState<ViewStockRecordsPage>
           isScrollable: true,
           tabs: widget.stockRecords
               .map((stock) => Tab(
-                    text: stock.additionalFields?.fields
-                            .firstWhere(
-                              (field) => field.key == 'productName',
-                              orElse: () => AdditionalField('productName', ''),
-                            )
-                            .value
-                            ?.toString() ??
+                    text: localizations.translate(
+                          stock.additionalFields?.fields
+                                  .firstWhere(
+                                    (field) => field.key == 'productName',
+                                    orElse: () => const AdditionalField(
+                                        'productName', ''),
+                                  )
+                                  .value
+                                  ?.toString() ??
+                              '',
+                        ) ??
                         '',
                   ))
               .toList(),
@@ -138,14 +142,17 @@ class _ViewStockRecordsPageState extends LocalizedState<ViewStockRecordsPage>
                       const Expanded(child: Text('Resource')),
                       Expanded(
                         child: Text(
-                          stock.additionalFields?.fields
-                                  .firstWhere(
-                                    (field) => field.key == 'productName',
-                                    orElse: () =>
-                                        AdditionalField('productName', ''),
-                                  )
-                                  .value
-                                  ?.toString() ??
+                          localizations.translate(
+                                stock.additionalFields?.fields
+                                        .firstWhere(
+                                          (field) => field.key == 'productName',
+                                          orElse: () => const AdditionalField(
+                                              'productName', ''),
+                                        )
+                                        .value
+                                        ?.toString() ??
+                                    '',
+                              ) ??
                               '',
                         ),
                       ),
