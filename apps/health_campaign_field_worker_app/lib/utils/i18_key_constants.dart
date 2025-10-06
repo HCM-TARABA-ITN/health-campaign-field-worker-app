@@ -1314,6 +1314,9 @@ class SearchBeneficiary {
   String get proximityLabel => 'PROXIMITY_LABEL';
   String get beneficiaryIdValidInfoDescription =>
       'BENEFICIARY_ID_VALID_INFO_DESCRIPTION';
+
+  String get beneficiaryIdSearchHelperText =>
+      'BENEFICIARY_ID_SEARCH_HELPER_TEXT';
 }
 
 class IndividualDetails {
