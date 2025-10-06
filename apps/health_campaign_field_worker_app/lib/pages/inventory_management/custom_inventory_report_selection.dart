@@ -178,11 +178,11 @@ class CustomInventoryReportSelectionPageState
                       ),
                       icon: Icons.store,
                       onTap: () => context.router.push(
-                          CustomStockReconciliationRoute()
-                          // CustomInventoryReportDetailsRoute(
-                          //   reportType: InventoryReportType.reconciliation,
-                          // ),
-                          ),
+                        // CustomStockReconciliationRoute()
+                        CustomInventoryReportDetailsRoute(
+                          reportType: InventoryReportType.reconciliation,
+                        ),
+                      ),
                     ),
                   ),
               ]),

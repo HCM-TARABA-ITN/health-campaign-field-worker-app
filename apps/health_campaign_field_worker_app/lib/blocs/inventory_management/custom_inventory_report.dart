@@ -148,10 +148,10 @@ class CustomInventoryReportBloc
     emit(const InventoryReportLoadingState());
     final data = await stockReconciliationRepository.search(
       StockReconciliationSearchModel(
-        tenantId: InventorySingleton().tenantId,
-        facilityId: event.facilityId,
-        productVariantId: event.productVariantId,
-      ),
+          // tenantId: InventorySingleton().tenantId,
+          // facilityId: event.facilityId,
+          // productVariantId: event.productVariantId,
+          ),
     );
 
     final groupedData = data.groupListsBy(
