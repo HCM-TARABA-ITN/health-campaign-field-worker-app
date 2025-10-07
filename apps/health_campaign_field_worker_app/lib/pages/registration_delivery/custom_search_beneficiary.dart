@@ -903,7 +903,7 @@ class _CustomSearchBeneficiaryPageState
                               WidgetsBinding.instance.addPostFrameCallback((_) {
                                 showNoIdsAlert(
                                     context: context,
-                                    showSkip: true,
+                                    showSkip: false,
                                     localizations: localizations,
                                     shouldProceedFurther: (bool skip) {
                                       context.read<FormsBloc>().add(
