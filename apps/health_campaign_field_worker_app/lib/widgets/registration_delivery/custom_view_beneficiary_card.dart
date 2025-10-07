@@ -16,8 +16,8 @@ import 'package:registration_delivery/models/entities/task.dart';
 import 'package:registration_delivery/utils/constants.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
 import 'package:registration_delivery/utils/utils.dart';
-import 'package:registration_delivery/widgets/beneficiary/beneficiary_card.dart';
 import 'package:registration_delivery/widgets/localized.dart';
+import 'package:registration_delivery/widgets/beneficiary/beneficiary_card.dart';
 
 class CustomViewBeneficiaryCard extends LocalizedStatefulWidget {
   final HouseholdWrapper householdWrapper;
@@ -208,14 +208,7 @@ class CustomViewBeneficiaryCardState
             cellKey: 'beneficiary',
           ),
           DigitTableData(
-            e.identifiers!
-                    .lastWhereOrNull(
-                      (ind) =>
-                          ind.identifierType ==
-                          IdentifierTypes.uniqueBeneficiaryID.toValue(),
-                    )
-                    ?.identifierId ??
-                '--',
+            getFormattedBeneficiaryID(e, canBeBlank: true),
             cellKey: 'beneficiaryId',
           ),
           DigitTableData(
@@ -374,16 +367,9 @@ class CustomViewBeneficiaryCardState
                           child: Padding(
                             padding: const EdgeInsets.all(spacer1),
                             child: Text(
-                              householdMember.headOfHousehold?.identifiers
-                                      ?.lastWhereOrNull(
-                                        (e) =>
-                                            e.identifierType ==
-                                            IdentifierTypes.uniqueBeneficiaryID
-                                                .toValue(),
-                                      )
-                                      ?.identifierId ??
-                                  localizations
-                                      .translate(i18.common.noResultsFound),
+                              getFormattedBeneficiaryID(
+                                householdMember.headOfHousehold!,
+                              ),
                               style: Theme.of(context)
                                   .digitTextTheme(context)
                                   .headingXS
@@ -408,8 +394,8 @@ class CustomViewBeneficiaryCardState
                                   .householdType ==
                               HouseholdType.family)
                           ? widget.distance != null
-                              ? '${householdMember.household?.memberCount ?? 1} ${householdMember.household?.memberCount == 1 ? localizations.translate(i18.beneficiaryDetails.householdMemberSingular) : localizations.translate(i18.beneficiaryDetails.householdMemberPlural)}\n${((widget.distance!) * 1000).round() > 999 ? '(${((widget.distance!).round())} km)' : '(${((widget.distance!) * 1000).round()} mts) ${localizations.translate(i18.beneficiaryDetails.fromCurrentLocation)}'}'
-                              : '${householdMember.household?.memberCount ?? 1} ${householdMember.household?.memberCount == 1 ? localizations.translate(i18.beneficiaryDetails.householdMemberSingular) : localizations.translate(i18.beneficiaryDetails.householdMemberPlural)}'
+                              ? '${householdMember.members?.length ?? 1} ${householdMember.members?.length == 1 ? localizations.translate(i18.beneficiaryDetails.householdMemberSingular) : localizations.translate(i18.beneficiaryDetails.householdMemberPlural)}\n${((widget.distance!) * 1000).round() > 999 ? '(${((widget.distance!).round())} km)' : '(${((widget.distance!) * 1000).round()} mts) ${localizations.translate(i18.beneficiaryDetails.fromCurrentLocation)}'}'
+                              : '${householdMember.members?.length ?? 1} ${householdMember.members?.length == 1 ? localizations.translate(i18.beneficiaryDetails.householdMemberSingular) : localizations.translate(i18.beneficiaryDetails.householdMemberPlural)}'
                           : (widget.distance != null)
                               ? ((widget.distance!) * 1000).round() > 999
                                   ? '(${((widget.distance!).round())} km)'
@@ -539,5 +525,32 @@ class CustomViewBeneficiaryCardState
     } else {
       return Status.notRegistered.toValue();
     }
+  }
+
+  getFormattedBeneficiaryID(IndividualModel individual,
+      {bool canBeBlank = false}) {
+    String? rawId = individual.identifiers
+        ?.lastWhereOrNull(
+          (e) =>
+              e.identifierType == IdentifierTypes.uniqueBeneficiaryID.toValue(),
+        )
+        ?.identifierId;
+
+    // Format ID as xxx-xxx-xxx
+    String formattedId = '';
+    if (rawId != null && rawId.isNotEmpty) {
+      formattedId = rawId.replaceAllMapped(
+        RegExp(r".{1,3}"), // groups of 3 chars
+        (match) => "${match.group(0)}-",
+      );
+      if (formattedId.endsWith('-')) {
+        formattedId = formattedId.substring(0, formattedId.length - 1);
+      }
+    } else {
+      formattedId = canBeBlank
+          ? '--'
+          : localizations.translate(i18.common.noResultsFound);
+    }
+    return formattedId.isNotEmpty ? formattedId : '';
   }
 }

@@ -1314,6 +1314,9 @@ class SearchBeneficiary {
   String get proximityLabel => 'PROXIMITY_LABEL';
   String get beneficiaryIdValidInfoDescription =>
       'BENEFICIARY_ID_VALID_INFO_DESCRIPTION';
+
+  String get beneficiaryIdSearchHelperText =>
+      'BENEFICIARY_ID_SEARCH_HELPER_TEXT';
 }
 
 class IndividualDetails {
@@ -1381,6 +1384,9 @@ class IndividualDetails {
 
 class BeneficiaryDetails {
   const BeneficiaryDetails();
+
+  String get insufficientStockForDeliveryMessage =>
+      'INSUFFICIENT_STOCK_FOR_DELIVERY_MESSAGE';
 
   String get validationForExcessStockReturn =>
       "ERROR_VALIDATION_FOR_EXCESS_STOCK_RETURN";

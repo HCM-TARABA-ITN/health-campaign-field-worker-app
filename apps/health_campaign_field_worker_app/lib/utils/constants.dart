@@ -109,6 +109,8 @@ class Constants {
   static const int validMaxAge = 59;
   static const String pipeSeparator = '||';
 
+  static const int eTokenLength = 9;
+
   static const int mlPerBottle = 30;
   static const int apiCallLimit = 1000;
   static const int beneficiaryIdLength = 9;

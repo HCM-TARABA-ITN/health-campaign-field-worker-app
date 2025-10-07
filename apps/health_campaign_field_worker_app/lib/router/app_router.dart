@@ -294,12 +294,21 @@ class AppRouter extends _$AppRouter {
         // from registration delivery
         AutoRoute(
             page: RegistrationDeliveryWrapperRoute.page,
-            path: 'registration-delivery-wrapper',
+            path: 'custom-registration-delivery-wrapper',
             children: [
               AutoRoute(
-                  initial: true,
-                  page: SearchBeneficiaryRoute.page,
-                  path: 'search-beneficiary'),
+                page: SearchBeneficiaryRoute.page,
+                path: 'search-beneficiary',
+              ),
+              AutoRoute(
+                initial: true,
+                page: CustomSearchBeneficiaryRoute.page,
+                path: 'custom-search-beneficiary',
+              ),
+              RedirectRoute(
+                path: 'search-beneficiary',
+                redirectTo: 'custom-search-beneficiary',
+              ),
               AutoRoute(
                 page: BeneficiaryErrorRoute.page,
                 path: 'beneficiary-error',
@@ -310,7 +319,15 @@ class AppRouter extends _$AppRouter {
               ),
               AutoRoute(
                 page: HouseholdOverviewRoute.page,
-                path: 'overview',
+                path: 'household-overview',
+              ),
+              AutoRoute(
+                page: CustomHouseholdOverviewRoute.page,
+                path: 'custom-household-overview',
+              ),
+              RedirectRoute(
+                path: 'household-overview',
+                redirectTo: 'custom-household-overview',
               ),
               AutoRoute(
                 page: BeneficiaryDetailsRoute.page,

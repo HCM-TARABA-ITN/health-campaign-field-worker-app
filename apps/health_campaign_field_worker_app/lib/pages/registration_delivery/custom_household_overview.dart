@@ -1,5 +1,6 @@
-import 'package:auto_route/auto_route.dart';
+import 'dart:math';
 import 'package:collection/collection.dart';
+// ignore: depend_on_referenced_packages, implementation_imports
 import 'package:digit_data_converter/src/reverse_transformer_service.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/household_type.dart';
@@ -14,6 +15,7 @@ import 'package:digit_ui_components/widgets/atoms/digit_action_card.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_button.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_chip.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_search_bar.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_toast.dart';
 import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
@@ -34,13 +36,14 @@ import 'package:registration_delivery/utils/registration_component_keys.dart'
     as registration_keys;
 import 'package:registration_delivery/utils/utils.dart';
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
+import 'package:registration_delivery/widgets/beneficiary/resource_card.dart';
 import 'package:registration_delivery/widgets/localized.dart';
-import 'package:registration_delivery/widgets/member_card/member_card.dart';
 import 'package:registration_delivery/widgets/table_card/table_card.dart';
 
-import '../../utils/i18_key_constants.dart' as i18_local;
 import '../../router/app_router.dart';
-import '../../utils/utils.dart';
+import '../../utils/extensions/extensions.dart';
+import '../../utils/i18_key_constants.dart' as i18_local;
+import '../../widgets/registration_delivery/custom_member_card.dart';
 
 @RoutePage()
 class CustomHouseholdOverviewPage extends LocalizedStatefulWidget {
@@ -149,92 +152,73 @@ class _CustomHouseholdOverviewPageState
                                               padding:
                                                   const EdgeInsets.symmetric(
                                                       vertical: spacer2),
-                                              child: (state
-                                                              .householdMembers
-                                                              .first
-                                                              .tasks
-                                                              ?.lastOrNull
-                                                              ?.status ==
-                                                          Status
-                                                              .administeredSuccess
-                                                              .toValue()
-                                                      ? true
-                                                      : false)
-                                                  ? Offstage()
-                                                  : DigitButton(
-                                                      label: localizations
-                                                          .translate(
-                                                        overviewTemplate
-                                                                ?.properties?[
-                                                                    registration_keys
-                                                                        .commonKeys
-                                                                        .secondaryButtonKey]
-                                                                ?.label ??
-                                                            '${RegistrationDeliverySingleton().selectedProject!.projectType}_${i18.memberCard.deliverDetailsUpdateLabel}',
-                                                      ),
-                                                      capitalizeLetters: false,
-                                                      isDisabled: state
+                                              child: DigitButton(
+                                                label: localizations.translate(
+                                                  overviewTemplate
+                                                          ?.properties?[
+                                                              registration_keys
+                                                                  .commonKeys
+                                                                  .secondaryButtonKey]
+                                                          ?.label ??
+                                                      '${RegistrationDeliverySingleton().selectedProject!.projectType}_${i18.memberCard.deliverDetailsUpdateLabel}',
+                                                ),
+                                                capitalizeLetters: false,
+                                                isDisabled: state
+                                                            .householdMembers
+                                                            .first
+                                                            .tasks
+                                                            ?.lastOrNull
+                                                            ?.status ==
+                                                        Status
+                                                            .administeredSuccess
+                                                            .toValue()
+                                                    ? true
+                                                    : false,
+                                                type: DigitButtonType.secondary,
+                                                size: DigitButtonSize.large,
+                                                mainAxisSize: MainAxisSize.max,
+                                                onPressed: () {
+                                                  serviceDefinitionState.when(
+                                                      empty: () {},
+                                                      isloading: () {},
+                                                      serviceDefinitionFetch:
+                                                          (value, model) {
+                                                        if (value
+                                                            .where((element) =>
+                                                                element.code
+                                                                    .toString()
+                                                                    .contains(
+                                                                        '${RegistrationDeliverySingleton().selectedProject!.name}.${RegistrationDeliveryEnums.eligibility.toValue()}'))
+                                                            .toList()
+                                                            .isEmpty) {
+                                                          //TODO: need to handle in smc flow
+                                                          // context.router.push(
+                                                          //   DeliverInterventionRoute(),
+                                                          // );
+                                                        } else {
+                                                          navigateToChecklist(
+                                                              ctx,
+                                                              state
                                                                   .householdMembers
                                                                   .first
-                                                                  .tasks
-                                                                  ?.lastOrNull
-                                                                  ?.status ==
-                                                              Status
-                                                                  .administeredSuccess
-                                                                  .toValue()
-                                                          ? true
-                                                          : false,
-                                                      type: DigitButtonType
-                                                          .secondary,
-                                                      size:
-                                                          DigitButtonSize.large,
-                                                      mainAxisSize:
-                                                          MainAxisSize.max,
-                                                      onPressed: () {
-                                                        serviceDefinitionState
-                                                            .when(
-                                                                empty: () {},
-                                                                isloading:
-                                                                    () {},
-                                                                serviceDefinitionFetch:
-                                                                    (value,
-                                                                        model) {
-                                                                  if (value
-                                                                      .where((element) => element
-                                                                          .code
-                                                                          .toString()
-                                                                          .contains(
-                                                                              '${RegistrationDeliverySingleton().selectedProject!.name}.${RegistrationDeliveryEnums.eligibility.toValue()}'))
-                                                                      .toList()
-                                                                      .isEmpty) {
-                                                                    //TODO: need to handle in smc flow
-                                                                    // context.router.push(
-                                                                    //   DeliverInterventionRoute(),
-                                                                    // );
-                                                                  } else {
-                                                                    navigateToChecklist(
-                                                                        ctx,
-                                                                        state
-                                                                            .householdMembers
-                                                                            .first
-                                                                            .household!
-                                                                            .clientReferenceId,
-                                                                        state
-                                                                            .householdMembers
-                                                                            .first
-                                                                            .household
-                                                                            ?.address);
-                                                                  }
-                                                                });
-                                                        callReloadEvent(
-                                                            offset: state
-                                                                .householdMembers
-                                                                .first
-                                                                .members!
-                                                                .length,
-                                                            limit: limit);
-                                                      },
-                                                    ),
+                                                                  .household!
+                                                                  .clientReferenceId,
+                                                              state
+                                                                  .householdMembers
+                                                                  .first
+                                                                  .household
+                                                                  ?.address);
+                                                        }
+                                                      });
+                                                  callReloadEvent(
+                                                      offset: state
+                                                          .householdMembers
+                                                          .first
+                                                          .members!
+                                                          .length,
+                                                      limit: limit);
+                                                },
+                                              ),
                                             ),
                                           )
                                         : Offstage(
@@ -276,65 +260,6 @@ class _CustomHouseholdOverviewPageState
                                                   ? true
                                                   : false,
                                               onPressed: () async {
-                                                int bednet = context.bednet;
-                                                String descriptionText =
-                                                    localizations.translate(
-                                                        i18_local
-                                                            .beneficiaryDetails
-                                                            .insufficientStockMessage);
-                                                //todo uncomment the code after testing
-                                                // if (bednet <= 0) {
-                                                //   descriptionText +=
-                                                //       "\n ${localizations.translate(i18_local.beneficiaryDetails.bednetUnit)}";
-                                                //   return showCustomPopup(
-                                                //     context: context,
-                                                //     builder: (popupContext) =>
-                                                //         Popup(
-                                                //       title: localizations
-                                                //           .translate(i18_local
-                                                //               .beneficiaryDetails
-                                                //               .insufficientStockHeading),
-                                                //       onOutsideTap: () {
-                                                //         Navigator.of(
-                                                //                 popupContext)
-                                                //             .pop(false);
-                                                //       },
-                                                //       description:
-                                                //           descriptionText,
-                                                //       type: PopUpType.simple,
-                                                //       actions: [
-                                                //         DigitButton(
-                                                //           label: localizations
-                                                //               .translate(
-                                                //             i18_local
-                                                //                 .beneficiaryDetails
-                                                //                 .goToHome,
-                                                //           ),
-                                                //           onPressed: () {
-                                                //             Navigator.of(
-                                                //               popupContext,
-                                                //               rootNavigator:
-                                                //                   true,
-                                                //             ).pop();
-                                                //             final parent = context
-                                                //                     .router
-                                                //                     .parent()
-                                                //                 as StackRouter;
-                                                //             // Pop twice to navigate back to the previous screen
-                                                //             parent
-                                                //                 .popUntilRouteWithName(
-                                                //                     HomeRoute
-                                                //                         .name);
-                                                //           },
-                                                //           type: DigitButtonType
-                                                //               .primary,
-                                                //           size: DigitButtonSize
-                                                //               .large,
-                                                //         ),
-                                                //       ],
-                                                //     ),
-                                                //   );
-                                                // }
                                                 serviceDefinitionState.when(
                                                     empty: () {},
                                                     isloading: () {},
@@ -352,9 +277,132 @@ class _CustomHouseholdOverviewPageState
                                                                       '${RegistrationDeliverySingleton().selectedProject!.name}.${RegistrationDeliveryEnums.eligibility.toValue()}'))
                                                           .toList()
                                                           .isEmpty) {
-                                                        context.router.push(
-                                                          BeneficiaryDetailsRoute(),
-                                                        );
+                                                        if (overviewTemplate
+                                                                ?.navigateTo !=
+                                                            null) {
+                                                          if (overviewTemplate!
+                                                                  .navigateTo
+                                                                  ?.type ==
+                                                              "form") {
+                                                            final pageName = context
+                                                                .read<
+                                                                    FormsBloc>()
+                                                                .state
+                                                                .cachedSchemas[
+                                                                    overviewTemplate
+                                                                        .navigateTo!
+                                                                        .name]
+                                                                ?.pages
+                                                                .entries
+                                                                .first
+                                                                .key;
+
+                                                            if (pageName ==
+                                                                null) {
+                                                              Toast.showToast(
+                                                                context,
+                                                                message: localizations
+                                                                    .translate(
+                                                                        'NO_FORM_FOUND_FOR_REGISTRATION'),
+                                                                type: ToastType
+                                                                    .error,
+                                                              );
+                                                            } else {
+                                                              int requiredCount = min(
+                                                                      ((state.householdMembers.firstOrNull!.household?.memberCount ?? 0) +
+                                                                              1) /
+                                                                          2,
+                                                                      4)
+                                                                  .toInt();
+                                                              int bednet =
+                                                                  context
+                                                                      .bednet;
+
+                                                              if (bednet >=
+                                                                  requiredCount) {
+                                                                context.router.push(
+                                                                    FormsRenderRoute(
+                                                                  currentSchemaKey:
+                                                                      overviewTemplate
+                                                                          .navigateTo!
+                                                                          .name,
+                                                                  pageName:
+                                                                      pageName,
+                                                                  defaultValues: {
+                                                                    'administrativeArea':
+                                                                        localizations.translate(
+                                                                            RegistrationDeliverySingleton().boundary?.code ??
+                                                                                '')
+                                                                  },
+                                                                  customComponents: const [
+                                                                    {
+                                                                      'resourceCard':
+                                                                          ResourceCard()
+                                                                    }
+                                                                  ],
+                                                                ));
+                                                              } else {
+                                                                showCustomPopup(
+                                                                  context:
+                                                                      context,
+                                                                  builder:
+                                                                      (BuildContext
+                                                                              context) =>
+                                                                          Popup(
+                                                                    title: localizations.translate(i18_local
+                                                                        .beneficiaryDetails
+                                                                        .insufficientStockHeading),
+                                                                    onOutsideTap:
+                                                                        () {
+                                                                      Navigator.of(
+                                                                              context)
+                                                                          .pop(
+                                                                              false);
+                                                                    },
+                                                                    description:
+                                                                        localizations.translate(i18_local
+                                                                            .beneficiaryDetails
+                                                                            .insufficientStockForDeliveryMessage),
+                                                                    type: PopUpType
+                                                                        .simple,
+                                                                    actions: [
+                                                                      DigitButton(
+                                                                        label: localizations
+                                                                            .translate(
+                                                                          i18_local
+                                                                              .common
+                                                                              .coreCommonGoback,
+                                                                        ),
+                                                                        onPressed:
+                                                                            () {
+                                                                          Navigator
+                                                                              .of(
+                                                                            context,
+                                                                            rootNavigator:
+                                                                                true,
+                                                                          ).pop();
+                                                                          //
+                                                                        },
+                                                                        type: DigitButtonType
+                                                                            .primary,
+                                                                        size: DigitButtonSize
+                                                                            .large,
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                );
+                                                              }
+                                                            }
+                                                          } else {
+                                                            context.router.push(
+                                                              BeneficiaryDetailsRoute(),
+                                                            );
+                                                          }
+                                                        } else {
+                                                          context.router.push(
+                                                            BeneficiaryDetailsRoute(),
+                                                          );
+                                                        }
                                                       } else {
                                                         navigateToChecklist(
                                                             ctx,
@@ -1010,7 +1058,7 @@ class _CustomHouseholdOverviewPageState
                                             currentCycle,
                                           );
 
-                                          return MemberCard(
+                                          return CustomMemberCard(
                                             showAddChildAction: false,
                                             isHead: isHead,
                                             individual: e,
