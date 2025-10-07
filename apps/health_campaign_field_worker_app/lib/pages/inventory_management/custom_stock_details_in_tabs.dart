@@ -744,24 +744,6 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
                               ),
                             );
                           }),
-                    // ReactiveWrapperField(
-                    //   formControlName: _waybillQuantityKey,
-                    //   builder: (field) {
-                    //     return InputField(
-                    //       type: InputType.text,
-                    //       label: 'Quantity of Blisters' + ,
-                    //       errorMessage: field.errorText,
-                    //       onChange: (val) {
-                    //         if (val == '') {
-                    //           field.control.value = '0';
-                    //         } else {
-                    //           field.control.value = val;
-                    //         }
-                    //       },
-                    //       isRequired: true,
-                    //     );
-                    //   },
-                    // ),
                     const SizedBox(height: 16),
                     ReactiveWrapperField(
                       formControlName: _commentsKey,
@@ -939,7 +921,9 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
                 ?.value
                 ?.toString() ??
             '0');
-        final totalQty = ((entryType == StockRecordEntryType.dispatch)
+        final totalQty = (((entryType == StockRecordEntryType.dispatch) ||
+                    entryType == StockRecordEntryType.loss ||
+                    entryType == StockRecordEntryType.damaged)
                 ? quantity * -1
                 : quantity) -
             quantityWasted;
@@ -1003,34 +987,81 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
             return;
           }
         }
-      }
 
-      for (final stockModel in _tabStocks.values) {
-        context.read<RecordStockBloc>().add(
-              RecordStockSaveStockDetailsEvent(
-                stockModel: stockModel,
+        if (entryType == StockRecordEntryType.loss ||
+            entryType == StockRecordEntryType.damaged) {
+          if (productName == Constants.spaq1 &&
+              (currentSpaq1Count + totalQty < 0)) {
+            await DigitToast.show(
+              context,
+              options: DigitToastOptions(
+                  localizations.translate(entryType == StockRecordEntryType.loss
+                      ? i18_local
+                          .beneficiaryDetails.validationForExcessStockLost
+                      : i18_local
+                          .beneficiaryDetails.validationForExcessStockDamage),
+                  true,
+                  theme),
+            );
+            return;
+          } else if (productName == Constants.spaq2 &&
+              (currentSpaq2Count + totalQty < 0)) {
+            await DigitToast.show(
+              context,
+              options: DigitToastOptions(
+                  localizations.translate(entryType == StockRecordEntryType.loss
+                      ? i18_local
+                          .beneficiaryDetails.validationForExcessStockLost
+                      : i18_local
+                          .beneficiaryDetails.validationForExcessStockDamage),
+                  true,
+                  theme),
+            );
+            return;
+          } else if (productName == Constants.bednet &&
+              (currentBednetCount + totalQty < 0)) {
+            await DigitToast.show(
+              context,
+              options: DigitToastOptions(
+                  localizations.translate(entryType == StockRecordEntryType.loss
+                      ? i18_local
+                          .beneficiaryDetails.validationForExcessStockLost
+                      : i18_local
+                          .beneficiaryDetails.validationForExcessStockDamage),
+                  true,
+                  theme),
+            );
+            return;
+          }
+        }
+
+        for (final stockModel in _tabStocks.values) {
+          context.read<RecordStockBloc>().add(
+                RecordStockSaveStockDetailsEvent(
+                  stockModel: stockModel,
+                ),
+              );
+          context.read<RecordStockBloc>().add(
+                const RecordStockCreateStockEntryEvent(),
+              );
+        }
+
+        context.read<AuthBloc>().add(
+              AuthAddProductCountsEvent(
+                bednetCount: bednetCount,
+                spaq1Count: spaq1Count,
+                spaq2Count: spaq2Count,
+                blueVasCount: 0,
+                redVasCount: 0,
               ),
             );
-        context.read<RecordStockBloc>().add(
-              const RecordStockCreateStockEntryEvent(),
-            );
+
+        (context.router.parent() as StackRouter).maybePop();
+        context.router.push(CustomAcknowledgementRoute(
+            mrnNumber: _sharedMRN,
+            stockRecords: _tabStocks.values.toList(),
+            entryType: entryType));
       }
-
-      context.read<AuthBloc>().add(
-            AuthAddProductCountsEvent(
-              bednetCount: bednetCount,
-              spaq1Count: spaq1Count,
-              spaq2Count: spaq2Count,
-              blueVasCount: 0,
-              redVasCount: 0,
-            ),
-          );
-
-      (context.router.parent() as StackRouter).maybePop();
-      context.router.push(CustomAcknowledgementRoute(
-          mrnNumber: _sharedMRN,
-          stockRecords: _tabStocks.values.toList(),
-          entryType: entryType));
     }
   }
 
