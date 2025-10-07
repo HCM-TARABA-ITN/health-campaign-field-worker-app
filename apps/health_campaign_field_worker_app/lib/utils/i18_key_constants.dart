@@ -1385,6 +1385,9 @@ class IndividualDetails {
 class BeneficiaryDetails {
   const BeneficiaryDetails();
 
+  String get insufficientStockForDeliveryMessage =>
+      'INSUFFICIENT_STOCK_FOR_DELIVERY_MESSAGE';
+
   String get validationForExcessStockReturn =>
       "ERROR_VALIDATION_FOR_EXCESS_STOCK_RETURN";
   String get validationForExcessStockDispatch =>

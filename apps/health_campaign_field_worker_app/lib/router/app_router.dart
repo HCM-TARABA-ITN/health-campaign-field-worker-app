@@ -294,7 +294,7 @@ class AppRouter extends _$AppRouter {
         // from registration delivery
         AutoRoute(
             page: RegistrationDeliveryWrapperRoute.page,
-            path: 'registration-delivery-wrapper',
+            path: 'custom-registration-delivery-wrapper',
             children: [
               AutoRoute(
                 page: SearchBeneficiaryRoute.page,
@@ -319,7 +319,15 @@ class AppRouter extends _$AppRouter {
               ),
               AutoRoute(
                 page: HouseholdOverviewRoute.page,
-                path: 'overview',
+                path: 'household-overview',
+              ),
+              AutoRoute(
+                page: CustomHouseholdOverviewRoute.page,
+                path: 'custom-household-overview',
+              ),
+              RedirectRoute(
+                path: 'household-overview',
+                redirectTo: 'custom-household-overview',
               ),
               AutoRoute(
                 page: BeneficiaryDetailsRoute.page,
