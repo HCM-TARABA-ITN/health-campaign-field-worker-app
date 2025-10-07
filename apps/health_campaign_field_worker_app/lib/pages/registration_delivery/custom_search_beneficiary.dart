@@ -113,19 +113,9 @@ class _CustomSearchBeneficiaryPageState
         RegistrationDeliverySingleton().templateConfigs?[pageKey];
     final theme = Theme.of(context);
     final textTheme = theme.digitTextTheme(context);
-    final schemas = [
-      RegistrationDeliverySingleton().regisrationConfig,
-      RegistrationDeliverySingleton().deliveryConfig,
-    ]
-        .where((s) =>
-            s != null &&
-            s.trim().isNotEmpty &&
-            s.trim().toLowerCase() != 'null')
-        .cast<String>()
-        .toList();
 
     final isDeliveryFlow =
-        schemas.isNotEmpty && schemas.first.contains('DELIVERYFLOW');
+        searchTemplate?.properties?['searchByProximity']?.hidden == true;
 
     return BlocListener<RegistrationWrapperBloc, RegistrationWrapperState>(
       listener: (context, createState) {
@@ -913,7 +903,7 @@ class _CustomSearchBeneficiaryPageState
                               WidgetsBinding.instance.addPostFrameCallback((_) {
                                 showNoIdsAlert(
                                     context: context,
-                                    showSkip: true,
+                                    showSkip: false,
                                     localizations: localizations,
                                     shouldProceedFurther: (bool skip) {
                                       context.read<FormsBloc>().add(
@@ -1285,7 +1275,8 @@ class _CustomSearchBeneficiaryPageState
                 final isCommunity =
                     RegistrationDeliverySingleton().householdType ==
                         HouseholdType.community;
-                final isTextShort = value.text.length < 3;
+                // ignore: prefer_is_empty
+                final isTextShort = value.text.length < 0;
 
                 return Offstage(
                   offstage: isCommunity && isTextShort,

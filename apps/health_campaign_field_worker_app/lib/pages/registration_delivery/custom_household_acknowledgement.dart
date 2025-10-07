@@ -40,6 +40,10 @@ class CustomHouseholdAcknowledgementPageState
     final theme = Theme.of(context);
     final textTheme = theme.digitTextTheme(context);
     final wrapper = context.read<RegistrationWrapperBloc>().state;
+    final isDeliveryFlow = householdAcknowledgementTemplate?.label
+            .toLowerCase()
+            .contains('delivery') ==
+        true;
 
     return PopScope(
       canPop: false,
@@ -88,7 +92,7 @@ class CustomHouseholdAcknowledgementPageState
                           ),
                           TextSpan(
                             text:
-                                '\n${localizations.translate(i18.beneficiaryDetails.shortGuidingMessage)}',
+                                '\n${localizations.translate(isDeliveryFlow ? i18.beneficiaryDetails.shortGuidingMessageForDelivery : i18.beneficiaryDetails.shortGuidingMessage)}',
                             style: textTheme.headingM.copyWith(
                               fontWeight: FontWeight.normal,
                               color: const DigitColors().light.paperPrimary,
@@ -212,10 +216,10 @@ class CustomHouseholdAcknowledgementPageState
     if (rawId != null && rawId.isNotEmpty) {
       formattedId = rawId.replaceAllMapped(
         RegExp(r".{1,3}"), // groups of 3 chars
-        (match) => "${match.group(0)} - ",
+        (match) => "${match.group(0)}-",
       );
-      if (formattedId.endsWith('- ')) {
-        formattedId = formattedId.substring(0, formattedId.length - 2);
+      if (formattedId.endsWith('-')) {
+        formattedId = formattedId.substring(0, formattedId.length - 1);
       }
     } else {
       formattedId = localizations.translate(i18.common.noResultsFound);
