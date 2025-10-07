@@ -116,7 +116,7 @@ class Constants {
   static const int beneficiaryIdLength = 9;
   static const String headConsent = 'caregiver_consent_registration';
   static const int dailyTarget = 90;
-  static const int registrarDailyTarget = 60;
+  static const int registrarDailyTarget = 100;
   static const int distributorDailyTarget = 200;
 
   // for stock validation
