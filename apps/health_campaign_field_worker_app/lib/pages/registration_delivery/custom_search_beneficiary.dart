@@ -1275,7 +1275,8 @@ class _CustomSearchBeneficiaryPageState
                 final isCommunity =
                     RegistrationDeliverySingleton().householdType ==
                         HouseholdType.community;
-                final isTextShort = value.text.length < 3;
+                // ignore: prefer_is_empty
+                final isTextShort = value.text.length < 0;
 
                 return Offstage(
                   offstage: isCommunity && isTextShort,
