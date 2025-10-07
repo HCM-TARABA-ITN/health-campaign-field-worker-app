@@ -113,19 +113,9 @@ class _CustomSearchBeneficiaryPageState
         RegistrationDeliverySingleton().templateConfigs?[pageKey];
     final theme = Theme.of(context);
     final textTheme = theme.digitTextTheme(context);
-    final schemas = [
-      RegistrationDeliverySingleton().regisrationConfig,
-      RegistrationDeliverySingleton().deliveryConfig,
-    ]
-        .where((s) =>
-            s != null &&
-            s.trim().isNotEmpty &&
-            s.trim().toLowerCase() != 'null')
-        .cast<String>()
-        .toList();
 
     final isDeliveryFlow =
-        schemas.isNotEmpty && schemas.first.contains('DELIVERYFLOW');
+        searchTemplate?.properties?['searchByProximity']?.hidden == true;
 
     return BlocListener<RegistrationWrapperBloc, RegistrationWrapperState>(
       listener: (context, createState) {
