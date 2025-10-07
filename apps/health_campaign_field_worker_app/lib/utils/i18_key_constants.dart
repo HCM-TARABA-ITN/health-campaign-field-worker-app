@@ -1392,6 +1392,10 @@ class BeneficiaryDetails {
       "ERROR_VALIDATION_FOR_EXCESS_STOCK_RETURN";
   String get validationForExcessStockDispatch =>
       "ERROR_VALIDATION_FOR_EXCESS_STOCK_DISPATCH";
+  String get validationForExcessStockLost =>
+      "ERROR_VALIDATIN_FOR_EXCESS_STOCK_LOST";
+  String get validationForExcessStockDamage =>
+      "ERROR_VALIDATIN_FOR_EXCESS_STOCK_DAMAGE";
 
   String get validationForExcessStock =>
       "ERROR_VALIDATIN_FOR_EXCESS_STOCK_DISPATCH";

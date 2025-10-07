@@ -664,6 +664,8 @@ class CustomInventoryReportDetailsPageState
                                             const receivedKey = 'received';
                                             const dispatchedKey = 'dispatched';
                                             const returnedKey = 'returned';
+                                            const lostKey = 'lost';
+                                            const damagedKey = 'damaged';
                                             const stockInHandKey =
                                                 'stockInHand';
                                             const manualCountKey =
@@ -707,8 +709,20 @@ class CustomInventoryReportDetailsPageState
                                                           .returnedCountLabel,
                                                     ),
                                                     key: returnedKey,
-                                                    width: 120,
+                                                    width: 100,
                                                   ),
+                                                  DigitGridColumn(
+                                                      label: i18
+                                                          .inventoryReportDetails
+                                                          .lostCountLabel,
+                                                      key: lostKey,
+                                                      width: 100),
+                                                  DigitGridColumn(
+                                                      label: i18
+                                                          .inventoryReportDetails
+                                                          .damagedCountLabel,
+                                                      key: damagedKey,
+                                                      width: 100),
                                                   DigitGridColumn(
                                                     label:
                                                         localizations.translate(
@@ -761,6 +775,22 @@ class CustomInventoryReportDetailsPageState
                                                                 _getCountFromAdditionalDetails(
                                                               model,
                                                               'returned',
+                                                            ),
+                                                          ),
+                                                          DigitGridCell(
+                                                            key: lostKey,
+                                                            value:
+                                                                _getCountFromAdditionalDetails(
+                                                              model,
+                                                              'lost',
+                                                            ),
+                                                          ),
+                                                          DigitGridCell(
+                                                            key: damagedKey,
+                                                            value:
+                                                                _getCountFromAdditionalDetails(
+                                                              model,
+                                                              'damaged',
                                                             ),
                                                           ),
                                                           DigitGridCell(
