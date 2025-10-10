@@ -727,15 +727,6 @@ class CustomStockDetailsPageState
                                                     ? facilities
                                                     : filteredFacilities;
 
-                                        if (context.isDistributor &&
-                                            entryType !=
-                                                StockRecordEntryType.returned) {
-                                          facilities = facilities
-                                              .where((element) =>
-                                                  element.id == senderId)
-                                              .toList();
-                                        }
-
                                         List<FacilityModel> teamFacilities = [
                                           FacilityModel(
                                             id: 'Delivery Team',
@@ -753,7 +744,6 @@ class CustomStockDetailsPageState
                                             ),
                                             InkWell(
                                               onTap: () async {
-                                                clearQRCodes();
                                                 form
                                                     .control(_deliveryTeamKey)
                                                     .value = '';
@@ -793,6 +783,7 @@ class CustomStockDetailsPageState
                                                     'Delivery Team') {
                                                   setState(() {
                                                     deliveryTeamSelected = true;
+                                                    clearQRCodes();
                                                   });
                                                 } else {
                                                   setState(() {
@@ -924,6 +915,7 @@ class CustomStockDetailsPageState
                                       });
                                       return InkWell(
                                         onTap: () async {
+                                          clearQRCodes();
                                           Navigator.of(context).push(
                                             MaterialPageRoute(
                                               builder: (context) =>
