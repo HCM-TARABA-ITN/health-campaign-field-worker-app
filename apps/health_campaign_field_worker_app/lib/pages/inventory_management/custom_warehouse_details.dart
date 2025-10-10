@@ -72,7 +72,7 @@ class CustomWarehouseDetailsPageState
     final recordStockBloc = BlocProvider.of<RecordStockBloc>(context);
     final textTheme = theme.digitTextTheme(context);
 
-    return InventorySingleton().projectId.isEmpty
+    return context.projectId.isEmpty
         ? Center(
             child: Text(localizations
                 .translate(i18.stockReconciliationDetails.noProjectSelected)))
@@ -82,9 +82,7 @@ class CustomWarehouseDetailsPageState
                 empty: () =>
                     NoFacilitiesAssignedDialog.show(context, localizations),
                 fetched: (facilities, allfacilities) {
-                  if (facilities.isNotEmpty &&
-                      !context.isCommunityDistributor &&
-                      selectedFacilityId == null) {
+                  if (facilities.isNotEmpty && selectedFacilityId == null) {
                     setState(() {
                       selectedFacilityId = facilities.first.id;
                     });
@@ -146,9 +144,9 @@ class CustomWarehouseDetailsPageState
                         ),
                       ];
 
-                      // teamFacilities.addAll(
-                      //   facilities,
-                      // );
+                      teamFacilities.addAll(
+                        facilities,
+                      );
 
                       return context.isDistributor &&
                               !InventorySingleton().isWareHouseMgr
