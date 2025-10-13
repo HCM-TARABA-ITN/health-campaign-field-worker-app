@@ -761,12 +761,26 @@ class CustomStockDetailsPageState
                                                 )) as FacilityModel?;
 
                                                 if (facility == null) return;
-                                                form
-                                                        .control(_secondaryPartyKey)
-                                                        .value =
-                                                    localizations.translate(
-                                                  'FAC_${facility.id}',
-                                                );
+                                                // form
+                                                //         .control(_secondaryPartyKey)
+                                                //         .value =
+                                                //     localizations.translate(
+                                                //   'FAC_${facility.id}',
+                                                // );
+                                                if (facility.id !=
+                                                    'Delivery Team') {
+                                                  form
+                                                          .control(
+                                                              _secondaryPartyKey)
+                                                          .value =
+                                                      localizations.translate(
+                                                          'FAC_${facility.id}');
+                                                } else {
+                                                  form
+                                                      .control(
+                                                          _secondaryPartyKey)
+                                                      .value = facility.name;
+                                                }
                                                 String facilityPrefix =
                                                     facility.id ==
                                                             'Delivery Team'
@@ -779,10 +793,24 @@ class CustomStockDetailsPageState
                                                   selectedFacilityId =
                                                       facility.id;
                                                 });
+                                                // if (facility.id ==
+                                                //     'Delivery Team') {
+                                                //   setState(() {
+                                                //     deliveryTeamSelected = true;
+                                                //     clearQRCodes();
+                                                //   });
+                                                // } else {
+                                                //   setState(() {
+                                                //     deliveryTeamSelected =
+                                                //         false;
+                                                //   });
+                                                // }
                                                 if (facility.id ==
                                                     'Delivery Team') {
                                                   setState(() {
                                                     deliveryTeamSelected = true;
+                                                    selectedFacilityId =
+                                                        null; // 👈 clear old facility ID
                                                     clearQRCodes();
                                                   });
                                                 } else {
@@ -1105,6 +1133,7 @@ class CustomStockDetailsPageState
     context.read<DigitScannerBloc>().add(const DigitScannerEvent.handleScanner(
           barCode: [],
           qrCode: [],
+          manualCode: '',
         ));
   }
 

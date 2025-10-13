@@ -858,6 +858,41 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
     );
   }
 
+  Future<int> totalIssuedBednet() async {
+    final repository =
+        context.read<LocalRepository<StockModel, StockSearchModel>>()
+            as CustomStockLocalRepository;
+
+    final result =
+        await repository.search(StockSearchModel(), context.loggedInUserUuid);
+    final secondartParty = receivedFrom.contains(("FAC_"))
+        ? receivedFrom.replaceFirst("FAC_", "")
+        : receivedFrom.split('||')[1];
+    final primaryId = BlocProvider.of<RecordStockBloc>(
+      context,
+    ).state.primaryId;
+
+    // Define correct values
+    String? transactionType;
+    String? transactionReason;
+
+    transactionType = 'DISPATCHED';
+
+    final filteredResult = result.where((stock) {
+      return stock.transactionType == transactionType &&
+          stock.transactionReason == transactionReason &&
+          stock.senderId == primaryId &&
+          stock.receiverId == secondartParty;
+      ;
+    }).toList();
+
+    int totalQuantity = 0;
+    for (var stock in filteredResult) {
+      totalQuantity += int.tryParse(stock.quantity ?? '0') ?? 0;
+    }
+    return totalQuantity;
+  }
+
   Future<void> _handleFinalSubmission(BuildContext context,
       StockRecordEntryType entryType, List<String> selectedProducts) async {
     final theme = Theme.of(context);
@@ -1028,6 +1063,23 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
                           .beneficiaryDetails.validationForExcessStockLost
                       : i18_local
                           .beneficiaryDetails.validationForExcessStockDamage),
+                  true,
+                  theme),
+            );
+            return;
+          }
+        }
+
+        if (entryType == StockRecordEntryType.returned) {
+          final issuedBednetCount = await totalIssuedBednet();
+
+          if (productName == Constants.bednet &&
+              (totalQty > issuedBednetCount)) {
+            await DigitToast.show(
+              context,
+              options: DigitToastOptions(
+                  localizations.translate(i18_local
+                      .beneficiaryDetails.validationForExcessStockReturn),
                   true,
                   theme),
             );

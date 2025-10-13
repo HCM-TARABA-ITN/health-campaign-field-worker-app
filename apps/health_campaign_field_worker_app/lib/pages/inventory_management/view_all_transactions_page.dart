@@ -48,15 +48,19 @@ class _ViewAllTransactionsScreenState extends State<ViewAllTransactionsScreen> {
     String? warehouseId = widget.warehouseId;
 
     List<StockModel> result;
+    List<StockModel> rawResult;
     List<StockModel> receivedResult;
     // check for valid user
     if (context.isLGA ||
         context.isHealthFacilitySupervisor ||
         InventorySingleton().isDistributor) {
-      result = await repository.search(StockSearchModel(
+      rawResult = await repository.search(StockSearchModel(
           transactionType: [TransactionType.dispatched.toValue()],
           transactionReason: [],
           receiverId: warehouseId == null ? [] : [warehouseId]));
+      result = rawResult
+          .where((element) => element.transactionReason == null)
+          .toList();
       if (context.isHealthFacilitySupervisor) {
         result = result.where((stock) {
           return stock.senderType == 'WAREHOUSE';

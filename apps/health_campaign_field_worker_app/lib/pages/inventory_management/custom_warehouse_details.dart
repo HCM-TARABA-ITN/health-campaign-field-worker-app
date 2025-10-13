@@ -144,12 +144,12 @@ class CustomWarehouseDetailsPageState
                         ),
                       ];
 
-                      teamFacilities.addAll(
-                        facilities,
-                      );
+                      // teamFacilities.addAll(
+                      //   facilities,
+                      // );
 
                       return context.isDistributor &&
-                              !InventorySingleton().isWareHouseMgr
+                              !context.isWarehouseManager
                           ? teamFacilities
                           : facilities;
                     },
@@ -334,16 +334,16 @@ class CustomWarehouseDetailsPageState
                                         );
                                       },
                                     ),
-                                    if (InventorySingleton().isDistributor &&
-                                        stockState.entryType !=
-                                            StockRecordEntryType.dispatch)
-                                      DigitButton(
-                                        label: "Scan Resource",
-                                        onPressed: _handleSubmission,
-                                        type: DigitButtonType.primary,
-                                        mainAxisSize: MainAxisSize.max,
-                                        size: DigitButtonSize.large,
-                                      ),
+                                    // if (InventorySingleton().isDistributor &&
+                                    //     stockState.entryType !=
+                                    //         StockRecordEntryType.dispatch)
+                                    //   DigitButton(
+                                    //     label: "Scan Resource",
+                                    //     onPressed: _handleSubmission,
+                                    //     type: DigitButtonType.primary,
+                                    //     mainAxisSize: MainAxisSize.max,
+                                    //     size: DigitButtonSize.large,
+                                    //   ),
                                   ]),
                             ),
                             children: [
@@ -454,11 +454,13 @@ class CustomWarehouseDetailsPageState
                                                   control.invalid &&
                                                   control.touched,
                                               builder: (field) {
-                                                field.control.value =
-                                                    facilities.first.id;
-                                                controller1.text =
-                                                    localizations.translate(
-                                                        'FAC_${facilities.first.id}');
+                                                if (facilities.isNotEmpty) {
+                                                  field.control.value ??=
+                                                      facilities.first.id;
+                                                  controller1.text =
+                                                      localizations.translate(
+                                                          'FAC_${facilities.first.id}');
+                                                }
                                                 return InputField(
                                                   type: InputType.search,
                                                   label:
