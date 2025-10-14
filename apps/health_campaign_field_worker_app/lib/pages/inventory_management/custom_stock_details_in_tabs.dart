@@ -867,7 +867,9 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
         await repository.search(StockSearchModel(), context.loggedInUserUuid);
     final secondartParty = receivedFrom.contains(("FAC_"))
         ? receivedFrom.replaceFirst("FAC_", "")
-        : receivedFrom.split('||')[1];
+        : receivedFrom.contains("||")
+            ? receivedFrom.split("||").last
+            : receivedFrom;
     final primaryId = BlocProvider.of<RecordStockBloc>(
       context,
     ).state.primaryId;
