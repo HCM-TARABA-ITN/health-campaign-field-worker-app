@@ -334,16 +334,20 @@ class CustomWarehouseDetailsPageState
                                         );
                                       },
                                     ),
-                                    // if (InventorySingleton().isDistributor &&
-                                    //     stockState.entryType !=
-                                    //         StockRecordEntryType.dispatch)
-                                    //   DigitButton(
-                                    //     label: "Scan Resource",
-                                    //     onPressed: _handleSubmission,
-                                    //     type: DigitButtonType.primary,
-                                    //     mainAxisSize: MainAxisSize.max,
-                                    //     size: DigitButtonSize.large,
-                                    //   ),
+                                    if (InventorySingleton().isDistributor &&
+                                        stockState.entryType !=
+                                            StockRecordEntryType.dispatch &&
+                                        stockState.entryType !=
+                                            StockRecordEntryType.damaged &&
+                                        stockState.entryType !=
+                                            StockRecordEntryType.loss)
+                                      DigitButton(
+                                        label: "Scan Resource",
+                                        onPressed: _handleSubmission,
+                                        type: DigitButtonType.primary,
+                                        mainAxisSize: MainAxisSize.max,
+                                        size: DigitButtonSize.large,
+                                      ),
                                   ]),
                             ),
                             children: [

@@ -867,22 +867,15 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
         await repository.search(StockSearchModel(), context.loggedInUserUuid);
     final secondartParty = receivedFrom.contains(("FAC_"))
         ? receivedFrom.replaceFirst("FAC_", "")
-        : receivedFrom.contains("||")
-            ? receivedFrom.split("||").last
+        : receivedFrom.contains('||')
+            ? receivedFrom.split('||')[1]
             : receivedFrom;
     final primaryId = BlocProvider.of<RecordStockBloc>(
       context,
     ).state.primaryId;
 
-    // Define correct values
-    String? transactionType;
-    String? transactionReason;
-
-    transactionType = 'DISPATCHED';
-
     final filteredResult = result.where((stock) {
-      return stock.transactionType == transactionType &&
-          stock.transactionReason == transactionReason &&
+      return stock.transactionType == 'DISPATCHED' &&
           stock.senderId == primaryId &&
           stock.receiverId == secondartParty;
       ;
@@ -892,7 +885,20 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
     for (var stock in filteredResult) {
       totalQuantity += int.tryParse(stock.quantity ?? '0') ?? 0;
     }
-    return totalQuantity;
+
+    final filteredReturnResult = result.where((stock) {
+      return stock.transactionType == 'RECEIVED' &&
+          stock.transactionReason == 'RETURNED' &&
+          stock.senderId == secondartParty &&
+          stock.receiverId == primaryId;
+      ;
+    }).toList();
+
+    int totalReturnQuantity = 0;
+    for (var stock in filteredReturnResult) {
+      totalReturnQuantity += int.tryParse(stock.quantity ?? '0') ?? 0;
+    }
+    return totalQuantity - totalReturnQuantity;
   }
 
   Future<void> _handleFinalSubmission(BuildContext context,
