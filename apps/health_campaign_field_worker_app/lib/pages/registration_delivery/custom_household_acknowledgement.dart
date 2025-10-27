@@ -14,6 +14,7 @@ import 'package:registration_delivery/utils/registration_component_keys.dart'
 
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../widgets/localized.dart';
+import '../../router/app_router.dart';
 
 @RoutePage()
 class CustomHouseholdAcknowledgementPage extends LocalizedStatefulWidget {
@@ -166,7 +167,8 @@ class CustomHouseholdAcknowledgementPageState
         DigitButton(
           label: localizations.translate(primaryProp?.label ??
               i18.householdDetails.viewHouseHoldDetailsAction),
-          onPressed: () => context.router.popAndPush(HouseholdOverviewRoute()),
+          onPressed: () =>
+              context.router.popAndPush(CustomHouseholdOverviewRoute()),
           type: DigitButtonType.primary,
           size: DigitButtonSize.large,
         ),
@@ -180,8 +182,8 @@ class CustomHouseholdAcknowledgementPageState
         DigitButton(
           label: localizations.translate(secondaryProp?.label ??
               i18.acknowledgementSuccess.actionLabelText),
-          onPressed: () =>
-              context.router.popUntilRouteWithName(SearchBeneficiaryRoute.name),
+          onPressed: () => context.router
+              .popUntilRouteWithName(CustomSearchBeneficiaryRoute.name),
           type: DigitButtonType.secondary,
           size: DigitButtonSize.large,
         ),

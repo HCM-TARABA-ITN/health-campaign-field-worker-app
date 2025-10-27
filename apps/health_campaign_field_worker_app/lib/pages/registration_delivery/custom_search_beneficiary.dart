@@ -42,6 +42,7 @@ import 'package:registration_delivery/widgets/beneficiary/view_beneficiary_card.
 import 'package:registration_delivery/widgets/localized.dart';
 import 'package:registration_delivery/widgets/status_filter/status_filter.dart';
 
+import '../../router/app_router.dart';
 import '../../utils/i18_key_constants.dart' as i18_local;
 import '../../utils/constants.dart';
 import '../../widgets/registration_delivery/custom_view_beneficiary_card.dart';
@@ -1243,8 +1244,8 @@ class _CustomSearchBeneficiaryPageState
                                                           .beneficiaryType
                                                           ?.toValue()));
 
-                                          await context.router
-                                              .push(HouseholdOverviewRoute());
+                                          await context.router.push(
+                                              CustomHouseholdOverviewRoute());
                                         }
                                         setState(() {
                                           isProximityEnabled = false;
