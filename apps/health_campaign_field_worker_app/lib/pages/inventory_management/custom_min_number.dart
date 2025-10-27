@@ -175,6 +175,7 @@ class CustomMinNumberPageState extends LocalizedState<CustomMinNumberPage> {
                                       );
                                     },
                                     child: MinNumberCard(
+                                      localizations: localizations,
                                       data: encoded,
                                       entryType: widget.type,
                                       minNumber: mrn,

@@ -144,12 +144,12 @@ class CustomWarehouseDetailsPageState
                         ),
                       ];
 
-                      teamFacilities.addAll(
-                        facilities,
-                      );
+                      // teamFacilities.addAll(
+                      //   facilities,
+                      // );
 
                       return context.isDistributor &&
-                              !InventorySingleton().isWareHouseMgr
+                              !context.isWarehouseManager
                           ? teamFacilities
                           : facilities;
                     },
@@ -336,7 +336,11 @@ class CustomWarehouseDetailsPageState
                                     ),
                                     if (InventorySingleton().isDistributor &&
                                         stockState.entryType !=
-                                            StockRecordEntryType.dispatch)
+                                            StockRecordEntryType.dispatch &&
+                                        stockState.entryType !=
+                                            StockRecordEntryType.damaged &&
+                                        stockState.entryType !=
+                                            StockRecordEntryType.loss)
                                       DigitButton(
                                         label: "Scan Resource",
                                         onPressed: _handleSubmission,
@@ -454,11 +458,13 @@ class CustomWarehouseDetailsPageState
                                                   control.invalid &&
                                                   control.touched,
                                               builder: (field) {
-                                                field.control.value =
-                                                    facilities.first.id;
-                                                controller1.text =
-                                                    localizations.translate(
-                                                        'FAC_${facilities.first.id}');
+                                                if (facilities.isNotEmpty) {
+                                                  field.control.value ??=
+                                                      facilities.first.id;
+                                                  controller1.text =
+                                                      localizations.translate(
+                                                          'FAC_${facilities.first.id}');
+                                                }
                                                 return InputField(
                                                   type: InputType.search,
                                                   label:

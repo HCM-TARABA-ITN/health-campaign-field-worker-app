@@ -2,14 +2,18 @@ import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/theme/spacers.dart';
 
 import 'package:flutter/material.dart';
+import 'package:inventory_management/blocs/app_localization.dart';
 import 'package:inventory_management/blocs/record_stock.dart';
 import 'package:inventory_management/utils/utils.dart';
 
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:inventory_management/widgets/localized.dart';
 
+import '../../blocs/localization/app_localization.dart';
 import '../../utils/utils.dart';
 
 class MinNumberCard extends StatelessWidget {
+  final InventoryLocalization localizations;
   final String minNumber;
   final String cddCode;
   final String date;
@@ -19,6 +23,7 @@ class MinNumberCard extends StatelessWidget {
   final StockRecordEntryType entryType;
   MinNumberCard({
     super.key,
+    required this.localizations,
     required this.minNumber,
     required this.cddCode,
     required this.date,
@@ -92,7 +97,7 @@ class MinNumberCard extends StatelessWidget {
                 child: Row(
                   children: [
                     Text(
-                      item['name']!,
+                      localizations.translate(item['name']!),
                       style: textTheme.bodyL,
                     ),
                     const SizedBox(width: 8.0), // Replace spacer2
@@ -102,7 +107,7 @@ class MinNumberCard extends StatelessWidget {
                     ),
                     const SizedBox(width: 8.0), // Replace spacer2
                     Text(
-                      "${item['quantity']!} ${item['name']!.contains('SPAQ') ? 'Blisters' : 'Capsules'}",
+                      "${item['quantity']!} ${item['name']!.contains('SPAQ') ? 'Blisters' : 'Units'}",
                       style: textTheme.bodyL,
                     ),
                   ],
