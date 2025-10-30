@@ -1,4 +1,3 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/templates/template_config.dart';
@@ -167,8 +166,7 @@ class CustomHouseholdAcknowledgementPageState
         DigitButton(
           label: localizations.translate(primaryProp?.label ??
               i18.householdDetails.viewHouseHoldDetailsAction),
-          onPressed: () =>
-              context.router.popAndPush(CustomHouseholdOverviewRoute()),
+          onPressed: () => context.router.popAndPush(HouseholdOverviewRoute()),
           type: DigitButtonType.primary,
           size: DigitButtonSize.large,
         ),
