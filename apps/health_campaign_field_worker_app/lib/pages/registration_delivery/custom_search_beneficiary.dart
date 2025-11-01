@@ -26,24 +26,23 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
-import 'package:registration_delivery/data/transformer_config.dart';
-import 'package:registration_delivery/registration_delivery.dart';
-import 'package:registration_delivery/widgets/beneficiary/resource_card.dart';
-
-import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
 import 'package:registration_delivery/blocs/app_localization.dart';
 import 'package:registration_delivery/blocs/unique_id/unique_id.dart';
+import 'package:registration_delivery/data/transformer_config.dart';
 import 'package:registration_delivery/models/entities/status.dart';
+import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
+import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
 import 'package:registration_delivery/utils/utils.dart';
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
 import 'package:registration_delivery/widgets/beneficiary/id_count_alert.dart';
-import 'package:registration_delivery/widgets/beneficiary/view_beneficiary_card.dart';
+import 'package:registration_delivery/widgets/beneficiary/resource_card.dart';
 import 'package:registration_delivery/widgets/localized.dart';
 import 'package:registration_delivery/widgets/status_filter/status_filter.dart';
 
-import '../../utils/i18_key_constants.dart' as i18_local;
+import '../../router/app_router.dart';
 import '../../utils/constants.dart';
+import '../../utils/i18_key_constants.dart' as i18_local;
 import '../../widgets/registration_delivery/custom_view_beneficiary_card.dart';
 
 @RoutePage()
@@ -633,11 +632,12 @@ class _CustomSearchBeneficiaryPageState
                                               value.trim().length ==
                                                   Constants.eTokenLength) {
                                             triggerGlobalSearchEvent();
-                                          } else {
-                                            blocWrapper.add(
-                                                const RegistrationWrapperEvent
-                                                    .clear());
                                           }
+                                          // else {
+                                          //   blocWrapper.add(
+                                          //       const RegistrationWrapperEvent
+                                          //           .clear());
+                                          // }
                                         } else if (!isDeliveryFlow &&
                                             (value.isEmpty ||
                                                 value.trim().length > 2)) {
@@ -977,14 +977,17 @@ class _CustomSearchBeneficiaryPageState
                             }
                           },
                           failed: (String? error) {
-                            _progressDialog.closeProgressDialog();
-                            _isProgressDialogVisible = false;
-                            if (error != null) {
-                              Toast.showToast(context,
-                                  message: localizations.translate(
-                                    i18.beneficiaryDetails.failedBeneficiaryIds,
-                                  ),
-                                  type: ToastType.error);
+                            if (!isDeliveryFlow) {
+                              _progressDialog.closeProgressDialog();
+                              _isProgressDialogVisible = false;
+                              if (error != null) {
+                                Toast.showToast(context,
+                                    message: localizations.translate(
+                                      i18.beneficiaryDetails
+                                          .failedBeneficiaryIds,
+                                    ),
+                                    type: ToastType.error);
+                              }
                             }
                           },
                           limitExceeded: (String? error) {

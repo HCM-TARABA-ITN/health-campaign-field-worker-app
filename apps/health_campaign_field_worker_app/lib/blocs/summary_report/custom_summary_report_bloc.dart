@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:digit_ui_components/utils/date_utils.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -79,6 +80,18 @@ class SummaryReportBloc extends Bloc<SummaryReportEvent, SummaryReportState> {
         administeredSuccessTaskList.add(element);
       }
     }
+
+    final groupedEntries = administeredSuccessTaskList.groupListsBy(
+      (element) => element.projectBeneficiaryClientReferenceId,
+    );
+    // Keep only the latest task (by createdTime) from each group
+    administeredSuccessTaskList = groupedEntries.values.map((tasks) {
+      tasks.sort(
+        (a, b) => (b.auditDetails?.createdTime ?? 0)
+            .compareTo(a.auditDetails?.createdTime ?? 0),
+      );
+      return tasks.first; // most recent one
+    }).toList();
 
     Map<String, List<HouseholdModel>> dateVsHouseholdsList = {};
     Map<String, List<TaskModel>> dateVsAdministeredSuccessTaskList = {};
