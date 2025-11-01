@@ -65,7 +65,6 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
   static const _transactionReasonKey = 'transactionReason';
   static const _transactionQuantityKey = 'quantity';
   static const _transactionQuantityPartialKey = 'quantityPartial';
-  static const _transactionQuantityWastedKey = 'quantityWasted';
   static const _waybillNumberKey = 'waybillNumber';
   // static const _waybillQuantityKey = 'waybillQuantity';
   static const _batchNumberKey = 'batchNumberKey';
@@ -153,7 +152,6 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
           // _waybillQuantityKey:
           //     FormControl<String>(validators: [Validators.required]),
           _transactionQuantityPartialKey: FormControl<int>(validators: []),
-          _transactionQuantityWastedKey: FormControl<int>(validators: []),
           _batchNumberKey: FormControl<String>(),
           _commentsKey: FormControl<String>(),
         }),
@@ -410,7 +408,6 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
     bool isLastTab = _tabController.index == _tabController.length - 1;
     String quantityCountLabel;
     String quantityPartialCountLabel = "";
-    String quantityWastedCountLabel = "";
     String pageTitle;
 
     switch (entryType) {
@@ -436,8 +433,6 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
               : i18.stockDetails.quantityReturnedLabel;
           quantityPartialCountLabel =
               i18_local.stockDetails.quantityPartialReturnedLabel;
-          quantityWastedCountLabel =
-              i18_local.stockDetails.quantityWastedReturnedLabel;
         } else {
           quantityCountLabel = (isWareHouseMgr || isHealthFacilitySupervisor)
               ? i18.stockDetails.quantitySentLabel
@@ -471,16 +466,6 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
             context.isCommunityDistributor) ||
         entryType == StockRecordEntryType.returned) {
       form.control(_transactionQuantityPartialKey).setValidators([
-        Validators.number(),
-        Validators.required,
-        Validators.min(0),
-        Validators.max(100000000),
-      ], autoValidate: true);
-    }
-
-    if (entryType == StockRecordEntryType.dispatch &&
-        context.isCommunityDistributor) {
-      form.control(_transactionQuantityWastedKey).setValidators([
         Validators.number(),
         Validators.required,
         Validators.min(0),
@@ -690,60 +675,6 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
                               ),
                             );
                           }),
-                    if (entryType == StockRecordEntryType.dispatch &&
-                        context.isCommunityDistributor)
-                      ReactiveWrapperField(
-                          formControlName: _transactionQuantityWastedKey,
-                          validationMessages: {
-                            "number": (object) => localizations.translate(
-                                  '${quantityCountLabel}_ERROR',
-                                ),
-                            "max": (object) => localizations.translate(
-                                  '${quantityCountLabel}_MAX_ERROR',
-                                ),
-                            "min": (object) => localizations.translate(
-                                  '${quantityCountLabel}_MIN_ERROR',
-                                ),
-                          },
-                          showErrors: (control) =>
-                              control.invalid && control.touched,
-                          builder: (field) {
-                            return LabeledField(
-                              label: localizations.translate(
-                                quantityWastedCountLabel,
-                              ),
-                              isRequired: true,
-                              child: BaseDigitFormInput(
-                                errorMessage: field.errorText,
-                                keyboardType:
-                                    const TextInputType.numberWithOptions(
-                                  decimal: true,
-                                ),
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.allow(
-                                    RegExp(r'[0-9]'),
-                                  ),
-                                  LengthLimitingTextInputFormatter(9),
-                                ],
-                                onChange: (val) {
-                                  field.control.markAsTouched();
-                                  if (val == "") {
-                                    field.control.value = null;
-                                    return;
-                                  }
-                                  if (int.parse(val) > 10000000000) {
-                                    field.control.value = 10000;
-                                  } else {
-                                    if (val != '') {
-                                      field.control.value = int.parse(val);
-                                    } else {
-                                      field.control.value = null;
-                                    }
-                                  }
-                                },
-                              ),
-                            );
-                          }),
                     const SizedBox(height: 16),
                     ReactiveWrapperField(
                       formControlName: _commentsKey,
@@ -826,8 +757,7 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
     final Set<String> additionalFieldKeys = {
       "batchNumber",
       "comments",
-      "partialBlistersReturned",
-      "wastedBlistersReturned"
+      "partialBlistersReturned"
     };
 
     List<AdditionalField> filteredAdditionalFields = additionalFields
@@ -850,9 +780,6 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
           if (form.control(_transactionQuantityPartialKey).value != null)
             AdditionalField('partialBlistersReturned',
                 form.control(_transactionQuantityPartialKey).value),
-          if (form.control(_transactionQuantityWastedKey).value != null)
-            AdditionalField('wastedBlistersReturned',
-                form.control(_transactionQuantityWastedKey).value),
         ],
       ),
     );
@@ -958,18 +885,11 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
 
       for (final stockModel in _tabStocks.values) {
         int quantity = int.parse(stockModel.quantity.toString());
-        int quantityWasted = int.parse(stockModel.additionalFields?.fields
-                .firstWhereOrNull(
-                    (element) => element.key == 'wastedBlistersReturned')
-                ?.value
-                ?.toString() ??
-            '0');
-        final totalQty = (((entryType == StockRecordEntryType.dispatch) ||
+        final totalQty = ((entryType == StockRecordEntryType.dispatch) ||
                     entryType == StockRecordEntryType.loss ||
                     entryType == StockRecordEntryType.damaged)
                 ? quantity * -1
-                : quantity) -
-            quantityWasted;
+                : quantity;
 
         String? productName = stockModel.additionalFields?.fields
             .firstWhereOrNull((element) => element.key == 'productName')

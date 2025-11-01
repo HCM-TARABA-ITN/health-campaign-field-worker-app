@@ -497,8 +497,6 @@ class CustomInventoryReportDetailsPageState
                                             const quantityKey = 'quantity';
                                             const partialQuantityKey =
                                                 'partialBlistersReturned';
-                                            const wastedQuantityKey =
-                                                'wastedBlistersReturned';
                                             const transactingPartyKey =
                                                 'transactingParty';
 
@@ -534,19 +532,6 @@ class CustomInventoryReportDetailsPageState
                                                               .stockDetails
                                                               .quantityPartialReturnedLabel),
                                                       key: partialQuantityKey,
-                                                      width: 200,
-                                                    ),
-                                                  if (widget.reportType ==
-                                                          InventoryReportType
-                                                              .dispatch &&
-                                                      context
-                                                          .isCommunityDistributor)
-                                                    DigitGridColumn(
-                                                      label: localizations
-                                                          .translate(i18_local
-                                                              .stockDetails
-                                                              .quantityWastedReturnedLabel),
-                                                      key: wastedQuantityKey,
                                                       width: 200,
                                                     ),
                                                   DigitGridColumn(
@@ -590,24 +575,6 @@ class CustomInventoryReportDetailsPageState
                                                                   : (model.additionalFields!
                                                                               .fields
                                                                               .firstWhereOrNull((e) => e.key == partialQuantityKey)
-                                                                              ?.value ??
-                                                                          '')
-                                                                      .toString(),
-                                                            ),
-                                                          if (widget.reportType ==
-                                                                  InventoryReportType
-                                                                      .dispatch &&
-                                                              context
-                                                                  .isCommunityDistributor)
-                                                            DigitGridCell(
-                                                              key:
-                                                                  wastedQuantityKey,
-                                                              value: model.additionalFields ==
-                                                                      null
-                                                                  ? "0"
-                                                                  : (model.additionalFields!
-                                                                              .fields
-                                                                              .firstWhereOrNull((e) => e.key == wastedQuantityKey)
                                                                               ?.value ??
                                                                           '')
                                                                       .toString(),

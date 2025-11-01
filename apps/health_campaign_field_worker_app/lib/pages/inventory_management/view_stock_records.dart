@@ -100,11 +100,6 @@ class _ViewStockRecordsPageState extends LocalizedState<ViewStockRecordsPage>
         ?.value
         .toString();
 
-    String? wastedQuantity = stock.additionalFields?.fields
-        .firstWhereOrNull((e) => e.key == "wastedBlistersReturned")
-        ?.value
-        .toString();
-
     String? batchNumber = stock.additionalFields?.fields
         .firstWhere(
           (field) => field.key == 'batchNumber',
@@ -234,16 +229,6 @@ class _ViewStockRecordsPageState extends LocalizedState<ViewStockRecordsPage>
                       readOnly: true,
                     ),
                   if (partialQuantity != null) const SizedBox(height: 12),
-                  // Wasted Quantity
-                  if (wastedQuantity != null)
-                    InputField(
-                      type: InputType.text,
-                      label: 'Wasted Quantity *',
-                      initialValue: wastedQuantity,
-                      isDisabled: true,
-                      readOnly: true,
-                    ),
-                  if (wastedQuantity != null) const SizedBox(height: 12),
                   // Comments
                   InputField(
                     type: InputType.textArea,
