@@ -440,7 +440,8 @@ extension ContextUtilityExtensions on BuildContext {
     try {
       String? boundaryLevel = selectedProject.address?.boundaryType;
 
-      if (boundaryLevel == Constants.districtBoundaryLevel) {
+      if (boundaryLevel == Constants.districtBoundaryLevel ||
+          boundaryLevel == Constants.lgaBoundaryLevel) {
         bool isDownSyncEnabled = loggedInUserRoles
             .where((role) => role.code == RolesType.warehouseManager.toValue())
             .toList()
