@@ -661,6 +661,18 @@ class CustomStockDetailsPageState
                                         List<FacilityModel> filteredFacilities =
                                             [];
 
+                                        final teamFacilities = [
+                                          FacilityModel(
+                                            id: Constants.deliveryTeam,
+                                            name: Constants.deliveryTeam,
+                                            usage: Constants.deliveryTeam,
+                                          ),
+                                        ];
+
+                                        teamFacilities.addAll(
+                                          facilities,
+                                        );
+
                                         if (context.selectedProject.address
                                                 ?.boundaryType ==
                                             Constants.stateBoundaryLevel) {
@@ -676,8 +688,25 @@ class CustomStockDetailsPageState
                                                       element.usage ==
                                                       Constants.lgaFacility)
                                                   .toList();
-                                        } else if (context.selectedProject
-                                                .address?.boundaryType ==
+                                        }
+                                        // else if (context.selectedProject
+                                        //         .address?.boundaryType ==
+                                        //     Constants.lgaBoundaryLevel) {
+                                        //   filteredFacilities = entryType ==
+                                        //           StockRecordEntryType.receipt
+                                        //       ? allFacilities
+                                        //           .where((element) =>
+                                        //               element.usage ==
+                                        //               Constants.stateFacility)
+                                        //           .toList()
+                                        //       : allFacilities
+                                        //           .where((element) =>
+                                        //               element.usage ==
+                                        //               Constants.healthFacility)
+                                        //           .toList();
+                                        // }
+                                        else if (context.selectedProject.address
+                                                ?.boundaryType ==
                                             Constants.lgaBoundaryLevel) {
                                           filteredFacilities = entryType ==
                                                   StockRecordEntryType.receipt
@@ -686,10 +715,10 @@ class CustomStockDetailsPageState
                                                       element.usage ==
                                                       Constants.stateFacility)
                                                   .toList()
-                                              : allFacilities
+                                              : teamFacilities
                                                   .where((element) =>
                                                       element.usage ==
-                                                      Constants.healthFacility)
+                                                      Constants.deliveryTeam)
                                                   .toList();
                                         } else if (context.selectedProject
                                                 .address?.boundaryType ==
@@ -706,13 +735,24 @@ class CustomStockDetailsPageState
                                                       element.usage ==
                                                       Constants.deliveryTeam)
                                                   .toList();
-                                        } else {
+                                        }
+                                        // else {
+                                        //   filteredFacilities = context
+                                        //           .// 👈 clear old facility IDisDistributor
+                                        //       ? allFacilities //TODO: changed from facilities
+                                        //           .where((element) =>
+                                        //               element.usage ==
+                                        //               Constants.healthFacility)
+                                        //           .toList()
+                                        //       : [];
+                                        // }
+                                        else {
                                           filteredFacilities = context
                                                   .isDistributor
                                               ? allFacilities //TODO: changed from facilities
                                                   .where((element) =>
                                                       element.usage ==
-                                                      Constants.healthFacility)
+                                                      Constants.lgaFacility)
                                                   .toList()
                                               : [];
                                         }
@@ -727,15 +767,15 @@ class CustomStockDetailsPageState
                                                     ? facilities
                                                     : filteredFacilities;
 
-                                        List<FacilityModel> teamFacilities = [
-                                          FacilityModel(
-                                            id: 'Delivery Team',
-                                            name: 'CDD Team',
-                                          ),
-                                        ];
-                                        teamFacilities.addAll(
-                                          facilities,
-                                        );
+                                        // List<FacilityModel> teamFacilities = [
+                                        //   FacilityModel(
+                                        //     id: 'Delivery Team',
+                                        //     name: 'CDD Team',
+                                        //   ),
+                                        // ];
+                                        // teamFacilities.addAll(
+                                        //   facilities,
+                                        // );
 
                                         return Column(
                                           children: [
@@ -809,8 +849,7 @@ class CustomStockDetailsPageState
                                                     'Delivery Team') {
                                                   setState(() {
                                                     deliveryTeamSelected = true;
-                                                    selectedFacilityId =
-                                                        null; // 👈 clear old facility ID
+                                                    selectedFacilityId = null;
                                                     clearQRCodes();
                                                   });
                                                 } else {
@@ -951,7 +990,7 @@ class CustomStockDetailsPageState
                                                 quantity: 1,
                                                 isGS1code: false,
                                                 singleValue: true,
-                                                scanType: ScanType.teamCode,
+                                                // scanType: ScanType.teamCode,
                                               ),
                                               settings: const RouteSettings(
                                                   name: '/qr-scanner'),
@@ -977,7 +1016,7 @@ class CustomStockDetailsPageState
                                                     quantity: 1,
                                                     isGS1code: false,
                                                     singleValue: true,
-                                                    scanType: ScanType.teamCode,
+                                                    // scanType: ScanType.teamCode,
                                                   ),
                                                   settings: const RouteSettings(
                                                       name: '/qr-scanner'),
