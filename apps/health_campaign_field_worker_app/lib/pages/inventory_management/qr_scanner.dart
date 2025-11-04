@@ -558,8 +558,8 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
       quantity: widget.quantity,
       result: result,
       handleError: handleErrorWrapper,
-      // storeValue: storeValueWrapper,
-      // storeCode: storeCodeWrapper,
+      storeValue: storeValueWrapper,
+      storeCode: storeCodeWrapper,
       cameraLensDirection: _cameraLensDirection,
       barcodeScanner: _barcodeScanner,
       localizations: localizations,
@@ -583,36 +583,36 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
   }
 
   Future<void> storeCodeWrapper(String code) async {
-    if (codes.length < widget.quantity) {
-      if (widget.scanType == ScanType.teamCode &&
-              code.contains(Constants.pipeSeparator) ||
-          widget.scanType != ScanType.teamCode) {
-        await DigitScannerUtils().storeCode(
-          context: context,
-          code: code,
-          player: player,
-          singleValue: widget.singleValue,
-          updateCodes: (newCodes) {
-            setState(() {
-              codes = newCodes;
-            });
-          },
-          initialCodes: codes,
-        );
-      } else {
-        await DigitToast.show(
-          context,
-          options: DigitToastOptions(
-            localizations.translate(
-                i18_local.deliverIntervention.patternValidationFailed),
-            true,
-            Theme.of(context),
-          ),
-        );
-        await Future.delayed(const Duration(seconds: 2));
-        return;
-      }
+    // if (codes.length < widget.quantity) {
+    if (widget.scanType == ScanType.teamCode &&
+            code.contains(Constants.pipeSeparator) ||
+        widget.scanType != ScanType.teamCode) {
+      await DigitScannerUtils().storeCode(
+        context: context,
+        code: code,
+        player: player,
+        singleValue: widget.singleValue,
+        updateCodes: (newCodes) {
+          setState(() {
+            codes = newCodes;
+          });
+        },
+        initialCodes: codes,
+      );
+    } else {
+      await DigitToast.show(
+        context,
+        options: DigitToastOptions(
+          localizations
+              .translate(i18_local.deliverIntervention.patternValidationFailed),
+          true,
+          Theme.of(context),
+        ),
+      );
+      await Future.delayed(const Duration(seconds: 2));
+      return;
     }
+    // }
   }
 
   Future<void> storeValueWrapper(GS1Barcode scanData) async {
