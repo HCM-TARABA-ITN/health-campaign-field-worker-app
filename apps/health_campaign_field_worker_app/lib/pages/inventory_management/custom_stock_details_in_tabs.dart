@@ -494,7 +494,9 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
                     Row(
                       children: [
                         const Expanded(child: Text('Resource')),
-                        Expanded(child: Text(products.first.variation ?? '')),
+                        Expanded(
+                            child: Text(localizations
+                                .translate(products.first.variation ?? ''))),
                       ],
                     ),
                     const SizedBox(height: 8),
@@ -886,10 +888,10 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
       for (final stockModel in _tabStocks.values) {
         int quantity = int.parse(stockModel.quantity.toString());
         final totalQty = ((entryType == StockRecordEntryType.dispatch) ||
-                    entryType == StockRecordEntryType.loss ||
-                    entryType == StockRecordEntryType.damaged)
-                ? quantity * -1
-                : quantity;
+                entryType == StockRecordEntryType.loss ||
+                entryType == StockRecordEntryType.damaged)
+            ? quantity * -1
+            : quantity;
 
         String? productName = stockModel.additionalFields?.fields
             .firstWhereOrNull((element) => element.key == 'productName')
@@ -1065,7 +1067,8 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
           controller: _tabController,
           isScrollable: true,
           tabs: selectedProductsToShow
-              .map((product) => Tab(text: product.toUpperCase()))
+              .map((product) =>
+                  Tab(text: localizations.translate(product.toUpperCase())))
               .toList(),
         ),
       ),

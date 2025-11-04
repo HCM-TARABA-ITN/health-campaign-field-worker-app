@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:inventory_management/utils/utils.dart';
 
 import 'package:qr_flutter/qr_flutter.dart';
+import '../../blocs/localization/app_localization.dart';
 
 class TransactionsCard extends StatelessWidget {
   final String minNumber;
@@ -75,7 +76,8 @@ class TransactionsCard extends StatelessWidget {
                 child: Row(
                   children: [
                     Text(
-                      item['name']!,
+                      AppLocalizations.of(context)
+                          .translate(item['name']!),
                       style: textTheme.bodyL,
                     ),
                     const SizedBox(width: 8.0), // Replace spacer2

@@ -277,7 +277,7 @@ class _ViewStockRecordsLGAPageState
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    productName,
+                    localizations.translate(productName),
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
@@ -392,7 +392,7 @@ class _ViewStockRecordsLGAPageState
                     .value
                     ?.toString() ??
                 '';
-            return Tab(text: productName);
+            return Tab(text: localizations.translate(productName));
           }).toList(),
         ),
       ),

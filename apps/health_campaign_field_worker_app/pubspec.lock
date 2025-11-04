@@ -597,10 +597,10 @@ packages:
     dependency: "direct main"
     description:
       name: digit_scanner
-      sha256: "8140d06998b796743f959c9c29b6e5715315435da1847f9d33c5fc9b836ce290"
+      sha256: "69580859ba9b63f32e40e6d56bf55a016eb623007ea06552b38f70056ea06dfe"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.6+4"
+    version: "1.0.5"
   digit_showcase:
     dependency: "direct main"
     description:
