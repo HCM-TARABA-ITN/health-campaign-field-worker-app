@@ -44,6 +44,7 @@ import '../../router/app_router.dart';
 import '../../utils/extensions/extensions.dart';
 import '../../utils/i18_key_constants.dart' as i18_local;
 import '../../widgets/registration_delivery/custom_member_card.dart';
+import '../../pages/registration_delivery/custom_forms_render.dart';
 
 @RoutePage()
 class CustomHouseholdOverviewPage extends LocalizedStatefulWidget {
@@ -321,7 +322,7 @@ class _CustomHouseholdOverviewPageState
                                                               if (bednet >=
                                                                   requiredCount) {
                                                                 context.router.push(
-                                                                    FormsRenderRoute(
+                                                                    CustomFormsRenderRoute(
                                                                   currentSchemaKey:
                                                                       overviewTemplate
                                                                           .navigateTo!
@@ -564,7 +565,7 @@ class _CustomHouseholdOverviewPageState
                                                             .key;
 
                                                         context.router.push(
-                                                            FormsRenderRoute(
+                                                            CustomFormsRenderRoute(
                                                           isEdit: true,
                                                           currentSchemaKey:
                                                               'REGISTRATIONFLOW',

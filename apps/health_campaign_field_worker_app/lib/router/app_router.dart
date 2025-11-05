@@ -110,6 +110,8 @@ import '../pages/checklist/custom_survey_form_wrapper.dart';
 import '../pages/summary_report/custom_distribution_summary_report.dart';
 import '../pages/summary_report/custom_summary_report.dart';
 import '../pages/complaints/custom_complaints_details.dart';
+import '../pages/registration_delivery/custom_forms_render.dart';
+import 'package:digit_forms_engine/blocs/app_localization.dart';
 
 part 'app_router.gr.dart';
 
@@ -344,7 +346,12 @@ class AppRouter extends _$AppRouter {
               RedirectRoute(
                   path: 'household-acknowledgement',
                   redirectTo: 'custom-household-acknowledgement'),
-              ...FormsRoute().routes,
+              AutoRoute(
+                page: CustomFormsRenderRoute.page,
+                path: 'custom-forms-render/:pageName',
+              ),
+
+              // ...FormsRoute().routes,
             ]),
         AutoRoute(page: BeneficiaryIdDownSyncRoute.page),
 

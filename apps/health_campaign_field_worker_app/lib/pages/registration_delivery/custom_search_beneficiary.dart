@@ -44,6 +44,7 @@ import '../../router/app_router.dart';
 import '../../utils/constants.dart';
 import '../../utils/i18_key_constants.dart' as i18_local;
 import '../../widgets/registration_delivery/custom_view_beneficiary_card.dart';
+import '../../pages/registration_delivery/custom_forms_render.dart';
 
 @RoutePage()
 class CustomSearchBeneficiaryPage extends LocalizedStatefulWidget {
@@ -202,7 +203,7 @@ class _CustomSearchBeneficiaryPageState
                     type: ToastType.error,
                   );
                 } else {
-                  context.router.push(FormsRenderRoute(
+                  context.router.push(CustomFormsRenderRoute(
                       currentSchemaKey: 'REGISTRATIONFLOW',
                       pageName: pageName,
                       defaultValues: {
@@ -229,7 +230,7 @@ class _CustomSearchBeneficiaryPageState
                     type: ToastType.error,
                   );
                 } else {
-                  context.router.push(FormsRenderRoute(
+                  context.router.push(CustomFormsRenderRoute(
                     currentSchemaKey: 'DELIVERYFLOW',
                     pageName: pageName,
                     defaultValues: {
@@ -821,7 +822,8 @@ class _CustomSearchBeneficiaryPageState
                                           type: ToastType.error,
                                         );
                                       } else {
-                                        context.router.push(FormsRenderRoute(
+                                        context.router
+                                            .push(CustomFormsRenderRoute(
                                           currentSchemaKey: 'REGISTRATIONFLOW',
                                           pageName: pageName,
                                           defaultValues: {
@@ -873,7 +875,7 @@ class _CustomSearchBeneficiaryPageState
                                 );
                               } else {
                                 /// TODO: MULTIPLE CALLS: NEED TO CREATE A COMMON METHOD
-                                context.router.push(FormsRenderRoute(
+                                context.router.push(CustomFormsRenderRoute(
                                   currentSchemaKey: 'REGISTRATIONFLOW',
                                   pageName: pageName,
                                   defaultValues: {
@@ -927,7 +929,8 @@ class _CustomSearchBeneficiaryPageState
                                           type: ToastType.error,
                                         );
                                       } else {
-                                        context.router.push(FormsRenderRoute(
+                                        context.router
+                                            .push(CustomFormsRenderRoute(
                                           currentSchemaKey: 'REGISTRATIONFLOW',
                                           pageName: pageName,
                                           defaultValues: {
@@ -1174,7 +1177,8 @@ class _CustomSearchBeneficiaryPageState
                                               .first
                                               .key;
 
-                                          context.router.push(FormsRenderRoute(
+                                          context.router
+                                              .push(CustomFormsRenderRoute(
                                             isEdit: true,
                                             currentSchemaKey:
                                                 'REGISTRATIONFLOW',
@@ -1397,7 +1401,7 @@ class _CustomSearchBeneficiaryPageState
                   type: ToastType.error,
                 );
               } else {
-                context.router.push(FormsRenderRoute(
+                context.router.push(CustomFormsRenderRoute(
                   currentSchemaKey: 'REGISTRATIONFLOW',
                   pageName: pageName,
                   defaultValues: {
