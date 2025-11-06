@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:collection/collection.dart';
 import 'package:digit_crud_bloc/bloc/crud_bloc.dart';
 import 'package:digit_crud_bloc/models/global_search_params.dart' as reg_params;
 // ignore: depend_on_referenced_packages, implementation_imports
@@ -45,6 +46,7 @@ import '../../utils/constants.dart';
 import '../../utils/i18_key_constants.dart' as i18_local;
 import '../../widgets/registration_delivery/custom_view_beneficiary_card.dart';
 import '../../pages/registration_delivery/custom_forms_render.dart';
+import '../../blocs/auth/auth.dart';
 
 @RoutePage()
 class CustomSearchBeneficiaryPage extends LocalizedStatefulWidget {
@@ -264,7 +266,7 @@ class _CustomSearchBeneficiaryPageState
         }
       },
       child: BlocListener<FormsBloc, FormsState>(
-        listener: (context, formState) {
+        listener: (context, formState) async {
           if (formState is FormsSubmittedState) {
             DigitLoaders.overlayLoader(context: context);
 
@@ -410,6 +412,9 @@ class _CustomSearchBeneficiaryPageState
                 blocWrapper.add(
                   RegistrationWrapperEvent.create(entities: entities),
                 );
+
+                await Future.delayed(const Duration(milliseconds: 400));
+                await _updateProductCount(entities);
               }
             } catch (e) {
               Navigator.of(context, rootNavigator: true).pop();
@@ -1551,5 +1556,17 @@ class _CustomSearchBeneficiaryPageState
 
   void fetchBeneficiaryIdCount() {
     context.read<UniqueIdBloc>().add(const UniqueIdEvent.fetchIdCount());
+  }
+
+  Future<void> _updateProductCount(List<EntityModel> entities) async {
+    TaskModel? taskModel =
+        entities.firstWhereOrNull((e) => e is TaskModel) as TaskModel?;
+    final clientRefId = taskModel?.clientReferenceId;
+    if (clientRefId != null && clientRefId.isNotEmpty) {
+      context
+          .read<AuthBloc>()
+          // .add(const AuthAddProductCountsEvent(bednetCount: 2)
+          .add(AuthDeliveryProductCountsEvent(clientReferenceId: clientRefId));
+    }
   }
 }

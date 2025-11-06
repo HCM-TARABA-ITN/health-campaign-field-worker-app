@@ -53,7 +53,7 @@ class _CustomFormsRenderState extends LocalizedState<CustomFormsRenderPage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Future.delayed(const Duration(milliseconds: 120), () {
+      Future.delayed(const Duration(milliseconds: 200), () {
         if (mounted) {
           setState(() {
             _ready = true;
