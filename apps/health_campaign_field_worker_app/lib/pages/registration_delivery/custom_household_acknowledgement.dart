@@ -54,6 +54,7 @@ class CustomHouseholdAcknowledgementPageState
   void initState() {
     super.initState();
     wrapper = context.read<RegistrationWrapperBloc>().state;
+    updateStock(wrapper.householdMembers);
   }
 
   @override
@@ -193,8 +194,7 @@ class CustomHouseholdAcknowledgementPageState
         DigitButton(
           label: localizations.translate(primaryProp?.label ??
               i18.householdDetails.viewHouseHoldDetailsAction),
-          onPressed: () async {
-            await updateStock(wrapper.householdMembers);
+          onPressed: () {
             context.router.popAndPush(HouseholdOverviewRoute());
           },
           type: DigitButtonType.primary,
@@ -210,8 +210,7 @@ class CustomHouseholdAcknowledgementPageState
         DigitButton(
           label: localizations.translate(secondaryProp?.label ??
               i18.acknowledgementSuccess.actionLabelText),
-          onPressed: () async {
-            await updateStock(wrapper.householdMembers);
+          onPressed: () {
             context.router
                 .popUntilRouteWithName(CustomSearchBeneficiaryRoute.name);
           },

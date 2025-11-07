@@ -53,7 +53,7 @@ class _CustomFormsRenderState extends LocalizedState<CustomFormsRenderPage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Future.delayed(const Duration(milliseconds: 1000), () {
+      Future.delayed(const Duration(milliseconds: 500), () {
         if (mounted) {
           setState(() {
             _ready = true;
@@ -85,8 +85,8 @@ class _CustomFormsRenderState extends LocalizedState<CustomFormsRenderPage> {
 
           final index =
               schemaObject.pages.keys.toList().indexOf(widget.pageName);
-          // final showcaseKeys = <GlobalKey>[]; // unused
 
+          // --- REMOVE BlocListener here, only use BlocBuilder ---
           return Provider<Map<String, dynamic>>.value(
             value: widget.defaultValues ?? {},
             child: ReactiveFormBuilder(
@@ -125,113 +125,107 @@ class _CustomFormsRenderState extends LocalizedState<CustomFormsRenderPage> {
                           setState(() {
                             _isNavigating = true;
                           });
-                          await Future.delayed(
-                              const Duration(milliseconds: 1000));
-                          // 1. Get visible keys only (skip hidden fields)
-                          final currentKeys = schema.properties?.entries
-                                  .where((entry) {
-                                    final isVisible = !isHidden(entry.value);
-                                    final includeInForm =
-                                        entry.value.includeInForm == true;
-                                    return isVisible || includeInForm;
-                                  })
-                                  .map((entry) => entry.key)
-                                  .toList() ??
-                              [];
+                          try {
+                            await Future.delayed(
+                                const Duration(milliseconds: 500));
+                            // 1. Get visible keys only (skip hidden fields)
+                            final currentKeys = schema.properties?.entries
+                                    .where((entry) {
+                                      final isVisible = !isHidden(entry.value);
+                                      final includeInForm =
+                                          entry.value.includeInForm == true;
+                                      return isVisible || includeInForm;
+                                    })
+                                    .map((entry) => entry.key)
+                                    .toList() ??
+                                [];
 
-                          // 2. Mark all visible controls as touched and revalidate
-                          for (final key in currentKeys) {
-                            final control = formGroup.control(key);
-                            control.markAsTouched();
-                            // control.updateValueAndValidity();
-                          }
-
-                          final hasErrors = currentKeys.any((key) {
-                            final control = formGroup.control(key);
-                            return control.errors.isNotEmpty;
-                          });
-
-                          if (hasErrors) {
-                            if (mounted) {
-                              setState(() {
-                                _isNavigating = false;
-                              });
+                            // 2. Mark all visible controls as touched and revalidate
+                            for (final key in currentKeys) {
+                              final control = formGroup.control(key);
+                              control.markAsTouched();
                             }
-                            return;
-                          }
 
-                          // 3. Check validity of just the visible controls
-                          final isCurrentPageValid = currentKeys
-                              .every((key) => formGroup.control(key).valid);
+                            final hasErrors = currentKeys.any((key) {
+                              final control = formGroup.control(key);
+                              return control.errors.isNotEmpty;
+                            });
 
-                          if (!isCurrentPageValid) {
-                            if (mounted) {
-                              setState(() {
-                                _isNavigating = false;
-                              });
+                            if (hasErrors) {
+                              if (mounted) {
+                                setState(() {
+                                  _isNavigating = false;
+                                });
+                              }
+                              return;
                             }
-                            return;
-                          }
 
-                          // 4. Proceed with value extraction and state update
-                          final values = JsonForms.getFormValues(
-                            formGroup,
-                            schema,
-                          );
+                            // 3. Check validity of just the visible controls
+                            final isCurrentPageValid = currentKeys
+                                .every((key) => formGroup.control(key).valid);
 
-                          final updatedPropertySchema = schema.copyWith(
-                            properties: Map.fromEntries(
-                              schema.properties?.entries.map(
-                                    (e) => values.containsKey(e.key)
-                                        ? MapEntry(
-                                            e.key,
-                                            e.value.copyWith(
-                                              value: values[e.key],
-                                            ),
-                                          )
-                                        : MapEntry(e.key, e.value),
-                                  ) ??
-                                  [],
-                            ),
-                          );
+                            if (!isCurrentPageValid) {
+                              if (mounted) {
+                                setState(() {
+                                  _isNavigating = false;
+                                });
+                              }
+                              return;
+                            }
 
-                          context.read<FormsBloc>().add(
-                                FormsUpdateEvent(
-                                  schemaKey: widget.currentSchemaKey,
-                                  schema: schemaObject.copyWith(
-                                    pages: Map.fromEntries(
-                                      schemaObject.pages.entries.map(
-                                        (entry) => MapEntry(
-                                          entry.key,
-                                          entry.key == widget.pageName
-                                              ? updatedPropertySchema
-                                              : entry.value,
+                            // 4. Proceed with value extraction and state update
+                            final values = JsonForms.getFormValues(
+                              formGroup,
+                              schema,
+                            );
+
+                            final updatedPropertySchema = schema.copyWith(
+                              properties: Map.fromEntries(
+                                schema.properties?.entries.map(
+                                      (e) => values.containsKey(e.key)
+                                          ? MapEntry(
+                                              e.key,
+                                              e.value.copyWith(
+                                                value: values[e.key],
+                                              ),
+                                            )
+                                          : MapEntry(e.key, e.value),
+                                    ) ??
+                                    [],
+                              ),
+                            );
+
+                            context.read<FormsBloc>().add(
+                                  FormsUpdateEvent(
+                                    schemaKey: widget.currentSchemaKey,
+                                    schema: schemaObject.copyWith(
+                                      pages: Map.fromEntries(
+                                        schemaObject.pages.entries.map(
+                                          (entry) => MapEntry(
+                                            entry.key,
+                                            entry.key == widget.pageName
+                                                ? updatedPropertySchema
+                                                : entry.value,
+                                          ),
                                         ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              );
+                                );
 
-                          if ((index) < schemaObject.pages.length - 1) {
-                            // await push to ensure navigation completes before allowing another action
-                            await context.router
-                                .push(app_router.CustomFormsRenderRoute(
-                              isEdit: widget.isEdit,
-                              customComponents: widget.customComponents,
-                              currentSchemaKey: widget.currentSchemaKey,
-                              pageName: schemaObject.pages.entries
-                                  .elementAt(index + 1)
-                                  .key,
-                              defaultValues: widget.defaultValues,
-                            ));
-                            if (mounted) {
-                              setState(() {
-                                _isNavigating = false;
-                              });
-                            }
-                          } else {
-                            if (schemaObject.summaryDetails != null &&
+                            if ((index) < schemaObject.pages.length - 1) {
+                              // await push to ensure navigation completes before allowing another action
+                              await context.router
+                                  .push(app_router.CustomFormsRenderRoute(
+                                isEdit: widget.isEdit,
+                                customComponents: widget.customComponents,
+                                currentSchemaKey: widget.currentSchemaKey,
+                                pageName: schemaObject.pages.entries
+                                    .elementAt(index + 1)
+                                    .key,
+                                defaultValues: widget.defaultValues,
+                              ));
+                            } else if (schemaObject.summaryDetails != null &&
                                 schemaObject.summaryDetails!.show) {
                               await context.router
                                   .push(app_router.CustomFormsRenderRoute(
@@ -242,11 +236,6 @@ class _CustomFormsRenderState extends LocalizedState<CustomFormsRenderPage> {
                                 isSummary: true,
                                 defaultValues: widget.defaultValues,
                               ));
-                              if (mounted) {
-                                setState(() {
-                                  _isNavigating = false;
-                                });
-                              }
                             } else {
                               if (schemaObject.showAlertPopUp != null) {
                                 showCustomPopup(
@@ -269,21 +258,17 @@ class _CustomFormsRenderState extends LocalizedState<CustomFormsRenderPage> {
                                                       isEdit: widget.isEdit,
                                                       schemaKey: widget
                                                           .currentSchemaKey));
-                                              // Pop all form pages (FormsRenderRoute)
                                               Navigator.of(
                                                 ctx,
                                                 rootNavigator: true,
                                               ).pop();
-                                              // Close popup first, then navigate back to the app's custom forms route
                                               WidgetsBinding.instance
                                                   .addPostFrameCallback((_) {
                                                 context.router
-                                                    .popUntil((route) {
-                                                  return route.settings.name !=
-                                                      app_router
-                                                          .CustomFormsRenderRoute
-                                                          .name;
-                                                });
+                                                    .popUntilRouteWithName(
+                                                        app_router
+                                                            .CustomSearchBeneficiaryRoute
+                                                            .name);
                                               });
                                             },
                                             type: DigitButtonType.primary,
@@ -311,17 +296,18 @@ class _CustomFormsRenderState extends LocalizedState<CustomFormsRenderPage> {
                                 context.read<FormsBloc>().add(FormsSubmitEvent(
                                     isEdit: widget.isEdit,
                                     schemaKey: widget.currentSchemaKey));
-
-                                // Pop all form pages (FormsRenderRoute)
-                                // Defer the popUntil to the next frame to avoid navigator re-entrancy
                                 WidgetsBinding.instance
                                     .addPostFrameCallback((_) {
-                                  context.router.popUntil((route) {
-                                    return route.settings.name !=
-                                        app_router.CustomFormsRenderRoute.name;
-                                  });
+                                  context.router.push(app_router
+                                      .CustomHouseholdAcknowledgementRoute());
                                 });
                               }
+                            }
+                          } finally {
+                            if (mounted) {
+                              setState(() {
+                                _isNavigating = false;
+                              });
                             }
                           }
                         },
@@ -438,7 +424,7 @@ class _CustomFormsRenderState extends LocalizedState<CustomFormsRenderPage> {
                 setState(() {
                   _isNavigating = true;
                 });
-                await Future.delayed(const Duration(milliseconds: 1000));
+                await Future.delayed(const Duration(milliseconds: 500));
                 if (schemaObject.showAlertPopUp != null) {
                   showCustomPopup(
                     context: context,
@@ -460,17 +446,16 @@ class _CustomFormsRenderState extends LocalizedState<CustomFormsRenderPage> {
                                     _isNavigating = false;
                                   });
                                 }
-                                // Pop the popup first, then defer clearing form pages to the next frame
+                                // Pop the popup first, then pop all forms pages and go back to search
                                 Navigator.of(
                                   ctx,
                                   rootNavigator: true,
                                 ).pop();
                                 WidgetsBinding.instance
                                     .addPostFrameCallback((_) {
-                                  context.router.popUntil((route) {
-                                    return route.settings.name !=
-                                        app_router.CustomFormsRenderRoute.name;
-                                  });
+                                  context.router.popUntilRouteWithName(
+                                      app_router
+                                          .CustomSearchBeneficiaryRoute.name);
                                 });
                               },
                               type: DigitButtonType.primary,
@@ -497,13 +482,10 @@ class _CustomFormsRenderState extends LocalizedState<CustomFormsRenderPage> {
                   context.read<FormsBloc>().add(FormsSubmitEvent(
                       isEdit: widget.isEdit,
                       schemaKey: widget.currentSchemaKey));
-
-                  // Defer popUntil to avoid navigator re-entrancy while closing flows
+                  // After submit, push the acknowledgement page
                   WidgetsBinding.instance.addPostFrameCallback((_) {
-                    context.router.popUntil((route) {
-                      return route.settings.name !=
-                          app_router.CustomFormsRenderRoute.name;
-                    });
+                    context.router
+                        .push(app_router.CustomHouseholdAcknowledgementRoute());
                   });
                 }
               },
