@@ -414,7 +414,7 @@ class _CustomSearchBeneficiaryPageState
                 );
 
                 if (entities.any((entity) => entity is TaskModel)) {
-                  await Future.delayed(const Duration(milliseconds: 100));
+                  await Future.delayed(const Duration(milliseconds: 10));
                   await _updateProductCount(entities);
                 }
                 ;
@@ -1562,8 +1562,7 @@ class _CustomSearchBeneficiaryPageState
   }
 
   Future<void> _updateProductCount(List<EntityModel> entities) async {
-    TaskModel? taskModel =
-        entities.firstWhereOrNull((e) => e is TaskModel) as TaskModel?;
+    TaskModel? taskModel = entities.whereType<TaskModel>().firstOrNull;
     final clientRefId = taskModel?.clientReferenceId;
     if (clientRefId != null && clientRefId.isNotEmpty) {
       context
