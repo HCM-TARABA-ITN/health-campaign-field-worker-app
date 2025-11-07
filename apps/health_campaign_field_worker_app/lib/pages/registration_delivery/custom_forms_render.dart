@@ -53,7 +53,7 @@ class _CustomFormsRenderState extends LocalizedState<CustomFormsRenderPage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Future.delayed(const Duration(milliseconds: 120), () {
+      Future.delayed(const Duration(milliseconds: 1000), () {
         if (mounted) {
           setState(() {
             _ready = true;
@@ -126,7 +126,7 @@ class _CustomFormsRenderState extends LocalizedState<CustomFormsRenderPage> {
                             _isNavigating = true;
                           });
                           await Future.delayed(
-                              const Duration(milliseconds: 100));
+                              const Duration(milliseconds: 1000));
                           // 1. Get visible keys only (skip hidden fields)
                           final currentKeys = schema.properties?.entries
                                   .where((entry) {
@@ -432,12 +432,13 @@ class _CustomFormsRenderState extends LocalizedState<CustomFormsRenderPage> {
             DigitButton(
               mainAxisSize: MainAxisSize.max,
               label: localizations.translate('CORE_COMMON_SUBMIT'),
+              isDisabled: !_ready || _isNavigating,
               onPressed: () async {
                 if (!_ready || _isNavigating) return;
                 setState(() {
                   _isNavigating = true;
                 });
-                await Future.delayed(const Duration(milliseconds: 100));
+                await Future.delayed(const Duration(milliseconds: 1000));
                 if (schemaObject.showAlertPopUp != null) {
                   showCustomPopup(
                     context: context,
@@ -454,6 +455,11 @@ class _CustomFormsRenderState extends LocalizedState<CustomFormsRenderPage> {
                                 context.read<FormsBloc>().add(FormsSubmitEvent(
                                     isEdit: widget.isEdit,
                                     schemaKey: widget.currentSchemaKey));
+                                if (mounted) {
+                                  setState(() {
+                                    _isNavigating = false;
+                                  });
+                                }
                                 // Pop the popup first, then defer clearing form pages to the next frame
                                 Navigator.of(
                                   ctx,

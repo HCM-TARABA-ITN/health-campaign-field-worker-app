@@ -13,6 +13,7 @@ import 'package:registration_delivery/utils/registration_component_keys.dart'
 
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../widgets/localized.dart';
+import '../../blocs/auth/auth.dart';
 import '../../router/app_router.dart';
 
 @RoutePage()
@@ -32,6 +33,29 @@ class CustomHouseholdAcknowledgementPage extends LocalizedStatefulWidget {
 
 class CustomHouseholdAcknowledgementPageState
     extends LocalizedState<CustomHouseholdAcknowledgementPage> {
+  late RegistrationWrapperState wrapper;
+
+  // Safely update stock using the first household's first task's clientReferenceId
+  Future<void> updateStock(List<HouseholdWrapper>? householdMembers) async {
+    if (householdMembers == null || householdMembers.isEmpty) return;
+    final tasks = householdMembers.first.tasks;
+    final clientReferenceId = (tasks != null && tasks.isNotEmpty)
+        ? tasks.first.clientReferenceId
+        : null;
+    if (clientReferenceId != null && clientReferenceId.isNotEmpty) {
+      context.read<AuthBloc>().add(
+            AuthDeliveryProductCountsEvent(
+                clientReferenceId: clientReferenceId),
+          );
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    wrapper = context.read<RegistrationWrapperBloc>().state;
+  }
+
   @override
   Widget build(BuildContext context) {
     final pageKey = HouseholdAcknowledgementRoute.name.replaceAll('Route', '');
@@ -55,15 +79,18 @@ class CustomHouseholdAcknowledgementPageState
               child: PanelCard(
                 type: PanelType.success,
                 additionalDetails: [
-                  if (wrapper.householdMembers?.first?.individuals?.lastOrNull!
-                          .identifiers!
-                          .lastWhereOrNull(
-                            (e) =>
-                                e.identifierType ==
-                                IdentifierTypes.uniqueBeneficiaryID.toValue(),
-                          )
-                          ?.identifierId !=
-                      null)
+                  if (wrapper.householdMembers != null &&
+                      wrapper.householdMembers.isNotEmpty &&
+                      wrapper.householdMembers?.first?.individuals?.lastOrNull!
+                              .identifiers!
+                              .lastWhereOrNull(
+                                (e) =>
+                                    e.identifierType ==
+                                    IdentifierTypes.uniqueBeneficiaryID
+                                        .toValue(),
+                              )
+                              ?.identifierId !=
+                          null)
                     // Text(
                     //   getSubText(wrapper.householdMembers.first),
                     //   textAlign: TextAlign.center,
@@ -166,7 +193,10 @@ class CustomHouseholdAcknowledgementPageState
         DigitButton(
           label: localizations.translate(primaryProp?.label ??
               i18.householdDetails.viewHouseHoldDetailsAction),
-          onPressed: () => context.router.popAndPush(HouseholdOverviewRoute()),
+          onPressed: () async {
+            await updateStock(wrapper.householdMembers);
+            context.router.popAndPush(HouseholdOverviewRoute());
+          },
           type: DigitButtonType.primary,
           size: DigitButtonSize.large,
         ),
@@ -180,8 +210,11 @@ class CustomHouseholdAcknowledgementPageState
         DigitButton(
           label: localizations.translate(secondaryProp?.label ??
               i18.acknowledgementSuccess.actionLabelText),
-          onPressed: () => context.router
-              .popUntilRouteWithName(CustomSearchBeneficiaryRoute.name),
+          onPressed: () async {
+            await updateStock(wrapper.householdMembers);
+            context.router
+                .popUntilRouteWithName(CustomSearchBeneficiaryRoute.name);
+          },
           type: DigitButtonType.secondary,
           size: DigitButtonSize.large,
         ),

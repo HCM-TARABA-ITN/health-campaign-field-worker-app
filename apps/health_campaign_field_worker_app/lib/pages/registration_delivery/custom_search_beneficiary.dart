@@ -266,7 +266,7 @@ class _CustomSearchBeneficiaryPageState
         }
       },
       child: BlocListener<FormsBloc, FormsState>(
-        listener: (context, formState) async {
+        listener: (context, formState) {
           if (formState is FormsSubmittedState) {
             DigitLoaders.overlayLoader(context: context);
 
@@ -413,11 +413,10 @@ class _CustomSearchBeneficiaryPageState
                   RegistrationWrapperEvent.create(entities: entities),
                 );
 
-                if (entities.any((entity) => entity is TaskModel)) {
-                  await Future.delayed(const Duration(milliseconds: 10));
-                  await _updateProductCount(entities);
-                }
-                ;
+                // if (entities.any((entity) => entity is TaskModel)) {
+                //   await _updateProductCount(entities);
+                // }
+                // ;
               }
             } catch (e) {
               Navigator.of(context, rootNavigator: true).pop();
@@ -1561,14 +1560,13 @@ class _CustomSearchBeneficiaryPageState
     context.read<UniqueIdBloc>().add(const UniqueIdEvent.fetchIdCount());
   }
 
-  Future<void> _updateProductCount(List<EntityModel> entities) async {
-    TaskModel? taskModel = entities.whereType<TaskModel>().firstOrNull;
-    final clientRefId = taskModel?.clientReferenceId;
-    if (clientRefId != null && clientRefId.isNotEmpty) {
-      context
-          .read<AuthBloc>()
-          // .add(const AuthAddProductCountsEvent(bednetCount: 2)
-          .add(AuthDeliveryProductCountsEvent(clientReferenceId: clientRefId));
-    }
-  }
+  // Future<void> _updateProductCount(List<EntityModel> entities) async {
+  //   TaskModel? taskModel = entities.whereType<TaskModel>().firstOrNull;
+  //   final clientRefId = taskModel?.clientReferenceId;
+  //   if (clientRefId != null && clientRefId.isNotEmpty) {
+  //     context
+  //         .read<AuthBloc>()
+  //         .add(AuthDeliveryProductCountsEvent(clientReferenceId: clientRefId));
+  //   }
+  // }
 }

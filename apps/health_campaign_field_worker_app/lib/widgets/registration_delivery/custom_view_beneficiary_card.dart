@@ -112,8 +112,12 @@ class CustomViewBeneficiaryCardState
               BeneficiaryType.individual) {
             return element.beneficiaryClientReferenceId == e.clientReferenceId;
           } else {
-            return element.beneficiaryClientReferenceId ==
-                householdMember.household!.clientReferenceId;
+            if (householdMember.household != null) {
+              return element.beneficiaryClientReferenceId ==
+                  householdMember.household?.clientReferenceId;
+            } else {
+              return false;
+            }
           }
         }).toList();
 
