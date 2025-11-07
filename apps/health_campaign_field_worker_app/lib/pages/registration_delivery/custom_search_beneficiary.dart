@@ -413,8 +413,11 @@ class _CustomSearchBeneficiaryPageState
                   RegistrationWrapperEvent.create(entities: entities),
                 );
 
-                await Future.delayed(const Duration(milliseconds: 400));
-                await _updateProductCount(entities);
+                if (entities.any((entity) => entity is TaskModel)) {
+                  await Future.delayed(const Duration(milliseconds: 100));
+                  await _updateProductCount(entities);
+                }
+                ;
               }
             } catch (e) {
               Navigator.of(context, rootNavigator: true).pop();
