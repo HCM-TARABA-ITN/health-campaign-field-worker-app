@@ -117,6 +117,18 @@ class _CustomSearchBeneficiaryPageState
         searchTemplate?.properties?['searchByProximity']?.hidden == true;
 
     return BlocListener<RegistrationWrapperBloc, RegistrationWrapperState>(
+      listenWhen: (previous, current) {
+        final actionChanged = previous.lastAction != current.lastAction &&
+            (current.lastAction == RegistrationWrapperActionType.created ||
+                current.lastAction == RegistrationWrapperActionType.updated ||
+                current.lastAction ==
+                    RegistrationWrapperActionType.createAndUpdate);
+
+        final errorOccurred =
+            previous.error != current.error && current.error != null;
+
+        return actionChanged || errorOccurred;
+      },
       listener: (context, createState) {
         if (createState.lastAction == RegistrationWrapperActionType.created ||
             createState.lastAction == RegistrationWrapperActionType.updated ||
@@ -130,15 +142,15 @@ class _CustomSearchBeneficiaryPageState
           final taskModel =
               createState.householdMembers.firstOrNull?.tasks?.firstOrNull;
 
-          if (createState.lastAction == RegistrationWrapperActionType.created &&
-              individualModel != null &&
-              individualModel.identifiers != null &&
-              individualModel.identifiers?.first.identifierId != null &&
-              individualModel.identifiers?.first.identifierType ==
-                  IdentifierTypes.uniqueBeneficiaryID.toValue()) {
-            context.read<UniqueIdBloc>().add(UniqueIdEvent.updateStatus(
-                id: individualModel.identifiers!.first.identifierId!));
-          }
+          // if (createState.lastAction == RegistrationWrapperActionType.created &&
+          //     individualModel != null &&
+          //     individualModel.identifiers != null &&
+          //     individualModel.identifiers?.first.identifierId != null &&
+          //     individualModel.identifiers?.first.identifierType ==
+          //         IdentifierTypes.uniqueBeneficiaryID.toValue()) {
+          //   context.read<UniqueIdBloc>().add(UniqueIdEvent.updateStatus(
+          //       id: individualModel.identifiers!.first.identifierId!));
+          // }
 
           if (householdModel != null) {
             blocWrapper.add(RegistrationWrapperEvent.fetchDeliveryDetails(
@@ -168,6 +180,11 @@ class _CustomSearchBeneficiaryPageState
                 const FormsEvent.clearForm(
                     schemaKey:
                         'REGISTRATIONFLOW'), // or create a FormsResetEvent
+              );
+
+          context.read<FormsBloc>().add(
+                const FormsEvent.clearForm(
+                    schemaKey: 'DELIVERYFLOW'), // or create a FormsResetEvent
               );
 
           final pages = currentSchema?.pages.entries.toList()
@@ -263,6 +280,10 @@ class _CustomSearchBeneficiaryPageState
         }
       },
       child: BlocListener<FormsBloc, FormsState>(
+        listenWhen: (previous, current) {
+          return previous.runtimeType != current.runtimeType &&
+              current is FormsSubmittedState;
+        },
         listener: (context, formState) {
           if (formState is FormsSubmittedState) {
             DigitLoaders.overlayLoader(context: context);
@@ -1246,8 +1267,8 @@ class _CustomSearchBeneficiaryPageState
                                                           .beneficiaryType
                                                           ?.toValue()));
 
-                                          await context.router
-                                              .push(HouseholdOverviewRoute());
+                                          await context.router.push(
+                                              CustomHouseholdOverviewRoute());
                                         }
                                         setState(() {
                                           isProximityEnabled = false;
@@ -1413,8 +1434,6 @@ class _CustomSearchBeneficiaryPageState
                 searchController.clear();
                 FocusManager.instance.primaryFocus?.unfocus();
               }
-            } else {
-              fetchBeneficiaryIdCount();
             }
 
             context
@@ -1543,9 +1562,5 @@ class _CustomSearchBeneficiaryPageState
           beneficiaryType:
               RegistrationDeliverySingleton().beneficiaryType?.toValue()));
     }
-  }
-
-  void fetchBeneficiaryIdCount() {
-    context.read<UniqueIdBloc>().add(const UniqueIdEvent.fetchIdCount());
   }
 }

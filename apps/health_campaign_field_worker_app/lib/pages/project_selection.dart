@@ -10,10 +10,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
 
 import '../blocs/auth/auth.dart';
+import '../blocs/localization/localization.dart';
 import '../blocs/project/project.dart';
+import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../router/app_router.dart';
 import '../utils/constants.dart';
+import '../utils/environment_config.dart';
 import '../utils/extensions/extensions.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/header/back_navigation_help_header.dart';
@@ -230,6 +233,15 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
   }
 
   void navigateToBoundary(String boundary) async {
+    await triggerLocalizationIfUpdated(
+      context: context,
+      locale: AppSharedPreferences().getSelectedLocale!,
+      moduleKey: 'REGISTRATIONFLOW,DELIVERYFLOW',
+
+      /// TODO: NEED TO MOVE CONSTANT FILE
+      projectReferenceId: context.selectedProject.referenceID ?? '',
+    );
+
     BoundaryBloc boundaryBloc = context.read<BoundaryBloc>();
     boundaryBloc.add(BoundaryFindEvent(code: boundary));
     try {
@@ -276,5 +288,29 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
     } else {
       context.read<LocationBloc>().add(const LocationEvent.requestPermission());
     }
+  }
+
+  Future<void> triggerLocalizationIfUpdated({
+    required BuildContext context,
+    required String moduleKey, // e.g., 'REGISTRATIONFLOW,DELIVERYFLOW'
+    required String projectReferenceId,
+    required String locale,
+  }) async {
+    final keys = moduleKey.split(',').map((e) => e.trim()).toList();
+
+    final moduleNames = keys
+        .map((key) => 'hcm-${key.toLowerCase()}-$projectReferenceId')
+        .toList();
+
+    final fullModuleString = moduleNames.join(',');
+
+    context
+        .read<LocalizationBloc>()
+        .add(LocalizationEvent.onRemoteLoadLocalization(
+          module: fullModuleString,
+          tenantId: envConfig.variables.tenantId,
+          locale: AppSharedPreferences().getSelectedLocale!,
+          path: Constants.localizationApiPath,
+        ));
   }
 }
