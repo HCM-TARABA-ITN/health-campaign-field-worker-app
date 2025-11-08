@@ -82,12 +82,49 @@ class _CustomHouseholdOverviewPageState
 
     return PopScope(
       onPopInvoked: (didPop) async {
-        context
-            .read<RegistrationWrapperBloc>()
-            .add(const RegistrationWrapperEvent.clear());
+        // context
+        //     .read<RegistrationWrapperBloc>()
+        //     .add(const RegistrationWrapperEvent.clear());
+        // WidgetsBinding.instance.addPostFrameCallback((_) {
+        //   context.router
+        //       .popUntilRouteWithName(CustomSearchBeneficiaryRoute.name);
+        if (!didPop) return;
+
+        // ✅ Capture bloc and router before teardown
+        final bloc = context.read<RegistrationWrapperBloc>();
+        final rootRouter = context.router;
+
+        // ✅ Clear your bloc immediately (safe)
+        bloc.add(const RegistrationWrapperEvent.clear());
+
+        // ✅ Schedule navigation for *next frame* (after pop + teardown complete)
+
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          context.router
-              .popUntilRouteWithName(CustomSearchBeneficiaryRoute.name);
+          try {
+            final stack = rootRouter.stack;
+
+            if (stack.isEmpty) {
+              // Nothing left in the stack → push fallback
+              rootRouter.push(CustomSearchBeneficiaryRoute());
+              return;
+            }
+
+            final hasTarget = stack.any(
+              (r) => r.name == CustomSearchBeneficiaryRoute.name,
+            );
+
+            if (hasTarget) {
+              // Target route exists → pop back to it
+              rootRouter
+                  .popUntilRouteWithName(CustomSearchBeneficiaryRoute.name);
+            } else {
+              // Target route missing → push fallback
+              rootRouter.push(CustomSearchBeneficiaryRoute());
+            }
+          } catch (e, s) {
+            rootRouter.push(CustomSearchBeneficiaryRoute());
+            debugPrint("⚠️ Navigation error after pop: $e\n$s");
+          }
         });
       },
       child: BlocBuilder<RegistrationWrapperBloc, RegistrationWrapperState>(
