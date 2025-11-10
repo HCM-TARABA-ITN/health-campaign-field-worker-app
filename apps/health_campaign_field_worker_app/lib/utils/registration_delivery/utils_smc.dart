@@ -3,17 +3,17 @@ import 'package:digit_data_model/models/entities/individual.dart';
 import 'package:digit_data_model/models/entities/project_type.dart';
 import 'package:digit_data_model/models/project_type/project_type_model.dart';
 import 'package:digit_ui_components/utils/date_utils.dart';
-import 'package:health_campaign_field_worker_app/utils/constants.dart';
 import 'package:registration_delivery/models/entities/additional_fields_type.dart';
 import 'package:registration_delivery/models/entities/side_effect.dart';
 import 'package:registration_delivery/models/entities/status.dart';
 import 'package:registration_delivery/models/entities/task.dart';
 
+import '../../../models/entities/assessment_checklist/status.dart'
+    as status_local;
 import '../../models/entities/additional_fields_type.dart'
     as additional_fields_local;
 import '../app_enums.dart';
-import '../../../models/entities/assessment_checklist/status.dart'
-    as status_local;
+import '../constants.dart';
 
 bool checkStatusSMC(List<TaskModel>? tasks, ProjectCycle? currentCycle) {
   if (currentCycle == null) {
@@ -366,8 +366,6 @@ bool assessmentSMCPending(List<TaskModel>? tasks, ProjectCycle? currentCycle) {
           successfulTaskCreatedTime <= currentCycle.endDate;
 
   return !isLastCycleRunning;
-
-  //return successfulTask == null;
 }
 
 bool assessmentVASPending(List<TaskModel>? tasks) {

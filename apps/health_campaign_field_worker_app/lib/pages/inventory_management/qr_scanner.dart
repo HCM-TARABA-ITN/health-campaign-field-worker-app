@@ -1,11 +1,16 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'dart:io';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:camera/camera.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
+import 'package:digit_scanner/blocs/scanner.dart';
+import 'package:digit_scanner/utils/i18_key_constants.dart' as i18;
 import 'package:digit_scanner/utils/scanner_utils.dart';
 import 'package:digit_scanner/widgets/localized.dart';
+import 'package:digit_scanner/widgets/vision_detector_views/detector_view.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/input_wrapper.dart';
@@ -16,12 +21,8 @@ import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart
 import 'package:gs1_barcode_parser/gs1_barcode_parser.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
-import 'package:digit_scanner/utils/i18_key_constants.dart' as i18;
-import '../../utils/i18_key_constants.dart' as i18_local;
-import 'package:digit_scanner/blocs/scanner.dart';
-import 'package:digit_scanner/widgets/vision_detector_views/detector_view.dart';
-
 import '../../utils/constants.dart';
+import '../../utils/i18_key_constants.dart' as i18_local;
 
 enum ScanType { teamCode, others }
 
@@ -174,46 +175,7 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                             ),
                           ),
                         ),
-                        // if (widget.isGS1code)
                         const SizedBox.shrink(),
-                        // else
-                        //   Align(
-                        //     alignment: Alignment.center,
-                        //     widthFactor: 2,
-                        //     child: Padding(
-                        //       padding: const EdgeInsets.only(top: spacer8),
-                        //       child: Column(
-                        //         crossAxisAlignment: CrossAxisAlignment.center,
-                        //         mainAxisAlignment: MainAxisAlignment.center,
-                        //         children: [
-                        //           Padding(
-                        //             padding: const EdgeInsets.only(top: spacer1),
-                        //             child: Text(
-                        //               localizations.translate(
-                        //                 i18.scanner.manualScan,
-                        //               ),
-                        //               style: textTheme.bodyL.copyWith(
-                        //                 color: theme.colorTheme.paper.primary
-                        //               )
-                        //             ),
-                        //           ),
-                        //           DigitButton(label: localizations.translate(
-                        //             i18.scanner.enterManualCode,
-                        //           ), onPressed: () {
-                        //             context.read<DigitScannerBloc>().add(
-                        //               const DigitScannerEvent.handleScanner(
-                        //                 barCode: [],
-                        //                 qrCode: [],
-                        //               ),
-                        //             );
-                        //             setState(() {
-                        //               manualCode = true;
-                        //             });
-                        //           }, type: DigitButtonType.link, size: DigitButtonSize.large)
-                        //         ],
-                        //       ),
-                        //     ),
-                        //   ),
 
                         Positioned(
                           bottom: 0,
@@ -583,7 +545,6 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
   }
 
   Future<void> storeCodeWrapper(String code) async {
-    // if (codes.length < widget.quantity) {
     if (widget.scanType == ScanType.teamCode &&
             code.contains(Constants.pipeSeparator) ||
         widget.scanType != ScanType.teamCode) {
@@ -612,7 +573,6 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
       await Future.delayed(const Duration(seconds: 2));
       return;
     }
-    // }
   }
 
   Future<void> storeValueWrapper(GS1Barcode scanData) async {

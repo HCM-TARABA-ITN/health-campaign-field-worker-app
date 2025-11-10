@@ -1,26 +1,22 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
-import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:health_campaign_field_worker_app/data/repositories/local/inventory_management/custom_stock.dart';
-import 'package:health_campaign_field_worker_app/utils/utils.dart';
-import 'package:health_campaign_field_worker_app/widgets/action_card/min_number_card.dart';
 import 'package:inventory_management/blocs/record_stock.dart';
 import 'package:inventory_management/models/entities/stock.dart';
-import 'package:inventory_management/utils/i18_key_constants.dart' as i18;
 import 'package:inventory_management/utils/utils.dart';
 import 'package:inventory_management/widgets/localized.dart';
-import 'package:inventory_management/widgets/back_navigation_help_header.dart';
-import '../../router/app_router.dart';
 import 'package:logger/logger.dart';
 
+import '../../data/repositories/local/inventory_management/custom_stock.dart';
+import '../../router/app_router.dart';
+import '../../utils/utils.dart';
+import '../../widgets/action_card/min_number_card.dart';
 import '../../widgets/custom_back_navigation.dart';
 
 @RoutePage()

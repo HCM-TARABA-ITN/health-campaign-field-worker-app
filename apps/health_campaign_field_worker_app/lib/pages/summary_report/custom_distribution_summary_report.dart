@@ -1,28 +1,23 @@
-import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
-import 'package:digit_components/utils/date_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:health_campaign_field_worker_app/widgets/localized.dart';
-import 'package:health_campaign_field_worker_app/widgets/reports/readonly_pluto_grid.dart';
-import 'package:intl/intl.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:registration_delivery/models/entities/household.dart';
-import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
 
 import '../../../router/app_router.dart';
-import '../../../utils/utils.dart';
 import '../../../utils/i18_key_constants.dart' as i18Local;
+import '../../../utils/utils.dart';
 import '../../blocs/summary_report/custom_distribution_summary_report.dart';
+import '../../widgets/localized.dart';
+import '../../widgets/reports/readonly_pluto_grid.dart';
 
 @RoutePage()
 class CustomDistributionSummaryReportDetailsPage
     extends LocalizedStatefulWidget {
   const CustomDistributionSummaryReportDetailsPage({
-    Key? key,
+    super.key,
     super.appLocalizations,
-  }) : super(key: key);
+  });
 
   @override
   State<CustomDistributionSummaryReportDetailsPage> createState() =>

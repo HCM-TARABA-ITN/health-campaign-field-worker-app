@@ -1,14 +1,10 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/menu_card.dart';
 import 'package:flutter/material.dart';
-import 'package:inventory_management/router/inventory_router.gm.dart';
-
 import 'package:inventory_management/utils/i18_key_constants.dart' as i18;
-import 'package:inventory_management/widgets/localized.dart';
-// import 'package:inventory_management/blocs/inventory_report.dart';
 import 'package:inventory_management/widgets/back_navigation_help_header.dart';
+import 'package:inventory_management/widgets/localized.dart';
 
 import '../../blocs/inventory_management/custom_inventory_report.dart';
 import '../../router/app_router.dart';
@@ -178,7 +174,6 @@ class CustomInventoryReportSelectionPageState
                       ),
                       icon: Icons.store,
                       onTap: () => context.router.push(
-                        // CustomStockReconciliationRoute()
                         CustomInventoryReportDetailsRoute(
                           reportType: InventoryReportType.reconciliation,
                         ),

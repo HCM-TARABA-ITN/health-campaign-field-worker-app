@@ -1,25 +1,16 @@
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/menu_card.dart';
-import 'package:digit_ui_components/widgets/scrollable_content.dart';
 import 'package:flutter/material.dart';
-import 'package:health_campaign_field_worker_app/router/app_router.dart';
-import 'package:health_campaign_field_worker_app/widgets/custom_back_navigation.dart';
-import 'package:inventory_management/router/inventory_router.gm.dart';
-import 'package:digit_components/widgets/digit_dialog.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
-
-import 'package:inventory_management/utils/i18_key_constants.dart' as i18;
-import '../../utils/i18_key_constants.dart' as i18_local;
-import 'package:inventory_management/utils/utils.dart';
-import 'package:inventory_management/widgets/localized.dart';
 import 'package:inventory_management/blocs/record_stock.dart';
-import 'package:inventory_management/widgets/back_navigation_help_header.dart';
+import 'package:inventory_management/router/inventory_router.gm.dart';
+import 'package:inventory_management/utils/i18_key_constants.dart' as i18;
+import 'package:inventory_management/widgets/localized.dart';
 
 import '../../router/app_router.dart';
+import '../../utils/i18_key_constants.dart' as i18_local;
 import '../../utils/utils.dart';
-import 'qrscanner.dart';
+import '../../widgets/custom_back_navigation.dart';
 
 @RoutePage()
 class CustomManageStocksPage extends LocalizedStatefulWidget {

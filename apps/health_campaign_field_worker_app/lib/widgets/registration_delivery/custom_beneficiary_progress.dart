@@ -3,23 +3,21 @@ import 'dart:math';
 import 'package:collection/collection.dart';
 import 'package:digit_components/widgets/digit_card.dart';
 import 'package:digit_data_model/data/data_repository.dart';
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../models/entities/assessment_checklist/status.dart';
-
 import 'package:registration_delivery/models/entities/household.dart';
 import 'package:registration_delivery/models/entities/task.dart';
 import 'package:registration_delivery/utils/utils.dart';
 
-import 'package:digit_ui_components/digit_components.dart';
-import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import '../../data/repositories/custom_household.dart';
-import '../../utils/environment_config.dart';
-import '../../models/entities/household.dart' as local;
-
 import '../../data/repositories/custom_task.dart';
+import '../../models/entities/assessment_checklist/status.dart';
+import '../../models/entities/household.dart' as local;
 import '../../models/entities/roles_type.dart';
 import '../../utils/constants.dart';
+import '../../utils/environment_config.dart';
 import '../../utils/extensions/extensions.dart';
 
 class CustomBeneficiaryProgressBar extends StatefulWidget {
@@ -164,14 +162,10 @@ class _CustomBeneficiaryProgressBarState
           );
           List<HouseholdModel> results =
               await householdRepository.progressBarSearch(householdSearchQuery);
-          // final groupedEntries = results.groupListsBy(
-          //   (element) => element.projectBeneficiaryClientReferenceId,
-          // );
           if (mounted) {
             setState(() {
               if (mounted) {
                 registrationCount = results.length;
-                // current = groupedEntries.entries.length;
               }
             });
           }

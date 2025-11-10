@@ -92,12 +92,6 @@ class CustomHouseholdAcknowledgementPageState
                               )
                               ?.identifierId !=
                           null)
-                    // Text(
-                    //   getSubText(wrapper.householdMembers.first),
-                    //   textAlign: TextAlign.center,
-                    //   style: textTheme.headingM.copyWith(
-                    //       color: const DigitColors().light.paperPrimary),
-                    // ),
                     Text.rich(
                       TextSpan(
                         children: [

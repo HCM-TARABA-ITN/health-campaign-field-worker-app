@@ -1,7 +1,11 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_forms_engine/blocs/forms/forms.dart';
 import 'package:digit_forms_engine/json_forms.dart';
+import 'package:digit_forms_engine/models/property_schema/property_schema.dart';
+import 'package:digit_forms_engine/models/schema_object/schema_object.dart';
+import 'package:digit_forms_engine/utils/utils.dart';
 import 'package:digit_forms_engine/widgets/back_header/back_navigation_help_header.dart';
+import 'package:digit_forms_engine/widgets/localized.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/label_value_list.dart';
@@ -15,10 +19,6 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
-import 'package:digit_forms_engine/widgets/localized.dart';
-import 'package:digit_forms_engine/models/property_schema/property_schema.dart';
-import 'package:digit_forms_engine/models/schema_object/schema_object.dart';
-import 'package:digit_forms_engine/utils/utils.dart';
 import '../../router/app_router.dart' as app_router;
 
 @RoutePage()
@@ -374,9 +374,7 @@ class _CustomFormsRenderState extends LocalizedState<CustomFormsRenderPage> {
                       JsonForms(
                         propertySchema: schema,
                         childrens: widget.customComponents,
-                        defaultValues: const {
-                          // 'locality': context.boundary.code,
-                        },
+                        defaultValues: const {},
                         pageName: widget.pageName,
                         currentSchemaKey: widget.currentSchemaKey,
                       )

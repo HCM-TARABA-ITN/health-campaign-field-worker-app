@@ -1,10 +1,8 @@
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/theme/spacers.dart';
-
 import 'package:flutter/material.dart';
 import 'package:inventory_management/utils/utils.dart';
 
-import 'package:qr_flutter/qr_flutter.dart';
 import '../../blocs/localization/app_localization.dart';
 
 class TransactionsCard extends StatelessWidget {
@@ -76,8 +74,7 @@ class TransactionsCard extends StatelessWidget {
                 child: Row(
                   children: [
                     Text(
-                      AppLocalizations.of(context)
-                          .translate(item['name']!),
+                      AppLocalizations.of(context).translate(item['name']!),
                       style: textTheme.bodyL,
                     ),
                     const SizedBox(width: 8.0), // Replace spacer2
@@ -90,12 +87,6 @@ class TransactionsCard extends StatelessWidget {
                       "${item['quantity']!} Units",
                       style: textTheme.bodyL,
                     ),
-                    // const SizedBox(width: 8.0),
-                    // Text(
-                    //   "|",
-                    //   style: textTheme.bodyL,
-                    // ),
-                    // Replace spacer2
                   ],
                 ),
               );

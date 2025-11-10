@@ -3,7 +3,6 @@ import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:digit_ui_components/widgets/molecules/panel_cards.dart';
 import 'package:flutter/material.dart';
-
 import 'package:survey_form/utils/i18_key_constants.dart' as i18;
 import 'package:survey_form/widgets/localized.dart';
 

@@ -1,30 +1,19 @@
+import 'dart:async';
 import 'dart:convert';
 
-import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:survey_form/survey_form.dart';
-import 'dart:async';
-
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/digit_dialog.dart';
 import 'package:digit_components/widgets/digit_icon_tile.dart';
-
 import 'package:digit_data_model/data_model.dart';
-
 import 'package:digit_forms_engine/blocs/forms/forms.dart';
 import 'package:digit_showcase/showcase_widget.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/services/location_bloc.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
-import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
-import 'package:digit_ui_components/widgets/helper_widget/digit_profile.dart';
 import 'package:digit_ui_components/widgets/molecules/hamburger.dart';
-import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_portal/flutter_portal.dart';
-import 'package:health_campaign_field_worker_app/widgets/showcase/showcase_wrappers.dart';
 import 'package:isar/isar.dart';
 import 'package:location/location.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -34,8 +23,10 @@ import 'package:registration_delivery/models/entities/project_beneficiary.dart';
 import 'package:registration_delivery/models/entities/referral.dart';
 import 'package:registration_delivery/models/entities/side_effect.dart';
 import 'package:registration_delivery/models/entities/task.dart';
-import 'package:sync_service/sync_service_lib.dart';
+import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:survey_form/survey_form.dart';
+import 'package:sync_service/sync_service_lib.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/auth/auth.dart';
@@ -52,6 +43,7 @@ import '../router/authenticated_route_observer.dart';
 import '../utils/environment_config.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../utils/utils.dart';
+import '../widgets/showcase/showcase_wrappers.dart';
 
 @RoutePage()
 class AuthenticatedPageWrapper extends StatelessWidget {
@@ -381,18 +373,6 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                   context.router.replaceAll([HomeRoute()]);
                 },
               ),
-              // context.isDownSyncEnabled
-              //     ? DigitIconTile(
-              //         title: AppLocalizations.of(context).translate(
-              //           i18.common.coreCommonViewDownloadedData,
-              //         ),
-              //         icon: Icons.download,
-              //         onPressed: () {
-              //           Navigator.of(context, rootNavigator: true).pop();
-              //           context.router.push(const BeneficiariesReportRoute());
-              //         },
-              //       )
-              //     : const Offstage(),
               DigitIconTile(
                 title: AppLocalizations.of(context)
                     .translate(i18.common.coreCommonLogout),

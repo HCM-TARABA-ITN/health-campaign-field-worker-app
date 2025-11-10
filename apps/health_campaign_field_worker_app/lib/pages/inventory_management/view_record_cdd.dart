@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/digit_dialog.dart';
 import 'package:digit_data_model/data_model.dart';
@@ -12,17 +13,16 @@ import 'package:inventory_management/models/entities/stock.dart';
 import 'package:inventory_management/models/entities/transaction_reason.dart';
 import 'package:inventory_management/models/entities/transaction_type.dart';
 import 'package:inventory_management/utils/i18_key_constants.dart' as i18;
-import '../../utils/i18_key_constants.dart' as i18_local;
-import 'package:registration_delivery/utils/i18_key_constants.dart' as i18_reg;
 import 'package:inventory_management/utils/utils.dart';
-import 'package:registration_delivery/widgets/localized.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:collection/collection.dart';
+import 'package:registration_delivery/utils/i18_key_constants.dart' as i18_reg;
+import 'package:registration_delivery/widgets/localized.dart';
 
 import '../../blocs/auth/auth.dart';
 import '../../router/app_router.dart';
 import '../../utils/constants.dart';
 import '../../utils/extensions/extensions.dart';
+import '../../utils/i18_key_constants.dart' as i18_local;
 
 @RoutePage()
 class ViewStockRecordsCDDPage extends LocalizedStatefulWidget {
@@ -387,7 +387,7 @@ class _ViewStockRecordsCDDPageState
             final productName = stock.additionalFields?.fields
                     .firstWhere(
                       (field) => field.key == 'productName',
-                      orElse: () => AdditionalField('productName', ''),
+                      orElse: () => const AdditionalField('productName', ''),
                     )
                     .value
                     ?.toString() ??

@@ -1,43 +1,16 @@
 library app_utils;
 
-import 'package:digit_data_model/data_model.dart';
-import 'package:health_campaign_field_worker_app/blocs/registration_delivery/custom_search_household.dart';
-import 'package:intl/intl.dart';
-import 'package:inventory_management/inventory_management.dart';
-import 'package:referral_reconciliation/referral_reconciliation.dart'
-    as referral_reconciliation_mappers;
-import 'package:collection/collection.dart';
-import 'package:digit_components/utils/date_utils.dart';
-import 'package:digit_data_model/models/entities/individual.dart';
-import 'package:digit_data_model/models/entities/product_variant.dart';
-import 'package:digit_data_model/models/entities/project_type.dart';
-import 'package:registration_delivery/models/entities/additional_fields_type.dart';
-import 'package:registration_delivery/models/entities/household.dart';
-import 'package:registration_delivery/registration_delivery.dart';
-import 'package:survey_form/survey_form.init.dart' as surveyForm_mappers;
-import 'package:complaints/complaints.init.dart' as complaints_mappers;
-import '../../utils/i18_key_constants.dart' as i18_local;
-import 'package:inventory_management/utils/i18_key_constants.dart' as i18_stock;
-
-import 'dart:convert';
-
-import 'package:crypto/crypto.dart';
-import 'package:device_info_plus/device_info_plus.dart';
-import 'package:flutter/foundation.dart';
-import 'package:inventory_management/inventory_management.init.dart'
-    as inventory_mappers;
-
-import 'package:registration_delivery/registration_delivery.init.dart'
-    as registration_delivery_mappers;
-
 import 'dart:async';
 import 'dart:io';
 
 import 'package:attendance_management/attendance_management.dart'
     as attendance_mappers;
-import 'package:survey_form/survey_form.dart' as surveyForm_mappers;
+import 'package:collection/collection.dart';
+import 'package:complaints/complaints.init.dart' as complaints_mappers;
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_data_model/data_model.dart' as data_model;
+import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/data_model.init.dart' as data_model_mappers;
 import 'package:digit_dss/digit_dss.dart' as dss_mappers;
 import 'package:digit_ui_components/digit_components.dart';
@@ -49,17 +22,32 @@ import 'package:disable_battery_optimization/disable_battery_optimization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
+import 'package:inventory_management/inventory_management.dart';
+import 'package:inventory_management/inventory_management.init.dart'
+    as inventory_mappers;
+import 'package:inventory_management/utils/i18_key_constants.dart' as i18_stock;
 import 'package:isar/isar.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:referral_reconciliation/referral_reconciliation.dart'
+    as referral_reconciliation_mappers;
+import 'package:registration_delivery/models/entities/additional_fields_type.dart';
+import 'package:registration_delivery/models/entities/household.dart';
+import 'package:registration_delivery/registration_delivery.dart';
+import 'package:registration_delivery/registration_delivery.init.dart'
+    as registration_delivery_mappers;
+import 'package:survey_form/survey_form.dart' as surveyForm_mappers;
+import 'package:survey_form/survey_form.init.dart' as surveyForm_mappers;
 
+import '../../utils/i18_key_constants.dart' as i18_local;
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/localization/localization.dart';
 import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
+import '../blocs/registration_delivery/custom_search_household.dart';
 import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/localization.dart';
 import '../data/local_store/secure_store/secure_store.dart';
 import '../models/app_config/app_config_model.dart';
-import '../models/entities/roles_type.dart';
 import '../router/app_router.dart';
 import '../widgets/progress_indicator/progress_indicator.dart';
 import 'constants.dart';
@@ -261,8 +249,6 @@ String customFormatAgeRange(String condition) {
       RegExp(r'(\d+)\s*<\s*ageandage\s*<\s*(\d+)', caseSensitive: false);
   final match = regex.firstMatch(condition);
   if (match != null && match.groupCount == 2) {
-    // final min = match.group(1);
-    // final max = match.group(2);
     int min = int.parse(match.group(1)!);
     int max = int.parse(match.group(2)!);
 

@@ -1,12 +1,9 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_action_card.dart';
 import 'package:digit_ui_components/widgets/atoms/menu_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:survey_form/survey_form.dart';
-
-import 'package:survey_form/router/survey_form_router.gm.dart';
 import 'package:survey_form/utils/constants.dart';
 import 'package:survey_form/utils/i18_key_constants.dart' as i18;
 import 'package:survey_form/widgets/back_navigation_help_header.dart';

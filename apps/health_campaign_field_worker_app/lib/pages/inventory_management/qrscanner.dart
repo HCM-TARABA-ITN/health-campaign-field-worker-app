@@ -1,21 +1,22 @@
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:collection/collection.dart';
+import 'package:digit_components/widgets/digit_dialog.dart' as dialog;
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:inventory_management/models/entities/stock.dart';
 import 'package:inventory_management/models/entities/transaction_reason.dart';
 import 'package:inventory_management/models/entities/transaction_type.dart';
+import 'package:inventory_management/widgets/localized.dart';
 import 'package:logger/logger.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
-import 'package:inventory_management/blocs/record_stock.dart';
-import 'package:inventory_management/models/entities/stock.dart';
-import 'package:inventory_management/widgets/localized.dart';
+import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
+
 import '../../data/repositories/local/inventory_management/custom_stock.dart';
 import '../../router/app_router.dart';
 import '../../utils/extensions/extensions.dart';
-import 'package:digit_components/widgets/digit_dialog.dart' as dialog;
-import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
 
 @RoutePage()
 class QRScannerPage extends LocalizedStatefulWidget {
@@ -55,9 +56,6 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
     List<StockModel> result = [];
 
     try {
-      // if (!Platform.isAndroid && !Platform.isIOS && code == 'test') {
-      //   code = _generateTestQRData();
-      // }
       final compressed = base64Url.decode(code);
 
       final decompressed = utf8.decode(zlib.decode(compressed));
@@ -186,7 +184,6 @@ class _QRScannerPageState extends LocalizedState<QRScannerPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          // title: Text(localizations.translate('qr_scanner_title')),
           actions: [
             IconButton(
               icon: const Icon(Icons.flash_on),

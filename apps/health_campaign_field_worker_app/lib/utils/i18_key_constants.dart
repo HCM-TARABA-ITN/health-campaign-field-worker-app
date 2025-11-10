@@ -504,13 +504,6 @@ class StockDetails {
 
   String get recordStockReturnedDescription =>
       'STOCK_DETAILS_RECORD_STOCK_RETURNED_DESCRIPTION';
-  // String get balesReceivedRequired => 'BALES_RECEIVED_IS_REQUIRED';
-  // String get netsReceivedRequired => 'NETS_RECEIVED_IS_REQUIRED';
-
-  // String get balesNumberLabel => 'BALES_NUMBER_LABEL';
-  // String get netsReceivedLabel => 'NETS_RECEIVED_LABEL';
-  // String get numberOfNetsInWaybillLabel => 'NUMBER_OF_NETS_IN_WAYBILL_LABEL';
-  // String get commentsLabel => 'COMMENTS_LABEL';
   String get driverIdLabel => 'DRIVER_ID_LABEL';
   String get itnsLabel => 'ITNS_LABEL';
 }
@@ -892,18 +885,6 @@ class ComplaintsInboxShowcase {
     return 'COMPLAINT_INBOX_SHOWCASE_CREATE';
   }
 }
-
-// class ForgotPassword {
-//   const ForgotPassword();
-
-//   String get labelText => 'FORGOT_PASSWORD_LABEL_TEXT';
-
-//   String get contentText => 'FORGOT_PASSWORD_CONTENT_TEXT';
-
-//   String get primaryActionLabel => 'PRIMARY_ACTION_LABEL';
-
-//   String get actionLabel => 'FORGOT_PASSWORD_ACTION_LABEL';
-// }
 
 class Home {
   const Home();

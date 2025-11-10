@@ -57,7 +57,6 @@ class _BoundarySelectionPageState
     context.syncRefresh();
     LocalizationParams()
         .setModule(['hcm-common', 'hcm-beneficiary', 'hcm-home'], false);
-    // LocalizationParams().setModule('common', false);
     context.read<SyncBloc>().add(SyncRefreshEvent(context.loggedInUserUuid));
     context.read<BeneficiaryDownSyncBloc>().add(
           const DownSyncResetStateEvent(),

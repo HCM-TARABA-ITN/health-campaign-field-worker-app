@@ -2,10 +2,10 @@ import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:health_campaign_field_worker_app/data/repositories/local/inventory_management/custom_stock.dart';
 import 'package:inventory_management/models/entities/stock.dart';
 
 import '../../blocs/inventory_management/stock_bloc.dart';
+import '../../data/repositories/local/inventory_management/custom_stock.dart';
 import '../../router/app_router.dart';
 import 'view_stock_records.dart'; // Import your view stock page
 
@@ -48,7 +48,7 @@ class _ViewTransactionsScreenState extends State<ViewTransactionsScreen> {
       final mrn = stock.additionalFields?.fields
               .firstWhere(
                 (f) => f.key == 'materialNoteNumber',
-                orElse: () => AdditionalField('materialNoteNumber', ''),
+                orElse: () => const AdditionalField('materialNoteNumber', ''),
               )
               .value
               ?.toString() ??
@@ -94,7 +94,7 @@ class _ViewTransactionsScreenState extends State<ViewTransactionsScreen> {
                                   .firstWhere(
                                     (field) =>
                                         field.key == 'materialNoteNumber',
-                                    orElse: () => AdditionalField(
+                                    orElse: () => const AdditionalField(
                                         'materialNoteNumber', ''),
                                   )
                                   .value
@@ -118,7 +118,7 @@ class _ViewTransactionsScreenState extends State<ViewTransactionsScreen> {
                               'MRN: ${firstStock.additionalFields?.fields.firstWhere(
                                     (field) =>
                                         field.key == 'materialNoteNumber',
-                                    orElse: () => AdditionalField(
+                                    orElse: () => const AdditionalField(
                                         'materialNoteNumber', ''),
                                   ).value?.toString() ?? 'N/A'}',
                               style: const TextStyle(
@@ -156,8 +156,9 @@ class _ViewTransactionsScreenState extends State<ViewTransactionsScreen> {
                                             .firstWhere(
                                               (field) =>
                                                   field.key == 'productName',
-                                              orElse: () => AdditionalField(
-                                                  'productName', 'N/A'),
+                                              orElse: () =>
+                                                  const AdditionalField(
+                                                      'productName', 'N/A'),
                                             )
                                             .value
                                             ?.toString() ??
