@@ -61,7 +61,6 @@ class CustomRegistrationDeliveryAddressRepo extends AddressLocalRepository {
             mode: OrderingMode.asc,
           ),
       ]);
-      // [TODO: Need to remove these default offSet and limit to constants
       selectQuery.limit(query.limit ?? 50, offset: query.offset ?? 0);
       final results = await selectQuery.get();
       final households = results

@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_components/widgets/digit_text_field.dart';
 import 'package:digit_data_model/data_model.dart';
@@ -17,16 +16,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:survey_form/survey_form.dart';
-import 'package:survey_form/utils/extensions/context_utility.dart';
-
-import 'package:survey_form/router/survey_form_router.gm.dart';
 import 'package:survey_form/utils/constants.dart';
+import 'package:survey_form/utils/extensions/context_utility.dart';
 import 'package:survey_form/utils/i18_key_constants.dart' as i18;
-import '../../utils/i18_key_constants.dart' as i18_local;
 import 'package:survey_form/widgets/back_navigation_help_header.dart';
 import 'package:survey_form/widgets/localized.dart';
 
 import '../../router/app_router.dart';
+import '../../utils/i18_key_constants.dart' as i18_local;
 
 @RoutePage()
 class CustomSurveyFormViewPage extends LocalizedStatefulWidget {
@@ -854,7 +851,6 @@ class CustomSurveyFormViewPageState
                                       final childIndex = initialAttributes
                                           ?.indexOf(matchingChildItem);
                                       if (childIndex != null) {
-                                        // controller[childIndex].clear();
                                         visibleSurveyFormIndexes.removeWhere(
                                             (v) => v == childIndex);
                                       }
@@ -874,14 +870,7 @@ class CustomSurveyFormViewPageState
                                           i++) {
                                         // Clear excluded child controllers
                                         if (item.dataType !=
-                                            'SingleValueList') {
-                                          // controller[excludedIndexes[i]].value =
-                                          //     TextEditingController.fromValue(
-                                          //   const TextEditingValue(
-                                          //     text: '',
-                                          //   ),
-                                          // ).value;
-                                        }
+                                            'SingleValueList') {}
                                       }
                                     }
 

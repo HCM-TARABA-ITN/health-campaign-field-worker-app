@@ -2,7 +2,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_components/widgets/atoms/digit_text_form_field.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
-// import 'package:digit_ui_components/widgets/atoms/digit_reactive_dropdown.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_scanner/pages/qr_scanner.dart';
@@ -16,16 +15,16 @@ import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+// ignore: depend_on_referenced_packages
 import 'package:gs1_barcode_parser/gs1_barcode_parser.dart';
-import 'package:inventory_management/inventory_management.dart';
-import 'package:inventory_management/router/inventory_router.gm.dart';
-import 'package:reactive_forms/reactive_forms.dart';
-
-import 'package:inventory_management/utils/i18_key_constants.dart' as i18;
-import 'package:inventory_management/widgets/localized.dart';
 import 'package:inventory_management/blocs/product_variant.dart';
 import 'package:inventory_management/blocs/record_stock.dart';
+import 'package:inventory_management/inventory_management.dart';
+import 'package:inventory_management/router/inventory_router.gm.dart';
+import 'package:inventory_management/utils/i18_key_constants.dart' as i18;
 import 'package:inventory_management/widgets/back_navigation_help_header.dart';
+import 'package:inventory_management/widgets/localized.dart';
+import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../blocs/auth/auth.dart';
 import '../../utils/constants.dart';
@@ -51,11 +50,6 @@ class CustomTransactionalDetailsPageState
   static const _transactionQuantityKey = 'quantity';
   static const _transactionPartialQuantityKey = 'partialBlistersReturned';
   static const _transactionReasonKey = 'transactionReason';
-  // static const _waybillNumberKey = 'waybillNumber';
-  // static const _waybillQuantityKey = 'waybillQuantity';
-  // static const _batchNumberKey = 'batchNumberKey';
-  // static const _vehicleNumberKey = 'vehicleNumber';
-  // static const _typeOfTransportKey = 'typeOfTransport';
   static const _commentsKey = 'comments';
   static const _deliveryTeamKey = 'deliveryTeam';
   bool deliveryTeamSelected = false;
@@ -86,15 +80,6 @@ class CustomTransactionalDetailsPageState
                 ]),
       _transactionPartialQuantityKey: FormControl<int>(validators: []),
       _transactionReasonKey: FormControl<String>(),
-      // _waybillNumberKey: FormControl<String>(
-      //   validators: [Validators.minLength(2), Validators.maxLength(200)],
-      // ),
-      // _waybillQuantityKey: FormControl<String>(),
-      // _batchNumberKey: FormControl<String>(
-      //   validators: [],
-      // ),
-      // _vehicleNumberKey: FormControl<String>(),
-      // _typeOfTransportKey: FormControl<String>(),
       _commentsKey: FormControl<String>(),
       _deliveryTeamKey: FormControl<String>(
         validators: deliveryTeamSelected ? [Validators.required] : [],
@@ -236,13 +221,6 @@ class CustomTransactionalDetailsPageState
                                       ],
                                 autoValidate: true);
                       }
-                      // else {
-                      //   form.control(_batchNumberKey).setValidators([
-                      //     Validators.required,
-                      //     Validators.minLength(2),
-                      //     Validators.maxLength(200)
-                      //   ], autoValidate: true);
-                      // }
 
                       return ScrollableContent(
                         header: Column(children: [
@@ -401,22 +379,6 @@ class CustomTransactionalDetailsPageState
                                                     .value ??
                                                 0;
 
-                                            // final waybillNumber = form
-                                            //     .control(_waybillNumberKey)
-                                            //     .value as String?;
-
-                                            // final waybillQuantity = form
-                                            //     .control(_waybillQuantityKey)
-                                            //     .value as String?;
-
-                                            // final batchNumber = form
-                                            //     .control(_batchNumberKey)
-                                            //     .value as String?;
-
-                                            // final vehicleNumber = form
-                                            //     .control(_vehicleNumberKey)
-                                            //     .value as String?;
-
                                             final lat = locationState.latitude;
                                             final lng = locationState.longitude;
 
@@ -555,7 +517,6 @@ class CustomTransactionalDetailsPageState
                                               referenceId: stockState.projectId,
                                               referenceIdType: 'PROJECT',
                                               quantity: quantity.toString(),
-                                              // wayBillNumber: waybillNumber,
                                               receiverId: receiverId,
                                               receiverType: receiverType,
                                               senderId: senderId,
@@ -579,8 +540,6 @@ class CustomTransactionalDetailsPageState
                                                     .millisecondsSinceEpoch(),
                                               ),
                                               additionalFields: [
-                                                        // waybillQuantity,
-                                                        // vehicleNumber,
                                                         comments,
                                                       ].any((element) =>
                                                           element != null) ||
@@ -596,33 +555,6 @@ class CustomTransactionalDetailsPageState
                                                               .loggedInUser
                                                               ?.name,
                                                         ),
-                                                        // if (waybillQuantity !=
-                                                        //         null &&
-                                                        //     waybillQuantity
-                                                        //         .trim()
-                                                        //         .isNotEmpty)
-                                                        //   AdditionalField(
-                                                        //     'waybill_quantity',
-                                                        //     waybillQuantity,
-                                                        //   ),
-                                                        // if (batchNumber !=
-                                                        //         null &&
-                                                        //     batchNumber
-                                                        //         .trim()
-                                                        //         .isNotEmpty)
-                                                        //   AdditionalField(
-                                                        //     'batch_number',
-                                                        //     batchNumber,
-                                                        //   ),
-                                                        // if (vehicleNumber !=
-                                                        //         null &&
-                                                        //     vehicleNumber
-                                                        //         .trim()
-                                                        //         .isNotEmpty)
-                                                        //   AdditionalField(
-                                                        //     'vehicle_number',
-                                                        //     vehicleNumber,
-                                                        //   ),
                                                         if (comments != null &&
                                                             comments
                                                                 .trim()
@@ -1037,7 +969,6 @@ class CustomTransactionalDetailsPageState
                                 },
                                 suffix: IconButton(
                                   onPressed: () {
-                                    //[TODO: Add route to auto_route]
                                     Navigator.of(context).push(
                                       MaterialPageRoute(
                                         builder: (context) =>

@@ -10,14 +10,13 @@ import 'package:digit_ui_components/widgets/molecules/digit_table.dart';
 import 'package:flutter/material.dart';
 import 'package:registration_delivery/blocs/registration_wrapper/registration_wrapper_bloc.dart';
 import 'package:registration_delivery/models/entities/project_beneficiary.dart';
-
 import 'package:registration_delivery/models/entities/status.dart';
 import 'package:registration_delivery/models/entities/task.dart';
 import 'package:registration_delivery/utils/constants.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
 import 'package:registration_delivery/utils/utils.dart';
-import 'package:registration_delivery/widgets/localized.dart';
 import 'package:registration_delivery/widgets/beneficiary/beneficiary_card.dart';
+import 'package:registration_delivery/widgets/localized.dart';
 
 class CustomViewBeneficiaryCard extends LocalizedStatefulWidget {
   final HouseholdWrapper householdWrapper;
@@ -112,8 +111,12 @@ class CustomViewBeneficiaryCardState
               BeneficiaryType.individual) {
             return element.beneficiaryClientReferenceId == e.clientReferenceId;
           } else {
-            return element.beneficiaryClientReferenceId ==
-                householdMember.household!.clientReferenceId;
+            if (householdMember.household != null) {
+              return element.beneficiaryClientReferenceId ==
+                  householdMember.household?.clientReferenceId;
+            } else {
+              return false;
+            }
           }
         }).toList();
 

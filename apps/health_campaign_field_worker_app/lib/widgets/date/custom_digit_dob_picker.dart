@@ -1,8 +1,9 @@
 import 'package:digit_components/digit_components.dart';
-import '../../../utils/date_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+
+import '../../../utils/date_utils.dart';
 
 class CustomDigitDobPicker extends StatelessWidget {
   // Properties to hold the form control name, labels, and error messages for the components

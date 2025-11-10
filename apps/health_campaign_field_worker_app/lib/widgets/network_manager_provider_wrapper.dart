@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:attendance_management/attendance_management.dart';
 import 'package:complaints/data/repositories/local/pgr_service.dart';
 import 'package:complaints/data/repositories/oplog/oplog.dart';
 import 'package:complaints/data/repositories/remote/pgr_service.dart';
@@ -10,21 +11,15 @@ import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:inventory_management/data/repositories/local/stock.dart';
-import 'package:inventory_management/data/repositories/oplog/oplog.dart';
-import 'package:inventory_management/models/entities/stock.dart';
+import 'package:inventory_management/inventory_management.dart';
 import 'package:isar/isar.dart';
 import 'package:provider/provider.dart';
+import 'package:referral_reconciliation/referral_reconciliation.dart';
 import 'package:registration_delivery/data/repositories/local/unique_id_pool.dart';
 import 'package:registration_delivery/data/repositories/remote/unique_id_pool.dart';
 import 'package:registration_delivery/models/entities/unique_id_pool.dart';
-import 'package:survey_form/data/repositories/local/service.dart';
-import 'package:survey_form/data/repositories/local/service_definition.dart';
-import 'package:survey_form/data/repositories/oplog/oplog.dart';
-import 'package:survey_form/data/repositories/remote/service.dart';
-import 'package:survey_form/data/repositories/remote/service_definition.dart';
-import 'package:survey_form/models/entities/service.dart';
-import 'package:survey_form/models/entities/service_definition.dart';
+import 'package:registration_delivery/registration_delivery.dart';
+import 'package:survey_form/survey_form.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../data/local_store/downsync/downsync.dart';
@@ -37,11 +32,6 @@ import '../data/repositories/oplog.dart';
 import '../data/repositories/remote/auth.dart';
 import '../data/repositories/remote/downsync.dart';
 import '../models/downsync/downsync.dart';
-import 'package:inventory_management/inventory_management.dart';
-import 'package:registration_delivery/registration_delivery.dart';
-import 'package:referral_reconciliation/referral_reconciliation.dart';
-import 'package:attendance_management/attendance_management.dart';
-import 'package:survey_form/survey_form.dart';
 
 class NetworkManagerProviderWrapper extends StatelessWidget {
   final LocalSqlDataStore sql;

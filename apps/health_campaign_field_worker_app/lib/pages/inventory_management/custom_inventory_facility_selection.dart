@@ -3,14 +3,12 @@ import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
-import 'package:digit_ui_components/widgets/scrollable_content.dart';
 import 'package:flutter/material.dart';
 import 'package:inventory_management/utils/constants.dart';
-import 'package:inventory_management/widgets/localized.dart';
-import 'package:reactive_forms/reactive_forms.dart';
-
 import 'package:inventory_management/utils/i18_key_constants.dart' as i18;
 import 'package:inventory_management/widgets/back_navigation_help_header.dart';
+import 'package:inventory_management/widgets/localized.dart';
+import 'package:reactive_forms/reactive_forms.dart';
 
 @RoutePage()
 class CustomInventoryFacilitySelectionPage extends LocalizedStatefulWidget {

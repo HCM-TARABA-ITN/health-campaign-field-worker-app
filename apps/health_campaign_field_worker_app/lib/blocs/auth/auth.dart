@@ -304,7 +304,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     List<TaskModel> taskList = await taskRepository
         .search(TaskSearchModel(clientReferenceId: [event.clientReferenceId]));
-    int bednetCount = _resourceDistributed(taskList.first.resources);
+    int bednetCount = 0;
+    if (taskList.isNotEmpty) {
+      bednetCount = _resourceDistributed(taskList.first.resources);
+    }
 
     try {
       int bednet = await localSecureStore.bednet;

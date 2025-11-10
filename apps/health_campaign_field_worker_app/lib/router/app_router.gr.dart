@@ -103,6 +103,39 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CustomFormsRenderRoute.name: (routeData) {
+      final pathParams = routeData.inheritedPathParams;
+      final queryParams = routeData.queryParams;
+      final args = routeData.argsAs<CustomFormsRenderRouteArgs>(
+          orElse: () => CustomFormsRenderRouteArgs(
+                currentSchemaKey: queryParams.getString(
+                  'currentSchemaKey',
+                  '',
+                ),
+                pageName: pathParams.getString('pageName'),
+                isEdit: queryParams.getBool(
+                  'isEdit',
+                  false,
+                ),
+                isSummary: queryParams.getBool(
+                  'isSummary',
+                  false,
+                ),
+              ));
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomFormsRenderPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          currentSchemaKey: args.currentSchemaKey,
+          pageName: args.pageName,
+          isEdit: args.isEdit,
+          customComponents: args.customComponents,
+          defaultValues: args.defaultValues,
+          isSummary: args.isSummary,
+        ),
+      );
+    },
     CustomHouseholdAcknowledgementRoute.name: (routeData) {
       final args = routeData.argsAs<CustomHouseholdAcknowledgementRouteArgs>(
           orElse: () => const CustomHouseholdAcknowledgementRouteArgs());
@@ -792,6 +825,80 @@ class CustomDistributionSummaryReportDetailsRouteArgs {
   @override
   String toString() {
     return 'CustomDistributionSummaryReportDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [CustomFormsRenderPage]
+class CustomFormsRenderRoute extends PageRouteInfo<CustomFormsRenderRouteArgs> {
+  CustomFormsRenderRoute({
+    Key? key,
+    FormLocalization? appLocalizations,
+    String currentSchemaKey = '',
+    required String pageName,
+    bool isEdit = false,
+    List<Map<String, Widget>>? customComponents,
+    Map<String, dynamic>? defaultValues,
+    bool isSummary = false,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomFormsRenderRoute.name,
+          args: CustomFormsRenderRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            currentSchemaKey: currentSchemaKey,
+            pageName: pageName,
+            isEdit: isEdit,
+            customComponents: customComponents,
+            defaultValues: defaultValues,
+            isSummary: isSummary,
+          ),
+          rawPathParams: {'pageName': pageName},
+          rawQueryParams: {
+            'currentSchemaKey': currentSchemaKey,
+            'isEdit': isEdit,
+            'isSummary': isSummary,
+          },
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomFormsRenderRoute';
+
+  static const PageInfo<CustomFormsRenderRouteArgs> page =
+      PageInfo<CustomFormsRenderRouteArgs>(name);
+}
+
+class CustomFormsRenderRouteArgs {
+  const CustomFormsRenderRouteArgs({
+    this.key,
+    this.appLocalizations,
+    this.currentSchemaKey = '',
+    required this.pageName,
+    this.isEdit = false,
+    this.customComponents,
+    this.defaultValues,
+    this.isSummary = false,
+  });
+
+  final Key? key;
+
+  final FormLocalization? appLocalizations;
+
+  final String currentSchemaKey;
+
+  final String pageName;
+
+  final bool isEdit;
+
+  final List<Map<String, Widget>>? customComponents;
+
+  final Map<String, dynamic>? defaultValues;
+
+  final bool isSummary;
+
+  @override
+  String toString() {
+    return 'CustomFormsRenderRouteArgs{key: $key, appLocalizations: $appLocalizations, currentSchemaKey: $currentSchemaKey, pageName: $pageName, isEdit: $isEdit, customComponents: $customComponents, defaultValues: $defaultValues, isSummary: $isSummary}';
   }
 }
 

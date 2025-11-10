@@ -43,7 +43,7 @@ class UniqueIdGeneration {
         formattedUniqueId.substring(0, formattedUniqueId.length - 1);
 
     if (kDebugMode) {
-      print('uniqueId : $formattedUniqueId');
+      debugPrint('uniqueId : $formattedUniqueId');
     }
 
     return returnCombinedIds
@@ -85,7 +85,7 @@ class UniqueIdGeneration {
         formattedUniqueId.substring(0, formattedUniqueId.length - 1);
 
     if (kDebugMode) {
-      print('uniqueId : $formattedUniqueId');
+      debugPrint('uniqueId : $formattedUniqueId');
     }
 
     return returnCombinedIds

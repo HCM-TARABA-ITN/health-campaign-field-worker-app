@@ -8,14 +8,13 @@ import 'package:digit_ui_components/widgets/atoms/digit_action_card.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_tag.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
-import 'package:registration_delivery/models/entities/project_beneficiary.dart';
-import 'package:registration_delivery/utils/extensions/extensions.dart';
-
 import 'package:registration_delivery/blocs/app_localization.dart';
 import 'package:registration_delivery/models/entities/household.dart';
+import 'package:registration_delivery/models/entities/project_beneficiary.dart';
 import 'package:registration_delivery/models/entities/side_effect.dart';
 import 'package:registration_delivery/models/entities/status.dart';
 import 'package:registration_delivery/models/entities/task.dart';
+import 'package:registration_delivery/utils/extensions/extensions.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
 import 'package:registration_delivery/utils/utils.dart';
 
@@ -317,16 +316,13 @@ class CustomMemberCard extends StatelessWidget {
                                               i18.householdOverView
                                                   .householdOverViewActionText,
                                             ),
-                                      onPressed: () {
-                                        //// TODO: need to write for logic for eligibility checklist and other flows
-                                      },
+                                      onPressed: () {},
                                     ),
                                   )
                                 : const Offstage(),
                         const SizedBox(
                           height: 10,
                         ),
-                        //// TODO:need to check
                       ],
                     ),
                   ),
@@ -349,9 +345,7 @@ class CustomMemberCard extends StatelessWidget {
                           prefixIcon: Icons.add_circle_outline,
                           size: DigitButtonSize.medium,
                           onPressed: () async {
-                            if (household != null) {
-                              /// TODO: adding a child, need to implement
-                            }
+                            if (household != null) {}
                           },
                         ),
                       ),
@@ -361,9 +355,7 @@ class CustomMemberCard extends StatelessWidget {
                         child: DigitButton(
                             label:
                                 '${localizations.translate(i18.memberCard.noOfChildren)} ${children?.length}',
-                            onPressed: () {
-                              /// TODO: navigate to parent details screen
-                            },
+                            onPressed: () {},
                             type: DigitButtonType.tertiary,
                             size: DigitButtonSize.medium),
                       ),
@@ -373,9 +365,7 @@ class CustomMemberCard extends StatelessWidget {
         ]);
   }
 
-  void navigateToChecklist(BuildContext context, clientReferenceId) async {
-    //// TODO: need to figure out logic for checklist navigation
-  }
+  void navigateToChecklist(BuildContext context, clientReferenceId) async {}
 
   getFormattedId(IndividualModel individual) {
     String? rawId = individual.identifiers

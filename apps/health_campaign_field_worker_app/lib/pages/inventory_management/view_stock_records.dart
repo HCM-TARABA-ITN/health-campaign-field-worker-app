@@ -5,14 +5,11 @@ import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/widgets/atoms/input_wrapper.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:inventory_management/blocs/record_stock.dart';
 import 'package:inventory_management/models/entities/stock.dart';
 import 'package:inventory_management/utils/i18_key_constants.dart' as i18;
 import 'package:inventory_management/utils/utils.dart';
 import 'package:registration_delivery/widgets/localized.dart';
 
-import '../../utils/extensions/extensions.dart';
 import '../../utils/utils.dart';
 
 @RoutePage()
@@ -56,7 +53,7 @@ class _ViewStockRecordsPageState extends LocalizedState<ViewStockRecordsPage>
       appBar: AppBar(
         bottom: TabBar(
           labelColor: Colors.white,
-          indicator: BoxDecoration(
+          indicator: const BoxDecoration(
             border: Border(
               left: BorderSide(color: Colors.orange),
               right: BorderSide(color: Colors.orange),
@@ -64,7 +61,7 @@ class _ViewStockRecordsPageState extends LocalizedState<ViewStockRecordsPage>
               top: BorderSide(color: Colors.orange),
             ),
           ),
-          indicatorPadding: EdgeInsets.fromLTRB(0.1, 0, 0.1, 0.1),
+          indicatorPadding: const EdgeInsets.fromLTRB(0.1, 0, 0.1, 0.1),
           controller: _tabController,
           isScrollable: true,
           tabs: widget.stockRecords

@@ -1,27 +1,22 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
-import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/input_wrapper.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:health_campaign_field_worker_app/router/app_router.dart';
 import 'package:intl/intl.dart';
-import 'package:inventory_management/pages/facility_selection.dart';
-import 'package:inventory_management/router/inventory_router.gm.dart';
-import 'package:reactive_forms/reactive_forms.dart';
-
-import 'package:inventory_management/utils/i18_key_constants.dart' as i18;
-import '../../utils/i18_key_constants.dart' as i18_local;
-import 'package:inventory_management/widgets/localized.dart';
 import 'package:inventory_management/blocs/record_stock.dart';
+import 'package:inventory_management/pages/facility_selection.dart';
+import 'package:inventory_management/utils/i18_key_constants.dart' as i18;
 import 'package:inventory_management/utils/utils.dart';
 import 'package:inventory_management/widgets/inventory/no_facilities_assigned_dialog.dart';
+import 'package:inventory_management/widgets/localized.dart';
+import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../router/app_router.dart';
+import '../../utils/i18_key_constants.dart' as i18_local;
 import '../../utils/utils.dart';
 import '../../widgets/custom_back_navigation.dart';
 
@@ -144,10 +139,6 @@ class CustomWarehouseDetailsPageState
                         ),
                       ];
 
-                      // teamFacilities.addAll(
-                      //   facilities,
-                      // );
-
                       return context.isDistributor &&
                               !context.isWarehouseManager
                           ? teamFacilities
@@ -170,11 +161,6 @@ class CustomWarehouseDetailsPageState
                                 !InventorySingleton().isWareHouseMgr!,
                             stockState),
                         builder: (context, form, child) {
-                          // form.control(_teamCodeKey).value =
-                          //     scannerState.qrCodes.isNotEmpty
-                          //         ? scannerState.qrCodes.firstOrNull
-                          //         : '';
-
                           return ScrollableContent(
                             header: const Column(children: [
                               CustomBackNavigationHelpHeaderWidget(
@@ -192,7 +178,6 @@ class CustomWarehouseDetailsPageState
                                           type: DigitButtonType.primary,
                                           mainAxisSize: MainAxisSize.max,
                                           size: DigitButtonSize.large,
-                                          // isDisabled: !form.valid,
                                           label: localizations.translate(
                                             i18.householdDetails.actionLabel,
                                           ),
@@ -412,9 +397,6 @@ class CustomWarehouseDetailsPageState
                                     if (!InventorySingleton().isDistributor)
                                       InkWell(
                                         onTap: () async {
-                                          // clearQRCodes();
-                                          // form.control(_teamCodeKey).value = '';
-
                                           final facility =
                                               await Navigator.of(context).push(
                                             MaterialPageRoute(

@@ -4,7 +4,7 @@ import 'dart:math' as math;
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:drift/drift.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:registration_delivery/models/entities/status.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 
@@ -401,7 +401,9 @@ class IndividualGlobalSearchSMCRepository extends LocalRepository {
                   : [])
           .get();
     } catch (e) {
-      debugPrint('Error in total $e');
+      if (kDebugMode) {
+        debugPrint('Error in total $e');
+      }
     }
     return totalCount == null ? 0 : totalCount.first.data['total_count'];
   }

@@ -1,11 +1,11 @@
 import 'dart:math';
+
 import 'package:collection/collection.dart';
 // ignore: depend_on_referenced_packages, implementation_imports
 import 'package:digit_data_converter/src/reverse_transformer_service.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:digit_forms_engine/blocs/forms/forms.dart';
-import 'package:digit_forms_engine/router/forms_router.gm.dart';
 import 'package:digit_ui_components/enum/app_enums.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/theme/digit_theme.dart';
@@ -24,9 +24,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:registration_delivery/blocs/registration_wrapper/registration_wrapper_bloc.dart';
 import 'package:registration_delivery/data/transformer_config.dart';
-import 'package:survey_form/survey_form.dart';
-
-import 'package:registration_delivery/widgets/status_filter/status_filter.dart';
 import 'package:registration_delivery/models/entities/household.dart';
 import 'package:registration_delivery/models/entities/registration_delivery_enums.dart';
 import 'package:registration_delivery/models/entities/status.dart';
@@ -38,7 +35,9 @@ import 'package:registration_delivery/utils/utils.dart';
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
 import 'package:registration_delivery/widgets/beneficiary/resource_card.dart';
 import 'package:registration_delivery/widgets/localized.dart';
+import 'package:registration_delivery/widgets/status_filter/status_filter.dart';
 import 'package:registration_delivery/widgets/table_card/table_card.dart';
+import 'package:survey_form/survey_form.dart';
 
 import '../../router/app_router.dart';
 import '../../utils/extensions/extensions.dart';
@@ -191,10 +190,6 @@ class _CustomHouseholdOverviewPageState
                                                                         '${RegistrationDeliverySingleton().selectedProject!.name}.${RegistrationDeliveryEnums.eligibility.toValue()}'))
                                                             .toList()
                                                             .isEmpty) {
-                                                          //TODO: need to handle in smc flow
-                                                          // context.router.push(
-                                                          //   DeliverInterventionRoute(),
-                                                          // );
                                                         } else {
                                                           navigateToChecklist(
                                                               ctx,
@@ -321,7 +316,7 @@ class _CustomHouseholdOverviewPageState
                                                               if (bednet >=
                                                                   requiredCount) {
                                                                 context.router.push(
-                                                                    FormsRenderRoute(
+                                                                    CustomFormsRenderRoute(
                                                                   currentSchemaKey:
                                                                       overviewTemplate
                                                                           .navigateTo!
@@ -564,7 +559,7 @@ class _CustomHouseholdOverviewPageState
                                                             .key;
 
                                                         context.router.push(
-                                                            FormsRenderRoute(
+                                                            CustomFormsRenderRoute(
                                                           isEdit: true,
                                                           currentSchemaKey:
                                                               'REGISTRATIONFLOW',
@@ -615,33 +610,6 @@ class _CustomHouseholdOverviewPageState
                                           ),
                                         ),
                                       ),
-
-                                    ///Old UI Format
-                                    // BlocBuilder<DeliverInterventionBloc,
-                                    //     DeliverInterventionState>(
-                                    //   builder: (ctx, deliverInterventionState) =>
-                                    //       Offstage(
-                                    //     offstage: beneficiaryType ==
-                                    //         BeneficiaryType.individual,
-                                    //     child: Align(
-                                    //       alignment: Alignment.centerLeft,
-                                    //       child: DigitIconButton(
-                                    //         icon: getStatusAttributes(state,
-                                    //             deliverInterventionState)['icon'],
-                                    //         iconText: localizations.translate(
-                                    //           getStatusAttributes(state,
-                                    //                   deliverInterventionState)[
-                                    //               'textLabel'],
-                                    //         ), // [TODO: map task status accordingly based on projectBeneficiaries and tasks]
-                                    //         iconTextColor: getStatusAttributes(state,
-                                    //             deliverInterventionState)['color'],
-                                    //         iconColor: getStatusAttributes(state,
-                                    //             deliverInterventionState)['color'],
-                                    //       ),
-                                    //     ),
-                                    //   ),
-                                    // ),
-
                                     Padding(
                                       padding: const EdgeInsets.only(
                                         left: spacer2,
@@ -1083,12 +1051,8 @@ class _CustomHouseholdOverviewPageState
                                                     registration_keys
                                                         .householdOverViewKeys
                                                         .individualSecondaryButtonKey],
-                                            editMemberAction: () async {
-                                              //TODO: need to add logic for edit member
-                                            },
+                                            editMemberAction: () async {},
                                             setAsHeadAction: () {
-                                              /// TODO: need to add event in wrapper class for head change
-
                                               Navigator.of(
                                                 context,
                                                 rootNavigator: true,
@@ -1119,8 +1083,6 @@ class _CustomHouseholdOverviewPageState
                                                             )
                                                               ..pop()
                                                               ..pop();
-
-                                                            /// TODO: Need to add logic for deleting a household
                                                           },
                                                           type: DigitButtonType
                                                               .primary,
@@ -1273,9 +1235,7 @@ class _CustomHouseholdOverviewPageState
     );
   }
 
-  addIndividual(BuildContext context, HouseholdModel household) async {
-    // TODO: Need to add logic for adding members
-  }
+  addIndividual(BuildContext context, HouseholdModel household) async {}
 
   bool isOutsideProjectDateRange() {
     final project = RegistrationDeliverySingleton().selectedProject;
@@ -1331,9 +1291,7 @@ class _CustomHouseholdOverviewPageState
   }
 
   void navigateToChecklist(BuildContext ctx, String beneficiaryClientRefId,
-      AddressModel? address) async {
-    //// TODO: need to figure out the logic for
-  }
+      AddressModel? address) async {}
 
   void callReloadEvent({
     required int offset,

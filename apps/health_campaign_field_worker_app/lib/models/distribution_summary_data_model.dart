@@ -24,19 +24,16 @@ class DistributionSummaryData extends EntityModel {
   }) : super();
 
   @override
-  // TODO: implement copyWith
   EntityModelCopyWith<EntityModel, EntityModel, EntityModel> get copyWith =>
       throw UnimplementedError();
 
   @override
   String toJson() {
-    // TODO: implement toJson
     throw UnimplementedError();
   }
 
   @override
   Map<String, dynamic> toMap() {
-    // TODO: implement toMap
     throw UnimplementedError();
   }
 }

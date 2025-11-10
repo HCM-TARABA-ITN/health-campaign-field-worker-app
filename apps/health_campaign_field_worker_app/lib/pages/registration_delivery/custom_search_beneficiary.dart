@@ -1,4 +1,4 @@
-import 'package:auto_route/auto_route.dart';
+import 'package:collection/collection.dart';
 import 'package:digit_crud_bloc/bloc/crud_bloc.dart';
 import 'package:digit_crud_bloc/models/global_search_params.dart' as reg_params;
 // ignore: depend_on_referenced_packages, implementation_imports
@@ -9,7 +9,6 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:digit_data_model/models/templates/template_config.dart';
 import 'package:digit_forms_engine/blocs/forms/forms.dart';
-import 'package:digit_forms_engine/router/forms_router.gm.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:digit_ui_components/digit_components.dart';
@@ -96,6 +95,21 @@ class _CustomSearchBeneficiaryPageState
     if (schemas.isNotEmpty) {
       context.read<FormsBloc>().add(FormsEvent.load(schemas: schemas));
     }
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // Always pop to search page before clearing state to avoid stacking forms pages
+      context.router.popUntilRouteWithName(CustomSearchBeneficiaryRoute.name);
+      context
+          .read<FormsBloc>()
+          .add(const FormsEvent.clearForm(schemaKey: 'REGISTRATIONFLOW'));
+      context
+          .read<FormsBloc>()
+          .add(const FormsEvent.clearForm(schemaKey: 'DELIVERYFLOW'));
+      context
+          .read<RegistrationWrapperBloc>()
+          .add(const RegistrationWrapperEvent.clear());
+    });
+
     super.initState();
   }
 
@@ -116,190 +130,298 @@ class _CustomSearchBeneficiaryPageState
     final isDeliveryFlow =
         searchTemplate?.properties?['searchByProximity']?.hidden == true;
 
-    return BlocListener<RegistrationWrapperBloc, RegistrationWrapperState>(
-      listener: (context, createState) {
-        if (createState.lastAction == RegistrationWrapperActionType.created ||
-            createState.lastAction == RegistrationWrapperActionType.updated ||
-            createState.lastAction ==
-                RegistrationWrapperActionType.createAndUpdate) {
-          Navigator.of(context, rootNavigator: true).pop();
-          final householdModel =
-              createState.householdMembers.firstOrNull?.household;
-          final individualModel = createState
-              .householdMembers.firstOrNull?.individuals?.firstOrNull;
-          final taskModel =
-              createState.householdMembers.firstOrNull?.tasks?.firstOrNull;
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<RegistrationWrapperBloc, RegistrationWrapperState>(
+          listener: (context, createState) {
+            if (createState.lastAction ==
+                    RegistrationWrapperActionType.created ||
+                createState.lastAction ==
+                    RegistrationWrapperActionType.updated ||
+                createState.lastAction ==
+                    RegistrationWrapperActionType.createAndUpdate) {
+              Navigator.of(context, rootNavigator: true).pop();
+              final householdModel =
+                  createState.householdMembers.firstOrNull?.household;
+              final individualModel = createState
+                  .householdMembers.firstOrNull?.individuals?.firstOrNull;
+              final taskModel =
+                  createState.householdMembers.firstOrNull?.tasks?.firstOrNull;
 
-          if (createState.lastAction == RegistrationWrapperActionType.created &&
-              individualModel != null &&
-              individualModel.identifiers != null &&
-              individualModel.identifiers?.first.identifierId != null &&
-              individualModel.identifiers?.first.identifierType ==
-                  IdentifierTypes.uniqueBeneficiaryID.toValue()) {
-            context.read<UniqueIdBloc>().add(UniqueIdEvent.updateStatus(
-                id: individualModel.identifiers!.first.identifierId!));
-          }
-
-          if (householdModel != null) {
-            blocWrapper.add(RegistrationWrapperEvent.fetchDeliveryDetails(
-                projectId: RegistrationDeliverySingleton().selectedProject!.id,
-                selectedIndividual: null,
-                householdWrapper: HouseholdWrapper(household: householdModel),
-                beneficiaryType: RegistrationDeliverySingleton()
-                    .beneficiaryType
-                    ?.toValue()));
-          }
-          if (taskModel != null) {
-            blocWrapper.add(RegistrationWrapperEvent.fetchDeliveryDetails(
-                projectId: RegistrationDeliverySingleton().selectedProject!.id,
-                selectedIndividual: null,
-                householdWrapper: HouseholdWrapper(tasks: [taskModel]),
-                beneficiaryType: RegistrationDeliverySingleton()
-                    .beneficiaryType
-                    ?.toValue()));
-          }
-          final currentSchema = context
-              .read<FormsBloc>()
-              .state
-              .cachedSchemas[context.read<FormsBloc>().state.activeSchemaKey];
-
-          // Reset to prevent re-handling
-          context.read<FormsBloc>().add(
-                const FormsEvent.clearForm(
-                    schemaKey:
-                        'REGISTRATIONFLOW'), // or create a FormsResetEvent
-              );
-
-          final pages = currentSchema?.pages.entries.toList()
-            ?..sort(
-                (a, b) => (a.value.order ?? 0).compareTo(b.value.order ?? 0));
-
-          final lastPage = pages?.isNotEmpty == true ? pages!.last.value : null;
-
-          final nextAction = lastPage?.navigateTo;
-          if (nextAction != null) {
-            if (nextAction.type == 'template') {
-              final nextPath = routerMap[nextAction.name];
-              if (nextPath != null) {
-                context.router.push(nextPath);
+              if (createState.lastAction ==
+                      RegistrationWrapperActionType.created &&
+                  individualModel != null &&
+                  individualModel.identifiers != null &&
+                  individualModel.identifiers?.first.identifierId != null &&
+                  individualModel.identifiers?.first.identifierType ==
+                      IdentifierTypes.uniqueBeneficiaryID.toValue()) {
+                context.read<UniqueIdBloc>().add(UniqueIdEvent.updateStatus(
+                    id: individualModel.identifiers!.first.identifierId!));
               }
-            } else {
-              if (nextAction.name == 'REGISTRATIONFLOW') {
-                final pageName = context
-                    .read<FormsBloc>()
-                    .state
-                    .cachedSchemas['REGISTRATIONFLOW']
-                    ?.pages
-                    .entries
-                    .first
-                    .key;
 
-                if (pageName == null) {
-                  Toast.showToast(
-                    context,
-                    message: localizations
-                        .translate('NO_FORM_FOUND_FOR_REGISTRATION'),
-                    type: ToastType.error,
+              if (householdModel != null) {
+                blocWrapper.add(RegistrationWrapperEvent.fetchDeliveryDetails(
+                    projectId:
+                        RegistrationDeliverySingleton().selectedProject!.id,
+                    selectedIndividual: null,
+                    householdWrapper:
+                        HouseholdWrapper(household: householdModel),
+                    beneficiaryType: RegistrationDeliverySingleton()
+                        .beneficiaryType
+                        ?.toValue()));
+              }
+              if (taskModel != null) {
+                blocWrapper.add(RegistrationWrapperEvent.fetchDeliveryDetails(
+                    projectId:
+                        RegistrationDeliverySingleton().selectedProject!.id,
+                    selectedIndividual: null,
+                    householdWrapper: HouseholdWrapper(tasks: [taskModel]),
+                    beneficiaryType: RegistrationDeliverySingleton()
+                        .beneficiaryType
+                        ?.toValue()));
+              }
+              final currentSchema =
+                  context.read<FormsBloc>().state.cachedSchemas[
+                      context.read<FormsBloc>().state.activeSchemaKey];
+
+              // Reset to prevent re-handling
+              context.read<FormsBloc>().add(
+                    const FormsEvent.clearForm(
+                        schemaKey:
+                            'REGISTRATIONFLOW'), // or create a FormsResetEvent
                   );
+
+              final pages = currentSchema?.pages.entries.toList()
+                ?..sort((a, b) =>
+                    (a.value.order ?? 0).compareTo(b.value.order ?? 0));
+
+              final lastPage =
+                  pages?.isNotEmpty == true ? pages!.last.value : null;
+
+              final nextAction = lastPage?.navigateTo;
+              if (nextAction != null) {
+                // Always clear forms state before pushing new forms
+                context.read<FormsBloc>().add(
+                    const FormsEvent.clearForm(schemaKey: 'REGISTRATIONFLOW'));
+                context
+                    .read<FormsBloc>()
+                    .add(const FormsEvent.clearForm(schemaKey: 'DELIVERYFLOW'));
+
+                if (nextAction.type == 'template') {
+                  final nextPath = routerMap[nextAction.name];
+                  if (nextPath != null) {
+                    context.router.push(nextPath);
+                  }
                 } else {
-                  context.router.push(FormsRenderRoute(
-                      currentSchemaKey: 'REGISTRATIONFLOW',
-                      pageName: pageName,
-                      defaultValues: {
-                        'administrativeArea': localizations.translate(
-                            RegistrationDeliverySingleton().boundary?.code ??
-                                '')
-                      }));
+                  if (nextAction.name == 'REGISTRATIONFLOW') {
+                    final pageName = context
+                        .read<FormsBloc>()
+                        .state
+                        .cachedSchemas['REGISTRATIONFLOW']
+                        ?.pages
+                        .entries
+                        .first
+                        .key;
+
+                    if (pageName == null) {
+                      Toast.showToast(
+                        context,
+                        message: localizations
+                            .translate('NO_FORM_FOUND_FOR_REGISTRATION'),
+                        type: ToastType.error,
+                      );
+                    } else {
+                      context.router.push(CustomFormsRenderRoute(
+                          currentSchemaKey: 'REGISTRATIONFLOW',
+                          pageName: pageName,
+                          defaultValues: {
+                            'administrativeArea': localizations.translate(
+                                RegistrationDeliverySingleton()
+                                        .boundary
+                                        ?.code ??
+                                    '')
+                          }));
+                    }
+                  } else {
+                    final pageName = context
+                        .read<FormsBloc>()
+                        .state
+                        .cachedSchemas['DELIVERYFLOW']
+                        ?.pages
+                        .entries
+                        .first
+                        .key;
+
+                    if (pageName == null) {
+                      Toast.showToast(
+                        context,
+                        message: localizations
+                            .translate('NO_FORM_FOUND_FOR_DELIVERY'),
+                        type: ToastType.error,
+                      );
+                    } else {
+                      context.router.push(CustomFormsRenderRoute(
+                        currentSchemaKey: 'DELIVERYFLOW',
+                        pageName: pageName,
+                        defaultValues: {
+                          'administrativeArea': localizations.translate(
+                              RegistrationDeliverySingleton().boundary?.code ??
+                                  '')
+                        },
+                        customComponents: const [
+                          {'resourceCard': ResourceCard()}
+                        ],
+                      ));
+                    }
+                  }
                 }
               } else {
-                final pageName = context
-                    .read<FormsBloc>()
-                    .state
-                    .cachedSchemas['DELIVERYFLOW']
-                    ?.pages
-                    .entries
-                    .first
-                    .key;
-
-                if (pageName == null) {
-                  Toast.showToast(
-                    context,
-                    message:
-                        localizations.translate('NO_FORM_FOUND_FOR_DELIVERY'),
-                    type: ToastType.error,
+                // After fallback page (acknowledgement), pop back to search page
+                context.router.push(CustomHouseholdAcknowledgementRoute());
+              }
+            } else if (createState.error != null) {
+              Navigator.of(context, rootNavigator: true).pop();
+              // Reset to prevent re-handling
+              context.read<FormsBloc>().add(
+                    const FormsEvent.clearForm(
+                        schemaKey:
+                            'REGISTRATIONFLOW'), // or create a FormsResetEvent
                   );
-                } else {
-                  context.router.push(FormsRenderRoute(
-                    currentSchemaKey: 'DELIVERYFLOW',
-                    pageName: pageName,
-                    defaultValues: {
-                      'administrativeArea': localizations.translate(
-                          RegistrationDeliverySingleton().boundary?.code ?? '')
-                    },
-                    customComponents: const [
-                      {'resourceCard': ResourceCard()}
-                    ],
-                  ));
-                }
+              context.router
+                  .push(BeneficiaryErrorRoute(enableViewHousehold: false))
+                  .then((_) {
+                context.router
+                    .popUntilRouteWithName(CustomSearchBeneficiaryRoute.name);
+              });
+              if (kDebugMode) {
+                debugPrint(createState.error);
               }
             }
-          } else {
-            context.router.push(BeneficiaryAcknowledgementRoute(
-                enableViewHousehold: true)); // fallback page
-          }
-        } else if (createState.error != null) {
-          Navigator.of(context, rootNavigator: true).pop();
-          // Reset to prevent re-handling
-          context.read<FormsBloc>().add(
-                const FormsEvent.clearForm(
-                    schemaKey:
-                        'REGISTRATIONFLOW'), // or create a FormsResetEvent
-              );
-          context.router
-              .push(BeneficiaryErrorRoute(enableViewHousehold: false));
-          if (kDebugMode) {
-            print(createState.error);
-          }
-        }
-      },
-      child: BlocListener<FormsBloc, FormsState>(
-        listener: (context, formState) {
-          if (formState is FormsSubmittedState) {
-            DigitLoaders.overlayLoader(context: context);
+          },
+        ),
+        BlocListener<FormsBloc, FormsState>(
+          listener: (context, formState) {
+            if (formState is FormsSubmittedState) {
+              DigitLoaders.overlayLoader(context: context);
 
-            final formData = formState.formData;
-            if (formData.isEmpty) return;
+              final formData = formState.formData;
+              if (formData.isEmpty) return;
 
-            try {
-              if (formState.isEdit) {
-                final formEntityMapper = FormEntityMapper(config: jsonConfig);
+              try {
+                if (formState.isEdit) {
+                  final formEntityMapper = FormEntityMapper(config: jsonConfig);
 
-                final householdMember =
-                    blocWrapper.state.householdMembers.firstOrNull;
-                final household = householdMember?.household;
-                final projectBeneficiary =
-                    householdMember?.projectBeneficiaries?.firstOrNull;
+                  final householdMember =
+                      blocWrapper.state.householdMembers.firstOrNull;
+                  final household = householdMember?.household;
+                  final projectBeneficiary =
+                      householdMember?.projectBeneficiaries?.firstOrNull;
 
-                final individual = householdMember?.individuals?.firstOrNull;
+                  final individual = householdMember?.individuals?.firstOrNull;
 
-                final member = householdMember?.members?.firstOrNull;
+                  final member = householdMember?.members?.firstOrNull;
 
-                final modelsConfig = formState.activeSchemaKey == 'DELIVERYFLOW'
-                    ? (jsonConfig['delivery']?['models']
-                        as Map<String, dynamic>)
-                    : jsonConfig['beneficiaryRegistration']?['models']
-                        as Map<String, dynamic>;
+                  final modelsConfig =
+                      formState.activeSchemaKey == 'DELIVERYFLOW'
+                          ? (jsonConfig['delivery']?['models']
+                              as Map<String, dynamic>)
+                          : jsonConfig['beneficiaryRegistration']?['models']
+                              as Map<String, dynamic>;
 
-                try {
-                  final entities = formEntityMapper.updateEntitiesFromForm(
-                    modelsConfig: modelsConfig,
+                  try {
+                    final entities = formEntityMapper.updateEntitiesFromForm(
+                      modelsConfig: modelsConfig,
+                      formValues: formData,
+                      existingModels: [
+                        if (household != null) household,
+                        if (individual != null) individual,
+                        if (projectBeneficiary != null) projectBeneficiary,
+                        if (member != null) member
+                      ],
+                      context: {
+                        "projectId":
+                            RegistrationDeliverySingleton().selectedProject?.id,
+                        "user": RegistrationDeliverySingleton().loggedInUser,
+                        "tenantId": RegistrationDeliverySingleton()
+                            .selectedProject
+                            ?.tenantId,
+                        "selectedBoundaryCode":
+                            RegistrationDeliverySingleton().boundary?.code,
+                        // converting in json format to match nested object value as passing model will cause issue
+                        'userUUID':
+                            RegistrationDeliverySingleton().loggedInUser?.uuid,
+                        'householdType': RegistrationDeliverySingleton()
+                            .householdType
+                            ?.toValue(),
+                        "beneficiaryType": RegistrationDeliverySingleton()
+                            .beneficiaryType
+                            ?.toValue(),
+                        if (household != null) 'householdModel': household,
+                        if (projectBeneficiary != null)
+                          "projectBeneficiaryModel": projectBeneficiary,
+                      },
+                    );
+
+                    final toCreate = <EntityModel>[];
+                    final toUpdate = [...entities];
+
+                    // If projectBeneficiary is null, mark for creation
+                    if (projectBeneficiary == null) {
+                      final projectBeneficiariesToCreate = entities
+                          .where(
+                              (e) => e.runtimeType == ProjectBeneficiaryModel)
+                          .toList();
+
+                      toCreate.addAll(projectBeneficiariesToCreate);
+
+                      // Remove from update list
+                      toUpdate.removeWhere(
+                          (e) => projectBeneficiariesToCreate.contains(e));
+                    }
+
+                    blocWrapper.add(
+                      RegistrationWrapperEvent.createAndUpdate(
+                        entitiesToCreate: toCreate,
+                        entitiesToUpdate: toUpdate,
+                      ),
+                    );
+                  } catch (e) {
+                    Navigator.of(context, rootNavigator: true).pop();
+                    // Reset to prevent re-handling
+                    context.read<FormsBloc>().add(
+                          const FormsEvent.clearForm(
+                              schemaKey:
+                                  'REGISTRATIONFLOW'), // or create a FormsResetEvent
+                        );
+                    context.router.push(
+                        BeneficiaryErrorRoute(enableViewHousehold: false));
+                  }
+                } else {
+                  final modelsConfig =
+                      formState.activeSchemaKey == 'DELIVERYFLOW'
+                          ? (jsonConfig['delivery']?['models']
+                              as Map<String, dynamic>)
+                          : jsonConfig['beneficiaryRegistration']?['models']
+                              as Map<String, dynamic>;
+
+                  final fallBackModel = formState.activeSchemaKey ==
+                          'DELIVERYFLOW'
+                      ? (jsonConfig['delivery']?['fallbackModel'] as String?)
+                      : jsonConfig['beneficiaryRegistration']?['fallbackModel']
+                          as String?;
+
+                  final formEntityMapper = FormEntityMapper(config: jsonConfig);
+
+                  final householdMember =
+                      blocWrapper.state.householdMembers.firstOrNull;
+                  final household = householdMember?.household?.toMap();
+                  final projectBeneficiary = householdMember
+                      ?.projectBeneficiaries?.firstOrNull
+                      ?.toMap();
+
+                  final entities = formEntityMapper.mapFormToEntities(
                     formValues: formData,
-                    existingModels: [
-                      if (household != null) household,
-                      if (individual != null) individual,
-                      if (projectBeneficiary != null) projectBeneficiary,
-                      if (member != null) member
-                    ],
+                    modelsConfig: modelsConfig,
                     context: {
                       "projectId":
                           RegistrationDeliverySingleton().selectedProject?.id,
@@ -322,111 +444,34 @@ class _CustomSearchBeneficiaryPageState
                       if (projectBeneficiary != null)
                         "projectBeneficiaryModel": projectBeneficiary,
                     },
+                    fallbackFormDataString: fallBackModel,
                   );
-
-                  final toCreate = <EntityModel>[];
-                  final toUpdate = [...entities];
-
-                  // If projectBeneficiary is null, mark for creation
-                  if (projectBeneficiary == null) {
-                    final projectBeneficiariesToCreate = entities
-                        .where((e) => e.runtimeType == ProjectBeneficiaryModel)
-                        .toList();
-
-                    toCreate.addAll(projectBeneficiariesToCreate);
-
-                    // Remove from update list
-                    toUpdate.removeWhere(
-                        (e) => projectBeneficiariesToCreate.contains(e));
-                  }
 
                   blocWrapper.add(
-                    RegistrationWrapperEvent.createAndUpdate(
-                      entitiesToCreate: toCreate,
-                      entitiesToUpdate: toUpdate,
-                    ),
+                    RegistrationWrapperEvent.create(entities: entities),
                   );
-                } catch (e) {
-                  Navigator.of(context, rootNavigator: true).pop();
-                  // Reset to prevent re-handling
-                  context.read<FormsBloc>().add(
-                        const FormsEvent.clearForm(
-                            schemaKey:
-                                'REGISTRATIONFLOW'), // or create a FormsResetEvent
-                      );
-                  context.router
-                      .push(BeneficiaryErrorRoute(enableViewHousehold: false));
                 }
-              } else {
-                final modelsConfig = formState.activeSchemaKey == 'DELIVERYFLOW'
-                    ? (jsonConfig['delivery']?['models']
-                        as Map<String, dynamic>)
-                    : jsonConfig['beneficiaryRegistration']?['models']
-                        as Map<String, dynamic>;
-
-                final fallBackModel =
-                    formState.activeSchemaKey == 'DELIVERYFLOW'
-                        ? (jsonConfig['delivery']?['fallbackModel'] as String?)
-                        : jsonConfig['beneficiaryRegistration']
-                            ?['fallbackModel'] as String?;
-
-                final formEntityMapper = FormEntityMapper(config: jsonConfig);
-
-                final householdMember =
-                    blocWrapper.state.householdMembers.firstOrNull;
-                final household = householdMember?.household?.toMap();
-                final projectBeneficiary =
-                    householdMember?.projectBeneficiaries?.firstOrNull?.toMap();
-
-                final entities = formEntityMapper.mapFormToEntities(
-                  formValues: formData,
-                  modelsConfig: modelsConfig,
-                  context: {
-                    "projectId":
-                        RegistrationDeliverySingleton().selectedProject?.id,
-                    "user": RegistrationDeliverySingleton().loggedInUser,
-                    "tenantId": RegistrationDeliverySingleton()
-                        .selectedProject
-                        ?.tenantId,
-                    "selectedBoundaryCode":
-                        RegistrationDeliverySingleton().boundary?.code,
-                    // converting in json format to match nested object value as passing model will cause issue
-                    'userUUID':
-                        RegistrationDeliverySingleton().loggedInUser?.uuid,
-                    'householdType': RegistrationDeliverySingleton()
-                        .householdType
-                        ?.toValue(),
-                    "beneficiaryType": RegistrationDeliverySingleton()
-                        .beneficiaryType
-                        ?.toValue(),
-                    if (household != null) 'householdModel': household,
-                    if (projectBeneficiary != null)
-                      "projectBeneficiaryModel": projectBeneficiary,
-                  },
-                  fallbackFormDataString: fallBackModel,
-                );
-
-                blocWrapper.add(
-                  RegistrationWrapperEvent.create(entities: entities),
-                );
+              } catch (e) {
+                Navigator.of(context, rootNavigator: true).pop();
+                // Reset to prevent re-handling
+                context.read<FormsBloc>().add(
+                      const FormsEvent.clearForm(
+                          schemaKey:
+                              'REGISTRATIONFLOW'), // or create a FormsResetEvent
+                    );
+                context.router
+                    .push(BeneficiaryErrorRoute(enableViewHousehold: false));
+                if (kDebugMode) {
+                  debugPrint('Error: $e');
+                }
               }
-            } catch (e) {
-              Navigator.of(context, rootNavigator: true).pop();
-              // Reset to prevent re-handling
-              context.read<FormsBloc>().add(
-                    const FormsEvent.clearForm(
-                        schemaKey:
-                            'REGISTRATIONFLOW'), // or create a FormsResetEvent
-                  );
-              context.router
-                  .push(BeneficiaryErrorRoute(enableViewHousehold: false));
-              print('Error: $e');
             }
-          }
-        },
-        child: KeyboardVisibilityBuilder(
-          builder: (context, isKeyboardVisible) => Scaffold(
-            body: NotificationListener<ScrollNotification>(
+          },
+        ),
+      ],
+      child: KeyboardVisibilityBuilder(
+        builder: (context, isKeyboardVisible) => Scaffold(
+          body: NotificationListener<ScrollNotification>(
               onNotification: (scrollNotification) {
                 if (scrollNotification is ScrollUpdateNotification) {
                   final metrics = scrollNotification.metrics;
@@ -633,11 +678,6 @@ class _CustomSearchBeneficiaryPageState
                                                   Constants.eTokenLength) {
                                             triggerGlobalSearchEvent();
                                           }
-                                          // else {
-                                          //   blocWrapper.add(
-                                          //       const RegistrationWrapperEvent
-                                          //           .clear());
-                                          // }
                                         } else if (!isDeliveryFlow &&
                                             (value.isEmpty ||
                                                 value.trim().length > 2)) {
@@ -821,7 +861,8 @@ class _CustomSearchBeneficiaryPageState
                                           type: ToastType.error,
                                         );
                                       } else {
-                                        context.router.push(FormsRenderRoute(
+                                        context.router
+                                            .push(CustomFormsRenderRoute(
                                           currentSchemaKey: 'REGISTRATIONFLOW',
                                           pageName: pageName,
                                           defaultValues: {
@@ -872,8 +913,7 @@ class _CustomSearchBeneficiaryPageState
                                   type: ToastType.error,
                                 );
                               } else {
-                                /// TODO: MULTIPLE CALLS: NEED TO CREATE A COMMON METHOD
-                                context.router.push(FormsRenderRoute(
+                                context.router.push(CustomFormsRenderRoute(
                                   currentSchemaKey: 'REGISTRATIONFLOW',
                                   pageName: pageName,
                                   defaultValues: {
@@ -927,7 +967,8 @@ class _CustomSearchBeneficiaryPageState
                                           type: ToastType.error,
                                         );
                                       } else {
-                                        context.router.push(FormsRenderRoute(
+                                        context.router
+                                            .push(CustomFormsRenderRoute(
                                           currentSchemaKey: 'REGISTRATIONFLOW',
                                           pageName: pageName,
                                           defaultValues: {
@@ -1092,208 +1133,211 @@ class _CustomSearchBeneficiaryPageState
                           });
                     },
                     child: BlocBuilder<RegistrationWrapperBloc,
-                            RegistrationWrapperState>(
-                        builder: (context, blocState) {
-                      final items = blocState.householdMembers;
-                      return BlocListener<DigitScannerBloc, DigitScannerState>(
-                        listener: (context, scannerState) {
-                          if (scannerState.qrCodes.isNotEmpty &&
-                              selectedTag != scannerState.qrCodes.lastOrNull) {
-                            setState(() {
-                              selectedTag =
-                                  scannerState.qrCodes.lastOrNull ?? "";
-                            });
-                            triggerGlobalSearchEvent();
-                          }
-                        },
-                        child: BlocBuilder<LocationBloc, LocationState>(
-                          builder: (context, locationState) {
-                            return SliverList(
-                              delegate: SliverChildBuilderDelegate(
-                                (ctx, index) {
-                                  final i = items[index];
-                                  final distance = calculateDistance(
-                                    Coordinate(
-                                      lat,
-                                      long,
-                                    ),
-                                    Coordinate(
-                                      i.household?.address?.latitude,
-                                      i.household?.address?.longitude,
-                                    ),
-                                  );
-
-                                  return Container(
-                                    margin:
-                                        const EdgeInsets.only(bottom: spacer2),
-                                    child: CustomViewBeneficiaryCard(
-                                      distance:
-                                          isProximityEnabled ? distance : null,
-                                      householdWrapper: i,
-                                      onOpenPressed: () async {
-                                        final scannerBloc =
-                                            context.read<DigitScannerBloc>();
-                                        FocusManager.instance.primaryFocus
-                                            ?.unfocus();
-
-                                        if ((i.tasks?.lastOrNull?.status ==
-                                                    Status.closeHousehold
-                                                        .toValue() &&
-                                                (i.tasks ?? []).isNotEmpty) ||
-                                            (i.projectBeneficiaries ?? [])
-                                                .isEmpty) {
-                                          setState(() {
-                                            selectedFilters = [];
-                                          });
-                                          blocWrapper.add(
-                                              const RegistrationWrapperEvent
-                                                  .clear());
-
-                                          final mapper = ReverseFormMapper(
-                                            formConfig: jsonConfig[
-                                                'beneficiaryRegistration']!,
-                                            modelInstances: [
-                                              if (i.household != null)
-                                                i.household!,
-                                              if (i.individuals?.first != null)
-                                                i.individuals!.first,
-                                              if (i.members?.first != null)
-                                                i.members!.first,
-                                            ],
-                                          );
-
-                                          final formData =
-                                              mapper.buildFormData();
-
-                                          final pageName = context
-                                              .read<FormsBloc>()
-                                              .state
-                                              .cachedSchemas['REGISTRATIONFLOW']
-                                              ?.pages
-                                              .entries
-                                              .first
-                                              .key;
-
-                                          context.router.push(FormsRenderRoute(
-                                            isEdit: true,
-                                            currentSchemaKey:
-                                                'REGISTRATIONFLOW',
-                                            pageName: pageName!,
-
-                                            /// as registration is there assuming form won't be null
-                                            defaultValues: {
-                                              ...formData,
-                                              'administrativeArea':
-                                                  localizations.translate(
-                                                      RegistrationDeliverySingleton()
-                                                              .boundary
-                                                              ?.code ??
-                                                          ''),
-                                              'availableIDs': {
-                                                'DEFAULT':
-                                                    IdGen.instance.identifier,
-                                              },
-                                              "eToken": ""
-                                            },
-                                          ));
-
-                                          blocWrapper.add(RegistrationWrapperEvent
-                                              .fetchDeliveryDetails(
-                                                  projectId:
-                                                      RegistrationDeliverySingleton()
-                                                          .selectedProject!
-                                                          .id,
-                                                  selectedIndividual: null,
-                                                  householdWrapper: HouseholdWrapper(
-                                                      household: i.household,
-                                                      individuals:
-                                                          i.individuals,
-                                                      members: i.members,
-                                                      projectBeneficiaries: i
-                                                          .projectBeneficiaries,
-                                                      tasks: i.tasks,
-                                                      sideEffects:
-                                                          i.sideEffects,
-                                                      referrals: i.referrals),
-                                                  beneficiaryType:
-                                                      RegistrationDeliverySingleton()
-                                                          .beneficiaryType
-                                                          ?.toValue()));
-                                        } else {
-                                          blocWrapper.add(
-                                              const RegistrationWrapperEvent
-                                                  .clear());
-                                          blocWrapper.add(RegistrationWrapperEvent
-                                              .fetchDeliveryDetails(
-                                                  projectId:
-                                                      RegistrationDeliverySingleton()
-                                                          .selectedProject!
-                                                          .id,
-                                                  selectedIndividual: null,
-                                                  householdWrapper: HouseholdWrapper(
-                                                      household: i.household,
-                                                      individuals:
-                                                          i.individuals,
-                                                      members: i.members,
-                                                      projectBeneficiaries: i
-                                                          .projectBeneficiaries,
-                                                      tasks: i.tasks,
-                                                      sideEffects:
-                                                          i.sideEffects,
-                                                      referrals: i.referrals),
-                                                  beneficiaryType:
-                                                      RegistrationDeliverySingleton()
-                                                          .beneficiaryType
-                                                          ?.toValue()));
-
-                                          await context.router
-                                              .push(HouseholdOverviewRoute());
-                                        }
-                                        setState(() {
-                                          isProximityEnabled = false;
-                                        });
-                                        searchController.clear();
-                                        selectedFilters.clear();
-                                      },
-                                    ),
-                                  );
-                                },
-                                childCount: items.length +
-                                    (blocState.loading
-                                        ? 1
-                                        : 0), // 👈 Extra item if loading
-                              ),
-                            );
+                        RegistrationWrapperState>(
+                      builder: (context, blocState) {
+                        final items = blocState.householdMembers;
+                        return BlocListener<DigitScannerBloc,
+                            DigitScannerState>(
+                          listener: (context, scannerState) {
+                            if (scannerState.qrCodes.isNotEmpty &&
+                                selectedTag !=
+                                    scannerState.qrCodes.lastOrNull) {
+                              setState(() {
+                                selectedTag =
+                                    scannerState.qrCodes.lastOrNull ?? "";
+                              });
+                              triggerGlobalSearchEvent();
+                            }
                           },
-                        ),
-                      );
-                    }),
+                          child: BlocBuilder<LocationBloc, LocationState>(
+                            builder: (context, locationState) {
+                              return SliverList(
+                                delegate: SliverChildBuilderDelegate(
+                                  (ctx, index) {
+                                    final i = items[index];
+                                    final distance = calculateDistance(
+                                      Coordinate(
+                                        lat,
+                                        long,
+                                      ),
+                                      Coordinate(
+                                        i.household?.address?.latitude,
+                                        i.household?.address?.longitude,
+                                      ),
+                                    );
+
+                                    return Container(
+                                      margin: const EdgeInsets.only(
+                                          bottom: spacer2),
+                                      child: CustomViewBeneficiaryCard(
+                                        distance: isProximityEnabled
+                                            ? distance
+                                            : null,
+                                        householdWrapper: i,
+                                        onOpenPressed: () async {
+                                          final scannerBloc =
+                                              context.read<DigitScannerBloc>();
+                                          FocusManager.instance.primaryFocus
+                                              ?.unfocus();
+
+                                          if ((i.tasks?.lastOrNull?.status ==
+                                                      Status.closeHousehold
+                                                          .toValue() &&
+                                                  (i.tasks ?? []).isNotEmpty) ||
+                                              (i.projectBeneficiaries ?? [])
+                                                  .isEmpty) {
+                                            setState(() {
+                                              selectedFilters = [];
+                                            });
+                                            blocWrapper.add(
+                                                const RegistrationWrapperEvent
+                                                    .clear());
+
+                                            final mapper = ReverseFormMapper(
+                                              formConfig: jsonConfig[
+                                                  'beneficiaryRegistration']!,
+                                              modelInstances: [
+                                                if (i.household != null)
+                                                  i.household!,
+                                                if (i.individuals?.first !=
+                                                    null)
+                                                  i.individuals!.first,
+                                                if (i.members?.first != null)
+                                                  i.members!.first,
+                                              ],
+                                            );
+
+                                            final formData =
+                                                mapper.buildFormData();
+
+                                            final pageName = context
+                                                .read<FormsBloc>()
+                                                .state
+                                                .cachedSchemas[
+                                                    'REGISTRATIONFLOW']
+                                                ?.pages
+                                                .entries
+                                                .first
+                                                .key;
+
+                                            context.router
+                                                .push(CustomFormsRenderRoute(
+                                              isEdit: true,
+                                              currentSchemaKey:
+                                                  'REGISTRATIONFLOW',
+                                              pageName: pageName!,
+
+                                              /// as registration is there assuming form won't be null
+                                              defaultValues: {
+                                                ...formData,
+                                                'administrativeArea':
+                                                    localizations.translate(
+                                                        RegistrationDeliverySingleton()
+                                                                .boundary
+                                                                ?.code ??
+                                                            ''),
+                                                'availableIDs': {
+                                                  'DEFAULT':
+                                                      IdGen.instance.identifier,
+                                                },
+                                                "eToken": ""
+                                              },
+                                            ));
+
+                                            blocWrapper.add(RegistrationWrapperEvent
+                                                .fetchDeliveryDetails(
+                                                    projectId:
+                                                        RegistrationDeliverySingleton()
+                                                            .selectedProject!
+                                                            .id,
+                                                    selectedIndividual: null,
+                                                    householdWrapper: HouseholdWrapper(
+                                                        household: i.household,
+                                                        individuals:
+                                                            i.individuals,
+                                                        members: i.members,
+                                                        projectBeneficiaries: i
+                                                            .projectBeneficiaries,
+                                                        tasks: i.tasks,
+                                                        sideEffects:
+                                                            i.sideEffects,
+                                                        referrals: i.referrals),
+                                                    beneficiaryType:
+                                                        RegistrationDeliverySingleton()
+                                                            .beneficiaryType
+                                                            ?.toValue()));
+                                          } else {
+                                            blocWrapper.add(
+                                                const RegistrationWrapperEvent
+                                                    .clear());
+                                            blocWrapper.add(RegistrationWrapperEvent
+                                                .fetchDeliveryDetails(
+                                                    projectId:
+                                                        RegistrationDeliverySingleton()
+                                                            .selectedProject!
+                                                            .id,
+                                                    selectedIndividual: null,
+                                                    householdWrapper: HouseholdWrapper(
+                                                        household: i.household,
+                                                        individuals:
+                                                            i.individuals,
+                                                        members: i.members,
+                                                        projectBeneficiaries: i
+                                                            .projectBeneficiaries,
+                                                        tasks: i.tasks,
+                                                        sideEffects:
+                                                            i.sideEffects,
+                                                        referrals: i.referrals),
+                                                    beneficiaryType:
+                                                        RegistrationDeliverySingleton()
+                                                            .beneficiaryType
+                                                            ?.toValue()));
+
+                                            await context.router.push(
+                                                CustomHouseholdOverviewRoute());
+                                          }
+                                          setState(() {
+                                            isProximityEnabled = false;
+                                          });
+                                          searchController.clear();
+                                          selectedFilters.clear();
+                                        },
+                                      ),
+                                    );
+                                  },
+                                  childCount: items.length +
+                                      (blocState.loading ? 1 : 0),
+                                ),
+                              );
+                            },
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 ],
-              ),
-            ),
-            bottomNavigationBar: ValueListenableBuilder<TextEditingValue>(
-              valueListenable: searchController,
-              builder: (context, value, _) {
-                final isCommunity =
-                    RegistrationDeliverySingleton().householdType ==
-                        HouseholdType.community;
-                // ignore: prefer_is_empty
-                final isTextShort = value.text.length < 0;
+              )),
+          bottomNavigationBar: ValueListenableBuilder<TextEditingValue>(
+            valueListenable: searchController,
+            builder: (context, value, _) {
+              final isCommunity =
+                  RegistrationDeliverySingleton().householdType ==
+                      HouseholdType.community;
+              // ignore: prefer_is_empty
+              final isTextShort = value.text.length < 0;
 
-                return Offstage(
-                  offstage: isCommunity && isTextShort,
-                  child: DigitCard(
-                    margin: const EdgeInsets.only(top: spacer2),
-                    padding: const EdgeInsets.all(spacer4),
-                    children: [
-                      ...buildSearchButtons(context, value, isCommunity,
-                          isTextShort, searchTemplate),
-                    ],
-                  ),
-                );
-              },
-            ),
+              return Offstage(
+                offstage: isCommunity && isTextShort,
+                child: DigitCard(
+                  margin: const EdgeInsets.only(top: spacer2),
+                  padding: const EdgeInsets.all(spacer4),
+                  children: [
+                    ...buildSearchButtons(context, value, isCommunity,
+                        isTextShort, searchTemplate),
+                  ],
+                ),
+              );
+            },
           ),
         ),
       ),
@@ -1397,7 +1441,7 @@ class _CustomSearchBeneficiaryPageState
                   type: ToastType.error,
                 );
               } else {
-                context.router.push(FormsRenderRoute(
+                context.router.push(CustomFormsRenderRoute(
                   currentSchemaKey: 'REGISTRATIONFLOW',
                   pageName: pageName,
                   defaultValues: {
@@ -1467,7 +1511,14 @@ class _CustomSearchBeneficiaryPageState
 
   void triggerGlobalSearchEvent({bool isPagination = false}) {
     if (!isPagination) {
+      // Always clear wrapper and forms state before new search
       blocWrapper.add(const RegistrationWrapperEvent.clear());
+      context
+          .read<FormsBloc>()
+          .add(const FormsEvent.clearForm(schemaKey: 'REGISTRATIONFLOW'));
+      context
+          .read<FormsBloc>()
+          .add(const FormsEvent.clearForm(schemaKey: 'DELIVERYFLOW'));
     }
 
     if (isProximityEnabled ||

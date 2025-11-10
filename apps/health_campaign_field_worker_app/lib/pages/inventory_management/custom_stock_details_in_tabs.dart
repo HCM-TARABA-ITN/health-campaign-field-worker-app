@@ -1,39 +1,36 @@
 import 'dart:async';
 
-import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_data_model/data_model.dart';
-import 'package:digit_data_model/models/entities/product_variant.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
-import 'package:flutter/services.dart';
-
+import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/services/location_bloc.dart';
-import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/input_wrapper.dart';
 import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
-import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
-import 'package:flutter/material.dart';
-import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
+import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:health_campaign_field_worker_app/pages/inventory_management/custom_acknowledgement.dart';
 import 'package:inventory_management/blocs/record_stock.dart';
 import 'package:inventory_management/models/entities/inventory_transport_type.dart';
 import 'package:inventory_management/models/entities/stock.dart';
 import 'package:inventory_management/models/entities/transaction_reason.dart';
 import 'package:inventory_management/models/entities/transaction_type.dart';
+import 'package:inventory_management/utils/i18_key_constants.dart' as i18;
 import 'package:inventory_management/utils/utils.dart';
 import 'package:inventory_management/widgets/localized.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:inventory_management/utils/i18_key_constants.dart' as i18;
+
 import '../../blocs/auth/auth.dart';
 import '../../blocs/inventory_management/stock_bloc.dart';
 import '../../data/repositories/local/inventory_management/custom_stock.dart';
 import '../../router/app_router.dart';
-import '../../utils/i18_key_constants.dart' as i18_local;
 import '../../utils/constants.dart';
 import '../../utils/extensions/extensions.dart';
+import '../../utils/i18_key_constants.dart' as i18_local;
 import '../../utils/registration_delivery/registration_delivery_utils.dart';
 
 class DynamicTabsPage extends LocalizedStatefulWidget {
@@ -110,10 +107,14 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
       }
     } on TimeoutException {
       _sharedMRN = 'MRN-${DateTime.now().millisecondsSinceEpoch}';
-      debugPrint('MRN generation timed out, using fallback');
+      if (kDebugMode) {
+        debugPrint('MRN generation timed out, using fallback');
+      }
     } catch (e) {
       _sharedMRN = 'MRN-${DateTime.now().millisecondsSinceEpoch}';
-      debugPrint('Error generating MRN: $e');
+      if (kDebugMode) {
+        debugPrint('Error generating MRN: $e');
+      }
     } finally {
       setState(() => _isInitializing = false);
     }
@@ -149,8 +150,6 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
             Validators.min(1),
             Validators.max(100000000),
           ]),
-          // _waybillQuantityKey:
-          //     FormControl<String>(validators: [Validators.required]),
           _transactionQuantityPartialKey: FormControl<int>(validators: []),
           _batchNumberKey: FormControl<String>(),
           _commentsKey: FormControl<String>(),
@@ -168,14 +167,6 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
     final productSku = product.sku ?? '';
     final state = context.read<RecordStockBloc>().state;
     StockRecordEntryType entryType = state.entryType;
-
-    // info setting the transaction related info here for the stock the model
-
-    // setTransactionTypeAndReason(
-    //   entryType,
-    //   transactionType,
-    //   transactionReason,
-    // );
 
     switch (entryType) {
       case StockRecordEntryType.receipt:
@@ -203,8 +194,6 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
         break;
     }
 
-    // setSenderReceiverIdAndType(
-    //     entryType, senderId, senderType, receiverId, receiverType);
     final secondartParty = receivedFrom.contains(("FAC_"))
         ? receivedFrom.replaceFirst("FAC_", "")
         : receivedFrom;
@@ -319,8 +308,6 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
 
   void setTransactionTypeAndReason(StockRecordEntryType entryType,
       String? transactionType, String? transactionReason) {
-    // todo set the reasons , for othe entryType (can capture from field once added)
-
     switch (entryType) {
       case StockRecordEntryType.receipt:
         transactionType = TransactionType.received.toValue();
@@ -354,7 +341,7 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
     String? receiverType,
   ) {
     // info captured on the transaction details , secondaryParty
-    // additionalCheck to correct this ,(TODO :correct this at stock detail page )
+    // additionalCheck to correct this
 
     final secondartParty = receivedFrom.contains(("FAC_"))
         ? receivedFrom.replaceFirst("FAC_", "")
@@ -730,16 +717,6 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
                       : localizations.translate(i18.common.coreCommonNext),
                 ),
                 const SizedBox(height: 12),
-                // DigitButton(
-                //   type: DigitButtonType.secondary,
-                //   size: DigitButtonSize.large,
-                //   onPressed: () {
-                //     // Secondary action if needed
-                //   },
-                //   label: localizations.translate(
-                //     i18.common.coreCommonCancel,
-                //   ),
-                // ),
               ],
             )
           ],

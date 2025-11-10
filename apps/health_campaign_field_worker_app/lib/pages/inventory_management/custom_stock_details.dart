@@ -1,11 +1,6 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
-// import 'package:digit_ui_components/widgets/atoms/digit_reactive_dropdown.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
-import '../../data/repositories/local/inventory_management/custom_stock.dart';
-import '../../router/app_router.dart';
-import './qr_scanner.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/services/location_bloc.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
@@ -14,22 +9,24 @@ import 'package:digit_ui_components/widgets/atoms/input_wrapper.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+// ignore: depend_on_referenced_packages
 import 'package:gs1_barcode_parser/gs1_barcode_parser.dart';
-import 'package:health_campaign_field_worker_app/pages/inventory_management/custom_stock_details_in_tabs.dart';
-import 'package:inventory_management/inventory_management.dart';
-import 'package:inventory_management/router/inventory_router.gm.dart';
-import 'package:reactive_forms/reactive_forms.dart';
-
-import 'package:inventory_management/utils/i18_key_constants.dart' as i18;
-import 'package:inventory_management/widgets/localized.dart';
 import 'package:inventory_management/blocs/product_variant.dart';
 import 'package:inventory_management/blocs/record_stock.dart';
+import 'package:inventory_management/inventory_management.dart';
+import 'package:inventory_management/utils/i18_key_constants.dart' as i18;
 import 'package:inventory_management/widgets/back_navigation_help_header.dart';
+import 'package:inventory_management/widgets/localized.dart';
+import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../blocs/inventory_management/stock_bloc.dart';
+import '../../data/repositories/local/inventory_management/custom_stock.dart';
+import '../../router/app_router.dart';
 import '../../utils/constants.dart';
 import '../../utils/extensions/extensions.dart';
 import '../../utils/i18_key_constants.dart' as i18_local;
+import './qr_scanner.dart';
+import 'custom_stock_details_in_tabs.dart';
 
 @RoutePage()
 class CustomStockDetailsPage extends LocalizedStatefulWidget {
@@ -51,12 +48,7 @@ class CustomStockDetailsPageState
   static const _vehicleNumberKey = 'vehicleNumber';
   static const _typeOfTransportKey = 'typeOfTransport';
   static const _deliveryTeamKey = 'deliveryTeam';
-  // static const _balesReceivedKey = 'balesReceived';
-  // static const _netsReceivedKey = 'netsReceived';
-  // static const _waybillNumberKey = 'waybillNumber';
-  // static const _commentsKey = 'comments';
   static const _driverIdKey = 'driverId';
-  // static const _numberOfNetsInWaybillKey = 'numberOfNetsInWaybill';
 
   bool deliveryTeamSelected = false;
   String? selectedFacilityId;
@@ -81,17 +73,6 @@ class CustomStockDetailsPageState
       _deliveryTeamKey: FormControl<String>(
         validators: deliveryTeamSelected ? [Validators.required] : [],
       ),
-      // _balesReceivedKey: FormControl<int>(
-      //   validators: [Validators.min(0), Validators.required],
-      // ),
-      // _netsReceivedKey: FormControl<int>(
-      //   validators: [Validators.min(0), Validators.required],
-      // ),
-      // _numberOfNetsInWaybillKey: FormControl<int>(
-      //   validators: [Validators.min(0)],
-      // ),
-      // _waybillNumberKey: FormControl<String>(),
-      // _commentsKey: FormControl<String>(),
       _driverIdKey: FormControl<String>(),
     });
   }
@@ -146,10 +127,6 @@ class CustomStockDetailsPageState
                 stockState.mapOrNull(
                   persisted: (value) {
                     final parent = context.router.parent() as StackRouter;
-                    // todo : verify this , not needed now as routing done from stock details tab page
-                    // parent.replace(
-                    //   InventoryAcknowledgementRoute(),
-                    // );
                   },
                 );
               },
@@ -356,8 +333,6 @@ class CustomStockDetailsPageState
                                       ),
                                     );
                                   } else {
-                                    // Logger().d(
-                                    //     "This is the form data ${form.control(_productVariantKey).value as List<ProductVariantModel>}");
                                     FocusManager.instance.primaryFocus
                                         ?.unfocus();
                                     context
@@ -375,7 +350,6 @@ class CustomStockDetailsPageState
                                       final bloc =
                                           context.read<RecordStockBloc>();
 
-                                      // todo nik to be moved to next page logic
                                       final productVariant = form
                                           .control(_productVariantKey)
                                           .value as List<ProductVariantModel>;
@@ -410,35 +384,9 @@ class CustomStockDetailsPageState
                                       final hasLocationData =
                                           lat != null && lng != null;
 
-                                      // final comments = form
-                                      //     .control(_commentsKey)
-                                      //     .value as String?;
-
                                       final deliveryTeamName = form
                                           .control(_deliveryTeamKey)
                                           .value as String?;
-
-                                      // int totalQuantity = 0;
-                                      // int totalRemainingQuantityInMl =
-                                      //     context.spaq1;
-
-                                      // int totalExpectedUnusedBottles =
-                                      //     totalRemainingQuantityInMl ~/
-                                      //         Constants.mlPerBottle;
-
-                                      // int totalExpectedPartialQuantityInMl =
-                                      //     totalRemainingQuantityInMl %
-                                      //         Constants.mlPerBottle;
-
-                                      // int totalExpectedPartialBottles =
-                                      //     totalRemainingQuantityInMl %
-                                      //                 Constants.mlPerBottle !=
-                                      //             0
-                                      //         ? 1
-                                      //         : 0;
-
-                                      // spaq1 =
-                                      //     totalQuantity * Constants.mlPerBottle;
 
                                       String? senderId;
                                       String? senderType;
@@ -541,7 +489,6 @@ class CustomStockDetailsPageState
                                     });
                                   }
                                 },
-                                // isDisabled: !form.valid,
                                 label: localizations
                                     .translate(i18.common.coreCommonNext),
                               );
@@ -575,16 +522,6 @@ class CustomStockDetailsPageState
                                               .firstWhereOrNull((element) =>
                                                   element.sku ==
                                                   Constants.bednet);
-                                      // ProductVariantModel? spaq1 =
-                                      //     productVariants
-                                      //         .firstWhereOrNull((element) =>
-                                      //             element.sku ==
-                                      //             Constants.spaq1);
-                                      // ProductVariantModel? spaq2 =
-                                      //     productVariants
-                                      //         .firstWhereOrNull((element) =>
-                                      //             element.sku ==
-                                      //             Constants.spaq2);
                                       return ReactiveWrapperField(
                                         formControlName: _productVariantKey,
                                         validationMessages: {
@@ -611,37 +548,6 @@ class CustomStockDetailsPageState
                                                   : '',
                                               suffixIcon: Icons.arrow_drop_down,
                                             ),
-                                            // child: MultiSelectDropDown(
-                                            //   // errorText: field.errorText,
-                                            //   selectionType:
-                                            //       SelectionType.defaultSelect,
-                                            //   options: [
-                                            //     if (spaq1 != null) spaq1,
-                                            //     if (spaq2 != null) spaq2
-                                            //   ].map((variant) {
-                                            //     return DropdownItem(
-                                            //       name: localizations.translate(
-                                            //           variant.sku ??
-                                            //               variant.id),
-                                            //       code: variant.id,
-                                            //     );
-                                            //   }).toList(),
-
-                                            //   onOptionSelected:
-                                            //       (List<DropdownItem>
-                                            //           selectedOptionsList) {
-                                            //     final selectedVariants =
-                                            //         selectedOptionsList
-                                            //             .map((item) {
-                                            //       return productVariants
-                                            //           .firstWhere((variant) =>
-                                            //               variant.id ==
-                                            //               item.code);
-                                            //     }).toList();
-                                            //     field.control.value =
-                                            //         selectedVariants;
-                                            //   },
-                                            // ),
                                           );
                                         },
                                       );
@@ -649,7 +555,6 @@ class CustomStockDetailsPageState
                                   );
                                 },
                               ),
-
                               BlocBuilder<FacilityBloc, FacilityState>(
                                 builder: (context, state) {
                                   return state.maybeWhen(
@@ -678,35 +583,18 @@ class CustomStockDetailsPageState
                                             Constants.stateBoundaryLevel) {
                                           filteredFacilities = entryType ==
                                                   StockRecordEntryType.receipt
-                                              ? allFacilities //TODO: changed from facilities
+                                              ? allFacilities
                                                   .where((element) =>
                                                       element.usage ==
                                                       Constants.centralFacility)
                                                   .toList()
-                                              : allFacilities //TODO: changed from facilities
+                                              : allFacilities
                                                   .where((element) =>
                                                       element.usage ==
                                                       Constants.lgaFacility)
                                                   .toList();
-                                        }
-                                        // else if (context.selectedProject
-                                        //         .address?.boundaryType ==
-                                        //     Constants.lgaBoundaryLevel) {
-                                        //   filteredFacilities = entryType ==
-                                        //           StockRecordEntryType.receipt
-                                        //       ? allFacilities
-                                        //           .where((element) =>
-                                        //               element.usage ==
-                                        //               Constants.stateFacility)
-                                        //           .toList()
-                                        //       : allFacilities
-                                        //           .where((element) =>
-                                        //               element.usage ==
-                                        //               Constants.healthFacility)
-                                        //           .toList();
-                                        // }
-                                        else if (context.selectedProject.address
-                                                ?.boundaryType ==
+                                        } else if (context.selectedProject
+                                                .address?.boundaryType ==
                                             Constants.lgaBoundaryLevel) {
                                           filteredFacilities = entryType ==
                                                   StockRecordEntryType.receipt
@@ -735,26 +623,15 @@ class CustomStockDetailsPageState
                                                       element.usage ==
                                                       Constants.deliveryTeam)
                                                   .toList();
-                                        }
-                                        // else {
-                                        //   filteredFacilities = context
-                                        //           .// 👈 clear old facility IDisDistributor
-                                        //       ? allFacilities //TODO: changed from facilities
-                                        //           .where((element) =>
-                                        //               element.usage ==
-                                        //               Constants.healthFacility)
-                                        //           .toList()
-                                        //       : [];
-                                        // }
-                                        else {
-                                          filteredFacilities = context
-                                                  .isDistributor
-                                              ? allFacilities //TODO: changed from facilities
-                                                  .where((element) =>
-                                                      element.usage ==
-                                                      Constants.lgaFacility)
-                                                  .toList()
-                                              : [];
+                                        } else {
+                                          filteredFacilities =
+                                              context.isDistributor
+                                                  ? allFacilities
+                                                      .where((element) =>
+                                                          element.usage ==
+                                                          Constants.lgaFacility)
+                                                      .toList()
+                                                  : [];
                                         }
 
                                         facilities =
@@ -766,16 +643,6 @@ class CustomStockDetailsPageState
                                                 : filteredFacilities.isEmpty
                                                     ? facilities
                                                     : filteredFacilities;
-
-                                        // List<FacilityModel> teamFacilities = [
-                                        //   FacilityModel(
-                                        //     id: 'Delivery Team',
-                                        //     name: 'CDD Team',
-                                        //   ),
-                                        // ];
-                                        // teamFacilities.addAll(
-                                        //   facilities,
-                                        // );
 
                                         return Column(
                                           children: [
@@ -801,12 +668,6 @@ class CustomStockDetailsPageState
                                                 )) as FacilityModel?;
 
                                                 if (facility == null) return;
-                                                // form
-                                                //         .control(_secondaryPartyKey)
-                                                //         .value =
-                                                //     localizations.translate(
-                                                //   'FAC_${facility.id}',
-                                                // );
                                                 if (facility.id !=
                                                     'Delivery Team') {
                                                   form
@@ -833,18 +694,6 @@ class CustomStockDetailsPageState
                                                   selectedFacilityId =
                                                       facility.id;
                                                 });
-                                                // if (facility.id ==
-                                                //     'Delivery Team') {
-                                                //   setState(() {
-                                                //     deliveryTeamSelected = true;
-                                                //     clearQRCodes();
-                                                //   });
-                                                // } else {
-                                                //   setState(() {
-                                                //     deliveryTeamSelected =
-                                                //         false;
-                                                //   });
-                                                // }
                                                 if (facility.id ==
                                                     'Delivery Team') {
                                                   setState(() {
@@ -906,64 +755,6 @@ class CustomStockDetailsPageState
                                       });
                                 },
                               ),
-                              // ReactiveWrapperField(
-                              //     formControlName: _balesReceivedKey,
-                              //     builder: (field) {
-                              //       return InputField(
-                              //         isRequired: true,
-                              //         type: InputType.text,
-                              //         label: localizations.translate(
-                              //           i18_local.stockDetails.balesNumberLabel,
-                              //         ),
-                              //         onChange: (val) {
-                              //           field.control.value = val;
-                              //         },
-                              //       );
-                              //     }),
-                              // ReactiveWrapperField(
-                              //     formControlName: _netsReceivedKey,
-                              //     builder: (field) {
-                              //       return InputField(
-                              //         isRequired: true,
-                              //         type: InputType.text,
-                              //         label: localizations.translate(
-                              //           i18_local
-                              //               .stockDetails.netsReceivedLabel,
-                              //         ),
-                              //         onChange: (val) {
-                              //           field.control.value = val;
-                              //         },
-                              //       );
-                              //     }),
-                              // ReactiveWrapperField(
-                              //     formControlName: _waybillNumberKey,
-                              //     builder: (field) {
-                              //       return InputField(
-                              //         type: InputType.text,
-                              //         label: localizations.translate(
-                              //           i18_local
-                              //               .stockDetails.waybillNumberLabel,
-                              //         ),
-                              //         onChange: (val) {
-                              //           field.control.value = val;
-                              //         },
-                              //       );
-                              //     }),
-                              // ReactiveWrapperField(
-                              //     formControlName: _numberOfNetsInWaybillKey,
-                              //     builder: (field) {
-                              //       return InputField(
-                              //         type: InputType.text,
-                              //         label: localizations.translate(
-                              //           i18_local.stockDetails
-                              //               .numberOfNetsInWaybillLabel,
-                              //         ),
-                              //         onChange: (val) {
-                              //           field.control.value = val;
-                              //         },
-                              //       );
-                              //     }),
-                              // TODO: as this case i need to set when occurring
                               Visibility(
                                 visible: deliveryTeamSelected,
                                 child: ReactiveWrapperField(
@@ -990,7 +781,6 @@ class CustomStockDetailsPageState
                                                 quantity: 1,
                                                 isGS1code: false,
                                                 singleValue: true,
-                                                // scanType: ScanType.teamCode,
                                               ),
                                               settings: const RouteSettings(
                                                   name: '/qr-scanner'),
@@ -1008,7 +798,6 @@ class CustomStockDetailsPageState
                                             controller: textController,
                                             suffixIcon: Icons.qr_code_2,
                                             onSuffixTap: (value) {
-                                              //[TODO: Add route to auto_route]
                                               Navigator.of(context).push(
                                                 MaterialPageRoute(
                                                   builder: (context) =>
@@ -1016,7 +805,6 @@ class CustomStockDetailsPageState
                                                     quantity: 1,
                                                     isGS1code: false,
                                                     singleValue: true,
-                                                    // scanType: ScanType.teamCode,
                                                   ),
                                                   settings: const RouteSettings(
                                                       name: '/qr-scanner'),
@@ -1133,19 +921,6 @@ class CustomStockDetailsPageState
                                       },
                                     );
                                   }),
-                              // ReactiveWrapperField(
-                              //     formControlName: _commentsKey,
-                              //     builder: (field) {
-                              //       return InputField(
-                              //         type: InputType.textArea,
-                              //         label: localizations.translate(
-                              //           i18_local.stockDetails.commentsLabel,
-                              //         ),
-                              //         onChange: (val) {
-                              //           field.control.value = val;
-                              //         },
-                              //       );
-                              //     }),
                             ],
                           ),
                         ],

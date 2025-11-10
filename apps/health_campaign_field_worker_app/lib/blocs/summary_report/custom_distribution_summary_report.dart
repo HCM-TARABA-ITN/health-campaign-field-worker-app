@@ -392,7 +392,6 @@ class CustomDistributionSummaryReportBloc extends Bloc<
       double quantityDistributed = 0;
       double quantityRedosed = 0;
 
-      //todo remove the double and int checks once , data type is finalized
       var resourceId = resource.productVariantId;
       quantityDistributed = quantityDistributed +
           (resource.quantity!.toString().contains(".")

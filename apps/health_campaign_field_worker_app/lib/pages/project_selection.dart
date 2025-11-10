@@ -5,6 +5,7 @@ import 'package:digit_ui_components/services/location_bloc.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/utils/component_utils.dart';
 import 'package:digit_ui_components/widgets/atoms/menu_card.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
@@ -143,7 +144,6 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                 final boundary = selectedProject.address?.boundary;
 
                 if (boundary != null) {
-                  // triggerLocationTracking(state.selectedProject!); // TODO: Enable location tracking
                   navigateToBoundary(boundary);
                 } else {
                   Toast.showToast(
@@ -241,7 +241,9 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
         ]);
       }
     } catch (e) {
-      debugPrint('error $e');
+      if (kDebugMode) {
+        debugPrint('error $e');
+      }
     }
   }
 
@@ -261,16 +263,14 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
         triggerLocationTracker(
           'com.digit.location_tracker',
           startAfterTimestamp: startAfterTimestamp.millisecondsSinceEpoch,
-          locationUpdateInterval: 60 * 1000, // TODO: Read from config
+          locationUpdateInterval: 60 * 1000,
           stopAfterTimestamp: project.endDate ??
               now.add(const Duration(hours: 8)).millisecondsSinceEpoch,
         );
 
         if (mounted) {
           LocationTrackerService().processLocationData(
-              interval: 120, // TODO: Read from config
-              createdBy: context.loggedInUserUuid,
-              isar: isar);
+              interval: 120, createdBy: context.loggedInUserUuid, isar: isar);
         }
       }
     } else {

@@ -403,7 +403,9 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
       await facilityLocalRepository.bulkCreate(facilities);
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        debugPrint(e.toString());
+      }
     }
   }
 
@@ -703,8 +705,10 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     try {
       transformedSchema = transformJson(schemaJson);
     } catch (e, stackTrace) {
-      debugPrint('Schema transformation failed: $e');
-      debugPrint('$stackTrace');
+      if (kDebugMode) {
+        debugPrint('Schema transformation failed: $e');
+        debugPrint('$stackTrace');
+      }
       transformedSchema = null;
     }
 
@@ -893,7 +897,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
       await createStockDownloadedEntries(stockEntriesDownloaded);
     } else if (userRoles.contains(RolesType.warehouseManager.toValue()) &&
-        boundaryType == Constants.districtBoundaryLevel) {
+        (boundaryType == Constants.districtBoundaryLevel ||
+            boundaryType == Constants.lgaBoundaryLevel)) {
       List<String> receiverIds =
           projectFacilities.map((e) => e.facilityId).toList();
       receiverIds = receiverIds
@@ -908,7 +913,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
       // info : create entries in the local repository
       await createStockDownloadedEntries(stockEntriesDownloaded);
-    } else if (userRoles.contains(RolesType.communityDistributor.toValue())) {
+    } else if (userRoles.contains(RolesType.communityDistributor.toValue()) ||
+        userRoles.contains(RolesType.distributor.toValue())) {
       final receiverIds = [context.loggedInUserUuid];
       final stockSearchModel = StockSearchModel(
         receiverId: receiverIds,

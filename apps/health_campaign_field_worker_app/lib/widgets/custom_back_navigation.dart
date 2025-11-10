@@ -1,17 +1,15 @@
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/ComponentTheme/back_button_theme.dart';
-import 'package:digit_ui_components/theme/ComponentTheme/button_theme.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_back_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:material_design_icons_flutter/icon_map.dart';
-import 'showcase/showcase_button.dart';
 
-import '../blocs/auth/auth.dart';
 import '../../blocs/localization/app_localization.dart';
 import '../../router/app_router.dart';
 import '../../utils/i18_key_constants.dart' as i18;
+import '../blocs/auth/auth.dart';
+import 'showcase/showcase_button.dart';
 
 class CustomBackNavigationHelpHeaderWidget extends StatelessWidget {
   final bool showHelp;
@@ -47,8 +45,7 @@ class CustomBackNavigationHelpHeaderWidget extends StatelessWidget {
                   DigitBackButton(
                     digitBackButtonThemeData:
                         const DigitBackButtonThemeData().copyWith(
-                          textColor: Theme.of(context)
-                              .colorTheme.text.primary,
+                      textColor: Theme.of(context).colorTheme.text.primary,
                       context: context,
                       backDigitButtonIcon: Icon(
                         Icons.arrow_left,
@@ -83,7 +80,7 @@ class CustomBackNavigationHelpHeaderWidget extends StatelessWidget {
                       type: DigitButtonType.tertiary,
                       size: DigitButtonSize.medium,
                       textColor: textTheme.colorTheme.primary.primary1,
-                      iconColor: textTheme.colorTheme.primary.primary1, 
+                      iconColor: textTheme.colorTheme.primary.primary1,
                     ),
                   ),
               ],
@@ -99,9 +96,9 @@ class CustomBackNavigationHelpHeaderWidget extends StatelessWidget {
               size: DigitButtonSize.medium,
               suffixIcon: Icons.help_outline_outlined,
               textColor: textTheme.colorTheme.primary.primary1,
-              iconColor: textTheme.colorTheme.primary.primary1, 
+              iconColor: textTheme.colorTheme.primary.primary1,
               onPressed: () => helpClicked,
-              ),
+            ),
           SizedBox(width: showcaseButton != null ? spacer4 : 0),
           if (showcaseButton != null) showcaseButton!,
         ],

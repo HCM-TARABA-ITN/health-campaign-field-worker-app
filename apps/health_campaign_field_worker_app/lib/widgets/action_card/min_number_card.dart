@@ -1,15 +1,9 @@
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
-import 'package:digit_ui_components/theme/spacers.dart';
-
 import 'package:flutter/material.dart';
 import 'package:inventory_management/blocs/app_localization.dart';
 import 'package:inventory_management/blocs/record_stock.dart';
-import 'package:inventory_management/utils/utils.dart';
-
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:inventory_management/widgets/localized.dart';
 
-import '../../blocs/localization/app_localization.dart';
 import '../../utils/utils.dart';
 
 class MinNumberCard extends StatelessWidget {
