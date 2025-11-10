@@ -1051,12 +1051,8 @@ class _CustomHouseholdOverviewPageState
                                                     registration_keys
                                                         .householdOverViewKeys
                                                         .individualSecondaryButtonKey],
-                                            editMemberAction: () async {
-                                              //TODO: need to add logic for edit member
-                                            },
+                                            editMemberAction: () async {},
                                             setAsHeadAction: () {
-                                              /// TODO: need to add event in wrapper class for head change
-
                                               Navigator.of(
                                                 context,
                                                 rootNavigator: true,
@@ -1087,8 +1083,6 @@ class _CustomHouseholdOverviewPageState
                                                             )
                                                               ..pop()
                                                               ..pop();
-
-                                                            /// TODO: Need to add logic for deleting a household
                                                           },
                                                           type: DigitButtonType
                                                               .primary,
@@ -1241,9 +1235,7 @@ class _CustomHouseholdOverviewPageState
     );
   }
 
-  addIndividual(BuildContext context, HouseholdModel household) async {
-    // TODO: Need to add logic for adding members
-  }
+  addIndividual(BuildContext context, HouseholdModel household) async {}
 
   bool isOutsideProjectDateRange() {
     final project = RegistrationDeliverySingleton().selectedProject;
@@ -1299,9 +1291,7 @@ class _CustomHouseholdOverviewPageState
   }
 
   void navigateToChecklist(BuildContext ctx, String beneficiaryClientRefId,
-      AddressModel? address) async {
-    //// TODO: need to figure out the logic for
-  }
+      AddressModel? address) async {}
 
   void callReloadEvent({
     required int offset,

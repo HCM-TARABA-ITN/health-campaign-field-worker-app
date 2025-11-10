@@ -19,6 +19,7 @@ import 'package:digit_ui_components/utils/component_utils.dart';
 import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:disable_battery_optimization/disable_battery_optimization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -255,7 +256,6 @@ String customFormatAgeRange(String condition) {
     max -= 1;
     min += 1;
 
-    print('min: $min, max: $max');
     return '$min - $max months';
   }
   return condition;
@@ -940,8 +940,10 @@ Map<String, dynamic> transformJson(Map<String, dynamic> inputJson) {
     return transformed;
   } catch (e, stackTrace) {
     // Log and rethrow to propagate error to the outer try-catch
-    debugPrint('Error inside transformJson: $e');
-    debugPrint('$stackTrace');
+    if (kDebugMode) {
+      debugPrint('Error inside transformJson: $e');
+      debugPrint('$stackTrace');
+    }
     rethrow;
   }
 }

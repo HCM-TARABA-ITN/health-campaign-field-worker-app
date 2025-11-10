@@ -55,7 +55,7 @@ bool checkStatusSMC(List<TaskModel>? tasks, ProjectCycle? currentCycle) {
         lastTask.status == Status.visited.name.toUpperCase()) {
       return false;
     }
-    return false; // [TODO: Move gap between doses to config]
+    return false;
   }
 
   return true;
@@ -99,7 +99,7 @@ bool checkStatusVAS(List<TaskModel>? tasks, ProjectCycle? currentCycle) {
     if (lastTask.status == Status.delivered.name) {
       return true;
     }
-    return diff.inHours >= 24; // [TODO: Move gap between doses to config]
+    return diff.inHours >= 24;
   }
 
   return true;

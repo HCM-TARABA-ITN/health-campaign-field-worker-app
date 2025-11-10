@@ -87,8 +87,6 @@ class MainApplicationState extends State<MainApplication>
           create: (context) => SearchEntityRepository(
             widget.sql,
             IndividualOpLogManager(widget.isar),
-
-            /// todo: need to be changed to make is generic as this won't affect anything right now
           ),
         ),
         RepositoryProvider<HouseHoldGlobalSearchRepository>(

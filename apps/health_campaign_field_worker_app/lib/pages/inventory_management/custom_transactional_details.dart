@@ -969,7 +969,6 @@ class CustomTransactionalDetailsPageState
                                 },
                                 suffix: IconButton(
                                   onPressed: () {
-                                    //[TODO: Add route to auto_route]
                                     Navigator.of(context).push(
                                       MaterialPageRoute(
                                         builder: (context) =>

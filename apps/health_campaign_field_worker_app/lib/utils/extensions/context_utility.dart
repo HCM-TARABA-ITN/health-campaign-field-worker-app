@@ -470,7 +470,6 @@ extension ContextUtilityExtensions on BuildContext {
 
   bool get isHealthFacilitySupervisor {
     try {
-      // todo : verify this make this healthFacilitySupervsior as per kebbi
       bool isDownSyncEnabled = loggedInUserRoles
           .where(
             (role) =>
@@ -488,7 +487,6 @@ extension ContextUtilityExtensions on BuildContext {
 
   bool get isSupervisor {
     try {
-      // todo : verify this make this healthFacilitySupervsior as per kebbi
       bool isSupervisor = loggedInUserRoles
           .where(
             (role) =>

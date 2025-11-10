@@ -294,7 +294,7 @@ class _CustomSearchBeneficiaryPageState
                     .popUntilRouteWithName(CustomSearchBeneficiaryRoute.name);
               });
               if (kDebugMode) {
-                print(createState.error);
+                debugPrint(createState.error);
               }
             }
           },
@@ -461,7 +461,9 @@ class _CustomSearchBeneficiaryPageState
                     );
                 context.router
                     .push(BeneficiaryErrorRoute(enableViewHousehold: false));
-                print('Error: $e');
+                if (kDebugMode) {
+                  debugPrint('Error: $e');
+                }
               }
             }
           },
@@ -911,7 +913,6 @@ class _CustomSearchBeneficiaryPageState
                                   type: ToastType.error,
                                 );
                               } else {
-                                /// TODO: MULTIPLE CALLS: NEED TO CREATE A COMMON METHOD
                                 context.router.push(CustomFormsRenderRoute(
                                   currentSchemaKey: 'REGISTRATIONFLOW',
                                   pageName: pageName,

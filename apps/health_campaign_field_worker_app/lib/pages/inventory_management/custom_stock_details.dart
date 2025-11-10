@@ -127,7 +127,6 @@ class CustomStockDetailsPageState
                 stockState.mapOrNull(
                   persisted: (value) {
                     final parent = context.router.parent() as StackRouter;
-                    // todo : verify this , not needed now as routing done from stock details tab page
                   },
                 );
               },
@@ -351,7 +350,6 @@ class CustomStockDetailsPageState
                                       final bloc =
                                           context.read<RecordStockBloc>();
 
-                                      // todo nik to be moved to next page logic
                                       final productVariant = form
                                           .control(_productVariantKey)
                                           .value as List<ProductVariantModel>;
@@ -557,7 +555,6 @@ class CustomStockDetailsPageState
                                   );
                                 },
                               ),
-
                               BlocBuilder<FacilityBloc, FacilityState>(
                                 builder: (context, state) {
                                   return state.maybeWhen(
@@ -586,12 +583,12 @@ class CustomStockDetailsPageState
                                             Constants.stateBoundaryLevel) {
                                           filteredFacilities = entryType ==
                                                   StockRecordEntryType.receipt
-                                              ? allFacilities // TODO: changed from facilities
+                                              ? allFacilities
                                                   .where((element) =>
                                                       element.usage ==
                                                       Constants.centralFacility)
                                                   .toList()
-                                              : allFacilities // TODO: changed from facilities
+                                              : allFacilities
                                                   .where((element) =>
                                                       element.usage ==
                                                       Constants.lgaFacility)
@@ -627,14 +624,14 @@ class CustomStockDetailsPageState
                                                       Constants.deliveryTeam)
                                                   .toList();
                                         } else {
-                                          filteredFacilities = context
-                                                  .isDistributor
-                                              ? allFacilities //TODO: changed from facilities
-                                                  .where((element) =>
-                                                      element.usage ==
-                                                      Constants.lgaFacility)
-                                                  .toList()
-                                              : [];
+                                          filteredFacilities =
+                                              context.isDistributor
+                                                  ? allFacilities
+                                                      .where((element) =>
+                                                          element.usage ==
+                                                          Constants.lgaFacility)
+                                                      .toList()
+                                                  : [];
                                         }
 
                                         facilities =
@@ -758,7 +755,6 @@ class CustomStockDetailsPageState
                                       });
                                 },
                               ),
-                              // TODO: as this case i need to set when occurring
                               Visibility(
                                 visible: deliveryTeamSelected,
                                 child: ReactiveWrapperField(
@@ -802,7 +798,6 @@ class CustomStockDetailsPageState
                                             controller: textController,
                                             suffixIcon: Icons.qr_code_2,
                                             onSuffixTap: (value) {
-                                              //[TODO: Add route to auto_route]
                                               Navigator.of(context).push(
                                                 MaterialPageRoute(
                                                   builder: (context) =>

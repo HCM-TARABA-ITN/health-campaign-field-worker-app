@@ -136,7 +136,6 @@ class BeneficiaryDownSyncBloc
       );
       if (initialResults.isNotEmpty) {
         // Current response from server is String, Expecting it to be int
-        //[TODO: Need to move the dynamic keys to constants
         int serverTotalCount = initialResults["DownsyncCriteria"]["totalCount"];
 
         emit(BeneficiaryDownSyncState.dataFound(
@@ -157,7 +156,6 @@ class BeneficiaryDownSyncBloc
   ) async {
     emit(const BeneficiaryDownSyncState.loading(true));
     double? diskSpace = 0;
-    // [TODO: Move the function DiskSpace.getFreeDiskSpace to utils
     diskSpace = await DiskSpace
         .getFreeDiskSpace; // Returns the device available space in MB
     // diskSpace in MB * 1000 comparison with serverTotalCount * 150KB * Number of entities * 2

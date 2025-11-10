@@ -316,16 +316,13 @@ class CustomMemberCard extends StatelessWidget {
                                               i18.householdOverView
                                                   .householdOverViewActionText,
                                             ),
-                                      onPressed: () {
-                                        //// TODO: need to write for logic for eligibility checklist and other flows
-                                      },
+                                      onPressed: () {},
                                     ),
                                   )
                                 : const Offstage(),
                         const SizedBox(
                           height: 10,
                         ),
-                        //// TODO:need to check
                       ],
                     ),
                   ),
@@ -348,9 +345,7 @@ class CustomMemberCard extends StatelessWidget {
                           prefixIcon: Icons.add_circle_outline,
                           size: DigitButtonSize.medium,
                           onPressed: () async {
-                            if (household != null) {
-                              /// TODO: adding a child, need to implement
-                            }
+                            if (household != null) {}
                           },
                         ),
                       ),
@@ -360,9 +355,7 @@ class CustomMemberCard extends StatelessWidget {
                         child: DigitButton(
                             label:
                                 '${localizations.translate(i18.memberCard.noOfChildren)} ${children?.length}',
-                            onPressed: () {
-                              /// TODO: navigate to parent details screen
-                            },
+                            onPressed: () {},
                             type: DigitButtonType.tertiary,
                             size: DigitButtonSize.medium),
                       ),
@@ -372,9 +365,7 @@ class CustomMemberCard extends StatelessWidget {
         ]);
   }
 
-  void navigateToChecklist(BuildContext context, clientReferenceId) async {
-    //// TODO: need to figure out logic for checklist navigation
-  }
+  void navigateToChecklist(BuildContext context, clientReferenceId) async {}
 
   getFormattedId(IndividualModel individual) {
     String? rawId = individual.identifiers

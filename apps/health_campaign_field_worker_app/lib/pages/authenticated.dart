@@ -456,7 +456,6 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                   (ele) => ele.value.toString() == e.value.toString(),
                 );
 
-                /// TODO: NEED TO EXTRACT THIS AS UTIL FUNCTION
                 String? dynamicModule;
                 final isInRegistrationFlow = context.router.current.name
                     .contains(RegistrationDeliveryWrapperRoute.name);

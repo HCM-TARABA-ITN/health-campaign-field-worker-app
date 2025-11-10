@@ -10,6 +10,7 @@ import 'package:digit_ui_components/widgets/atoms/input_wrapper.dart';
 import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -106,10 +107,14 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
       }
     } on TimeoutException {
       _sharedMRN = 'MRN-${DateTime.now().millisecondsSinceEpoch}';
-      debugPrint('MRN generation timed out, using fallback');
+      if (kDebugMode) {
+        debugPrint('MRN generation timed out, using fallback');
+      }
     } catch (e) {
       _sharedMRN = 'MRN-${DateTime.now().millisecondsSinceEpoch}';
-      debugPrint('Error generating MRN: $e');
+      if (kDebugMode) {
+        debugPrint('Error generating MRN: $e');
+      }
     } finally {
       setState(() => _isInitializing = false);
     }
@@ -303,8 +308,6 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
 
   void setTransactionTypeAndReason(StockRecordEntryType entryType,
       String? transactionType, String? transactionReason) {
-    // todo set the reasons , for othe entryType (can capture from field once added)
-
     switch (entryType) {
       case StockRecordEntryType.receipt:
         transactionType = TransactionType.received.toValue();
@@ -338,7 +341,7 @@ class _DynamicTabsPageState extends LocalizedState<DynamicTabsPage>
     String? receiverType,
   ) {
     // info captured on the transaction details , secondaryParty
-    // additionalCheck to correct this ,(TODO :correct this at stock detail page )
+    // additionalCheck to correct this
 
     final secondartParty = receivedFrom.contains(("FAC_"))
         ? receivedFrom.replaceFirst("FAC_", "")

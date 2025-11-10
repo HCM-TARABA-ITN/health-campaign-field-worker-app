@@ -403,7 +403,9 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
       await facilityLocalRepository.bulkCreate(facilities);
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        debugPrint(e.toString());
+      }
     }
   }
 
@@ -703,8 +705,10 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     try {
       transformedSchema = transformJson(schemaJson);
     } catch (e, stackTrace) {
-      debugPrint('Schema transformation failed: $e');
-      debugPrint('$stackTrace');
+      if (kDebugMode) {
+        debugPrint('Schema transformation failed: $e');
+        debugPrint('$stackTrace');
+      }
       transformedSchema = null;
     }
 

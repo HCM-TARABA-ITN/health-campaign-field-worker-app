@@ -67,7 +67,7 @@ class DigitDateUtils {
       return DateFormat(dateFormat ?? "dd/MM/yyyy").format(dateTime);
     } on Exception catch (e) {
       if (kDebugMode) {
-        print(e);
+        debugPrint(e.toString());
       }
     }
   }
@@ -117,7 +117,7 @@ class DigitDateUtils {
       return inputDate;
     } on Exception catch (e) {
       if (kDebugMode) {
-        print(e);
+        debugPrint(e.toString());
       }
 
       return null;

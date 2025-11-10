@@ -155,7 +155,6 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                             ),
                           ),
                         ),
-                        // [TODO : Need move to constants]
                         Positioned(
                           top: MediaQuery.of(context).size.width / 7.5,
                           left: MediaQuery.of(context).size.width / 2.6,
@@ -176,7 +175,6 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                           ),
                         ),
                         const SizedBox.shrink(),
-
                         Positioned(
                           bottom: 0,
                           width: MediaQuery.of(context).size.width,
@@ -215,7 +213,6 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                             ],
                           ),
                         ),
-
                         Positioned(
                           bottom: (spacer1 * 10),
                           height: widget.isGS1code
